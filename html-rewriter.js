@@ -1,7 +1,10 @@
 
-
+var cheerio = require('cheerio');
 
 
 module.exports = function(html) {
-       return html;
+
+    var $ = cheerio.load(html);
+
+    return $.html();
 }

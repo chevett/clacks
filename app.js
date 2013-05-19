@@ -30,8 +30,8 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/:destination', proxy.go);
+
+app.get('/*', proxy.go);
 
 app.get('/users', user.list);
 

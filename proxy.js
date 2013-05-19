@@ -2,11 +2,13 @@ var http = require('http')
     , url = require('url')
     , $ = require("jquery")
     , settings = require("./settings")()
-    , S = require('underscore.string');
+    , S = require('underscore.string')
+    , rewrite = { html:require('./html-rewriter')};
 
 
 function _getDestinationRequestParameters(request){
-    var dest = request.params.destination, opt;
+    var dest = request.url.substr(1),   // kill the slash
+        opt;
 
     if (!S.startsWith(dest, "http://") || S.startsWith(dest, "https://")){
         dest = "http://" + dest;
@@ -15,14 +17,24 @@ function _getDestinationRequestParameters(request){
     opt = url.parse(dest);
     opt.headers = $.extend({}, request.headers);
     delete opt.headers.host;
+    delete opt.headers['accept-encoding'];  // TODO: handle gzip
 
     return opt;
 }
 
-function _handleRedirect(response, proxyResponse){
+function _writeResponseHeaders(request, response, proxyResponse){
 
-    response.writeHead(proxyResponse.statusCode, {'Location':_createProxiedUrl(proxyResponse.headers.location)});
-    response.end();
+    var headers = $.extend({}, proxyResponse.headers);
+
+    switch (proxyResponse.statusCode){
+        case 301:
+        case 302:
+            headers.location =  _createProxiedUrl(proxyResponse.headers.location, request);
+        break;
+    }
+
+    response.writeHead(proxyResponse.statusCode, headers);
+
 }
 
 function _createProxiedUrl(originalUrl, forceSsl){
@@ -31,7 +43,7 @@ function _createProxiedUrl(originalUrl, forceSsl){
     originalUrl = typeof originalUrl === 'string' ? originalUrl : url.format(originalUrl);
 
     o = Object.create(settings);
-    o.pathname = encodeURIComponent(originalUrl.replace(/http:\/\/|https:\/\//, ''));
+    o.pathname = originalUrl.replace(/http:\/\/|https:\/\//, '');
     o.protocol = forceSsl || settings.forceSsl || originalUrl.match(/https:\/\//) ? "https" : "http";
 
     s = url.format(o);
@@ -41,30 +53,39 @@ function _createProxiedUrl(originalUrl, forceSsl){
 
 
 exports.go = function(request, response) {
-    var destinationOptions =  _getDestinationRequestParameters(request);
+    var destinationOptions =  _getDestinationRequestParameters(request)
+        , html="", encoding, buffer;
 
 
     var proxy_request = http.request(destinationOptions, function(proxy_response){
 
 
+        _writeResponseHeaders
 
-        switch (proxy_response.statusCode){
-            case 301:
-            case 302:
-                return _handleRedirect(response, proxy_response);
+
+        if (proxy_response.headers["content-type"].match(/text\/html/g)){
+            encoding = proxy_response.headers["content-type"].match(/charset=(.+)/i)[1];
+
+            proxy_response.addListener('data', function(chunk) {
+
+                html += new Buffer(Array.prototype.slice.call(chunk, 0), encoding).toString(encoding);
+            });
+
+            proxy_response.addListener('end', function() {
+                response.write(rewrite['html'](html), encoding);
+                response.end();
+            });
+
+        } else {
+
+            proxy_response.addListener('data', function(chunk) {
+                response.write(chunk, 'binary');
+            });
+
+            proxy_response.addListener('end', function() {
+                response.end();
+            });
         }
-
-
-        proxy_response.addListener('data', function(chunk) {
-            response.write(chunk, 'binary');
-        });
-
-        proxy_response.addListener('end', function() {
-            response.end();
-        });
-
-        response.writeHead(proxy_response.statusCode, proxy_response.headers);
-
     });
 
 

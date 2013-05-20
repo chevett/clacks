@@ -1,7 +1,7 @@
 
 var cheerio = require('cheerio')
     , url = require('url')
-    , proxy = require('./proxy')   // gross
+    , proxy = require('./../proxy')   // gross
     ;
 
 module.exports = function(html, url) {
@@ -25,8 +25,10 @@ module.exports = function(html, url) {
 
         $this[0].children[0].data = "";
 
-        if (src)
+        if (src)  {
             $this.attr('src', proxy.toProxiedUrl(src, url))
+
+        }
     });
 
 

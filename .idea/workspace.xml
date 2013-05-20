@@ -16,7 +16,7 @@
     <file path="/settings.js" changelist="484ac2f5-adb9-477e-be3a-f3f96c266206" time="1368971850340" ignored="false" />
     <file path="/css.js" changelist="484ac2f5-adb9-477e-be3a-f3f96c266206" time="1369015673389" ignored="false" />
     <file path="/js.js" changelist="484ac2f5-adb9-477e-be3a-f3f96c266206" time="1369015635229" ignored="false" />
-    <file path="/html.js" changelist="484ac2f5-adb9-477e-be3a-f3f96c266206" time="1369073569004" ignored="false" />
+    <file path="/html.js" changelist="484ac2f5-adb9-477e-be3a-f3f96c266206" time="1369076113825" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,10 +36,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="proxy.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="proxy.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/proxy.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="87" column="21" selection-start="2385" selection-end="2385" vertical-scroll-proportion="0.5780347">
+            <state line="87" column="21" selection-start="2385" selection-end="2385" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -81,10 +81,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="html.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="html.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/rewrite/html.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="26" selection-start="470" selection-end="470" vertical-scroll-proportion="0.0">
+            <state line="26" column="27" selection-start="577" selection-end="577" vertical-scroll-proportion="0.27745664">
               <folding />
             </state>
           </provider>
@@ -122,9 +122,9 @@
         <option value="$PROJECT_DIR$/rewrite/css.js" />
         <option value="$PROJECT_DIR$/rewrite/js.js" />
         <option value="$PROJECT_DIR$/rewrite/json.js" />
-        <option value="$PROJECT_DIR$/rewrite/html.js" />
         <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/proxy.js" />
+        <option value="$PROJECT_DIR$/rewrite/html.js" />
       </list>
     </option>
   </component>
@@ -303,7 +303,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32893288" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2512563" sideWeight="0.6024229" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3975771" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3975771" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32893288" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32893288" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -382,13 +382,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/rewrite/html.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="26" selection-start="470" selection-end="470" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Library/Caches/WebStorm6/extLibs/nodejs-v0.8.8-src/core-modules-sources/lib/url.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="343" column="0" selection-start="10982" selection-end="10982" vertical-scroll-proportion="0.0">
@@ -426,7 +419,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/proxy.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="87" column="21" selection-start="2385" selection-end="2385" vertical-scroll-proportion="0.5780347">
+        <state line="87" column="21" selection-start="2385" selection-end="2385" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rewrite/html.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="27" selection-start="577" selection-end="577" vertical-scroll-proportion="0.27745664">
           <folding />
         </state>
       </provider>

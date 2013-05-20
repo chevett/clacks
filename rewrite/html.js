@@ -24,13 +24,17 @@ module.exports = function(html, urlRewriter) {
     });
 
     $("script").each(function(){
-        var $this = $(this), scriptBody = $this[0].children[0].data, src = $this.attr('src');
+        var $this = $(this), src = $this.attr('src');
 
-        $this[0].children[0].data = "";
+
 
         if (src)  {
             $this.attr('src', urlRewriter(src))
+        } else {
+            $this[0].children[0].data = "";
         }
+
+
     });
 
 

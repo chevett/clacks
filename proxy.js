@@ -3,7 +3,22 @@ var http = require('http')
     , $ = require("jquery")
     , settings = require("./settings")()
     , S = require('underscore.string')
-    , rewrite = { html:require('./html-rewriter')};
+    , rewriters = (function(){
+        var o={}, html = require('./rewrite/html'), css = require('./rewrite/css'), js = require('./rewrite/js'), json = require('./rewrite/json');
+
+        o['text/html'] = html;
+
+        o['text/javascript'] =
+            o['application/javascript'] =
+            o['application/x-javascript'] = js;
+
+        o['application/json'] = json;
+
+        o['text/css'] = css;
+
+        return o;
+    })()
+    ;
 
 
 function _getDestinationRequestParameters(request){
@@ -38,8 +53,9 @@ function _writeResponseHeaders(request, response, proxyResponse){
 }
 
 
-function _isHtml(proxyResponse){
-    return proxyResponse.headers["content-type"] && proxyResponse.headers["content-type"].match(/text\/html/g);
+function _getRewriter(proxyResponse){
+    var contentType = (proxyResponse.headers["content-type"] || "").match(/^([\w\-/]+?)(;|$)+/i);
+    return contentType && contentType.length>1 ? rewriters[contentType[1]] : null;
 }
 
 function _isRelative(url){
@@ -75,11 +91,11 @@ exports.go = function(request, response) {
 
 
     var proxy_request = http.request(destinationOptions, function(proxy_response){
-
+        var rewriter = _getRewriter(proxy_response);
 
         _writeResponseHeaders(request, response, proxy_response);
 
-        if (_isHtml(proxy_response)){
+        if (rewriter){
             encoding = proxy_response.headers["content-type"].match(/charset=(.+)/i)[1];
 
             proxy_response.addListener('data', function(chunk) {
@@ -88,7 +104,7 @@ exports.go = function(request, response) {
             });
 
             proxy_response.addListener('end', function() {
-                response.write(rewrite['html'](html, url.format(destinationOptions)), encoding);
+                response.write(rewriter(html, url.format(destinationOptions)), encoding);
                 response.end();
             });
 

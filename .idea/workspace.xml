@@ -10,7 +10,7 @@
     <ignored path="miketown3.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="484ac2f5-adb9-477e-be3a-f3f96c266206" time="1369071204940" ignored="false" />
-    <file path="/proxy.js" changelist="484ac2f5-adb9-477e-be3a-f3f96c266206" time="1369075837242" ignored="false" />
+    <file path="/proxy.js" changelist="484ac2f5-adb9-477e-be3a-f3f96c266206" time="1369076379082" ignored="false" />
     <file path="/app.js" changelist="484ac2f5-adb9-477e-be3a-f3f96c266206" time="1368969245885" ignored="false" />
     <file path="/fragment.js" changelist="484ac2f5-adb9-477e-be3a-f3f96c266206" time="1369074537332" ignored="false" />
     <file path="/settings.js" changelist="484ac2f5-adb9-477e-be3a-f3f96c266206" time="1368971850340" ignored="false" />
@@ -36,19 +36,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="proxy.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="proxy.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/proxy.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="87" column="21" selection-start="2385" selection-end="2385" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="js.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rewrite/js.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="82" column="0" selection-start="2226" selection-end="2226" vertical-scroll-proportion="0.33333334">
               <folding />
             </state>
           </provider>
@@ -57,7 +48,7 @@
       <file leaf-file-name="json.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rewrite/json.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="2" column="20" selection-start="61" selection-end="61" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -81,10 +72,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="html.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="html.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rewrite/html.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="27" selection-start="577" selection-end="577" vertical-scroll-proportion="0.27745664">
+            <state line="32" column="41" selection-start="691" selection-end="691" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -93,7 +84,7 @@
       <file leaf-file-name="url.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/Library/Caches/WebStorm6/extLibs/nodejs-v0.8.8-src/core-modules-sources/lib/url.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="343" column="0" selection-start="10982" selection-end="10982" vertical-scroll-proportion="0.0">
+            <state line="398" column="0" selection-start="12668" selection-end="12668" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -123,8 +114,8 @@
         <option value="$PROJECT_DIR$/rewrite/js.js" />
         <option value="$PROJECT_DIR$/rewrite/json.js" />
         <option value="$PROJECT_DIR$/app.js" />
-        <option value="$PROJECT_DIR$/proxy.js" />
         <option value="$PROJECT_DIR$/rewrite/html.js" />
+        <option value="$PROJECT_DIR$/proxy.js" />
       </list>
     </option>
   </component>
@@ -297,7 +288,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1615" height="1026" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32893288" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -378,17 +369,20 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="31" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/proxy.js</url>
+          <line>82</line>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+      </breakpoints>
+      <breakpoints-dialog>
+        <breakpoints-dialog />
+      </breakpoints-dialog>
+      <option name="time" value="39" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/Library/Caches/WebStorm6/extLibs/nodejs-v0.8.8-src/core-modules-sources/lib/url.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="343" column="0" selection-start="10982" selection-end="10982" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="33" column="30" selection-start="809" selection-end="809" vertical-scroll-proportion="0.0">
@@ -403,13 +397,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/rewrite/json.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/rewrite/css.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="3" column="61" selection-start="167" selection-end="167" vertical-scroll-proportion="0.0">
@@ -417,16 +404,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/proxy.js">
+    <entry file="file://$PROJECT_DIR$/rewrite/json.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="87" column="21" selection-start="2385" selection-end="2385" vertical-scroll-proportion="0.0">
+        <state line="2" column="20" selection-start="61" selection-end="61" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/rewrite/html.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="27" selection-start="577" selection-end="577" vertical-scroll-proportion="0.27745664">
+        <state line="32" column="41" selection-start="691" selection-end="691" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Caches/WebStorm6/extLibs/nodejs-v0.8.8-src/core-modules-sources/lib/url.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="398" column="0" selection-start="12668" selection-end="12668" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/proxy.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="82" column="0" selection-start="2226" selection-end="2226" vertical-scroll-proportion="0.33333334">
           <folding />
         </state>
       </provider>

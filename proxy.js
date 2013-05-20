@@ -25,7 +25,7 @@ function _getDestinationRequestParameters(request){
     var dest = request.url.substr(1),   // kill the slash
         opt;
 
-    if (!dest.match(/^(http|https)?:\/\//i)) {
+    if (!dest.match(/^(http:|https:)?\/\//i)) {
         dest = "http://" + dest;
     }
 
@@ -79,7 +79,7 @@ function _createProxiedUrl(originalUrl, referrer, forceSsl){
     //o.pathname = originalUrl.replace(/http:\/\/|https:\/\//, '');
     o.protocol = forceSsl || settings.forceSsl || originalUrl.match(/https:\/\//) ? "https" : "http";
 
-    s = url.format(o) +'/'+ originalUrl.replace(/http:\/\/|https:\/\//, '');
+    s = url.format(o) +'/'+ originalUrl.replace(/^(http:|https:)?\/\//i, '');
     return s;
 }
 

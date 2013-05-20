@@ -83,7 +83,10 @@ function _createProxiedUrl(originalUrl, referrer, forceSsl){
     return s;
 }
 
-
+function _getContentEncoding(repsonse){
+    var matches = (repsonse.headers["content-type"] || '').match(/charset=(.+)/i);
+    return matches && matches.length>1 ? matches[1] : "utf-8";
+}
 
 exports.go = function(request, response) {
     var destinationOptions =  _getDestinationRequestParameters(request)
@@ -95,7 +98,7 @@ exports.go = function(request, response) {
         _writeResponseHeaders(request, response, proxy_response);
 
         if (rewriter){
-            encoding = proxy_response.headers["content-type"].match(/charset=(.+)/i)[1];
+            encoding = _getContentEncoding(proxy_response);
 
             proxy_response.addListener('data', function(chunk) {
 

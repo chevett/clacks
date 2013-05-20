@@ -35,6 +35,11 @@ app.get('/*', proxy.go);
 
 app.get('/users', user.list);
 
+app.use(function(err, req, res, next){
+    console.error(err.stack);
+    res.send(500, 'Something broke!');
+});
+
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });

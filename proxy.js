@@ -126,6 +126,12 @@ exports.go = function(request, response) {
     });
 
 
+    proxy_request.on('error', function (err) {
+        console.log(err);
+        response.writeHead(500);
+        response.end();
+    });
+
     proxy_request.addListener('response', function (proxy_response) {
 
 

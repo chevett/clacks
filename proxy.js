@@ -37,10 +37,26 @@ function _writeResponseHeaders(request, response, proxyResponse){
 
 }
 
-function _createProxiedUrl(originalUrl, forceSsl){
+
+function _isHtml(proxyResponse){
+    return proxyResponse.headers["content-type"] && proxyResponse.headers["content-type"].match(/text\/html/g);
+}
+
+function _isRelative(url){
+    return !url.match(/^(http:|https:)?\/\//i);
+}
+
+function _createProxiedUrl(originalUrl, referrer, forceSsl){
     var o, s;
 
     originalUrl = typeof originalUrl === 'string' ? originalUrl : url.format(originalUrl);
+
+    if (_isRelative(originalUrl)){
+        originalUrl = url.resolve(referrer, originalUrl);
+    }
+
+
+
 
     o = Object.create(settings);
     o.pathname = originalUrl.replace(/http:\/\/|https:\/\//, '');
@@ -54,16 +70,16 @@ function _createProxiedUrl(originalUrl, forceSsl){
 
 exports.go = function(request, response) {
     var destinationOptions =  _getDestinationRequestParameters(request)
-        , html="", encoding, buffer;
+        , html="", encoding;
+
 
 
     var proxy_request = http.request(destinationOptions, function(proxy_response){
 
 
-        _writeResponseHeaders
+        _writeResponseHeaders(request, response, proxy_response);
 
-
-        if (proxy_response.headers["content-type"].match(/text\/html/g)){
+        if (_isHtml(proxy_response)){
             encoding = proxy_response.headers["content-type"].match(/charset=(.+)/i)[1];
 
             proxy_response.addListener('data', function(chunk) {
@@ -72,7 +88,7 @@ exports.go = function(request, response) {
             });
 
             proxy_response.addListener('end', function() {
-                response.write(rewrite['html'](html), encoding);
+                response.write(rewrite['html'](html, url.format(destinationOptions)), encoding);
                 response.end();
             });
 
@@ -86,6 +102,10 @@ exports.go = function(request, response) {
                 response.end();
             });
         }
+
+        proxy_response.addListener('error', function(e) {
+            console.log('problem with request: ' + e.message);
+        });
     });
 
 

@@ -2,7 +2,7 @@ var http = require('http')
     , url = require('url')
     , $ = require("jquery")
     , settings = require("./settings")()
-    , S = require('underscore.string')
+
     , rewriters = (function(){
         var o={}, html = require('./rewrite/html'), css = require('./rewrite/css'), js = require('./rewrite/js'), json = require('./rewrite/json');
 
@@ -25,7 +25,7 @@ function _getDestinationRequestParameters(request){
     var dest = request.url.substr(1),   // kill the slash
         opt;
 
-    if (!S.startsWith(dest, "http://") || S.startsWith(dest, "https://")){
+    if (!dest.match(/^(http|https)?:\/\//i)) {
         dest = "http://" + dest;
     }
 
@@ -87,8 +87,6 @@ function _createProxiedUrl(originalUrl, referrer, forceSsl){
 exports.go = function(request, response) {
     var destinationOptions =  _getDestinationRequestParameters(request)
         , html="", encoding;
-
-
 
     var proxy_request = http.request(destinationOptions, function(proxy_response){
         var rewriter = _getRewriter(proxy_response);

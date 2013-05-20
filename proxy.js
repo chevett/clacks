@@ -76,10 +76,10 @@ function _createProxiedUrl(originalUrl, referrer, forceSsl){
 
 
     o = Object.create(settings);
-    o.pathname = originalUrl.replace(/http:\/\/|https:\/\//, '');
+    //o.pathname = originalUrl.replace(/http:\/\/|https:\/\//, '');
     o.protocol = forceSsl || settings.forceSsl || originalUrl.match(/https:\/\//) ? "https" : "http";
 
-    s = url.format(o);
+    s = url.format(o) +'/'+ originalUrl.replace(/http:\/\/|https:\/\//, '');
     return s;
 }
 

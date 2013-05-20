@@ -1,7 +1,5 @@
-/**
- * Created with JetBrains WebStorm.
- * User: mchevett
- * Date: 5/19/13
- * Time: 8:17 PM
- * To change this template use File | Settings | File Templates.
- */
+var proxy = require('./../proxy')   // gross
+
+module.exports = function(css, url) {
+    return css.replace(/url\s*\(\s*('|")?(.+?)('|")?\s*\)/i, function(a,b,c,d){alert('url('+b+proxy.toProxiedUrl(c, url)+d+')');})
+}

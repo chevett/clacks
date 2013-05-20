@@ -18,6 +18,11 @@ module.exports = function(html, urlRewriter) {
         $this.attr('href', urlRewriter($this.attr('href')))
     });
 
+    $("form[action]").each(function(){
+        var $this = $(this);
+        $this.attr('action', urlRewriter($this.attr('action')))
+    });
+
     $("script").each(function(){
         var $this = $(this), scriptBody = $this[0].children[0].data, src = $this.attr('src');
 

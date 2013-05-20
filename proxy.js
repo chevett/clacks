@@ -30,6 +30,7 @@ function _getDestinationRequestParameters(request){
     }
 
     opt = url.parse(dest);
+    opt.method = request.method;
     opt.headers = $.extend({}, request.headers);
     delete opt.headers.host;
     delete opt.headers['accept-encoding'];  // TODO: handle gzip

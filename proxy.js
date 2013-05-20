@@ -104,7 +104,10 @@ exports.go = function(request, response) {
             });
 
             proxy_response.addListener('end', function() {
-                response.write(rewriter(html, url.format(destinationOptions)), encoding);
+                var requestUrl = url.format(destinationOptions)
+                response.write(rewriter(html, function(originalUrl){
+                    return _createProxiedUrl(originalUrl, requestUrl);
+                }), encoding);
                 response.end();
             });
 

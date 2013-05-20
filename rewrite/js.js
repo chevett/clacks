@@ -1,5 +1,3 @@
-var proxy = require('./../proxy');   // gross
-
-module.exports = function(js, url) {
+module.exports = function(js, urlRewriter) {
     return js;
 }

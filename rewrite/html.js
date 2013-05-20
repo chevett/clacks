@@ -1,10 +1,8 @@
 
 var cheerio = require('cheerio')
-    , url = require('url')
-    , proxy = require('./../proxy')   // gross
     ;
 
-module.exports = function(html, url) {
+module.exports = function(html, urlRewriter) {
 
 
     var $ = cheerio.load(html);
@@ -12,12 +10,12 @@ module.exports = function(html, url) {
 
     $("img").each(function(){
         var $this = $(this);
-        $this.attr('src', proxy.toProxiedUrl($this.attr('src'), url))
+        $this.attr('src', urlRewriter($this.attr('src')))
     });
 
     $("a").each(function(){
         var $this = $(this);
-        $this.attr('href', proxy.toProxiedUrl($this.attr('href'), url))
+        $this.attr('href', urlRewriter($this.attr('href')))
     });
 
     $("script").each(function(){
@@ -26,8 +24,7 @@ module.exports = function(html, url) {
         $this[0].children[0].data = "";
 
         if (src)  {
-            $this.attr('src', proxy.toProxiedUrl(src, url))
-
+            $this.attr('src', urlRewriter(src))
         }
     });
 

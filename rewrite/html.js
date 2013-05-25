@@ -4,66 +4,41 @@ var cheerio = require('cheerio'),
     jsRewriter = require('./js')
     ;
 
+
+
+
 module.exports = function(html, urlRewriter) {
 
-
-    var $ = cheerio.load(html);
-
-
-    $("img").each(function(){
-        var $this = $(this);
-        $this.attr('src', urlRewriter($this.attr('src')))
-    });
-
-    $("a").each(function(){
-        var $this = $(this);
-        $this.attr('href', urlRewriter($this.attr('href')))
-    });
-
-    $("form[action]").each(function(){
-        var $this = $(this);
-        $this.attr('action', urlRewriter($this.attr('action')))
-    });
-
-    $("link[href]").each(function(){
-        var $this = $(this);
-        $this.attr('href', urlRewriter($this.attr('href')))
-    });
-
-    $("script").each(function(){
-        var $this = $(this),
-            src = $this.attr('src'),
-            content
+    var $ = cheerio.load(html),
+        rewriteUrlAttribute = function (attributeName){
+            return function(){
+                var $this = $(this);
+                $this.attr(attributeName, urlRewriter($this.attr(attributeName)));
+            };
+        },
+        rewriteContent = function (rewriter){
+            return function(){
+                var $this = $(this);
+                $this.html(rewriter($this.html(), urlRewriter));
+            };
+        }
         ;
 
-        if (src)  {
-            $this.attr('src', urlRewriter(src))
-        } else {
-            content =  $this[0].children[0].data;
-            $this[0].children[0].data = jsRewriter(content, urlRewriter);
-        }
-    });
+    $("*[src]").each(rewriteUrlAttribute('src'));
+    $("*[href]").each(rewriteUrlAttribute('href'));
+    $("form[action]").each(rewriteUrlAttribute('action'));
 
+    $("style:not([src])").each(rewriteContent(cssRewriter));
+    $("script:not([src])").each(rewriteContent(jsRewriter));
 
     $("*[style]").each(function(){
-        var $this = $(this),
+            var $this = $(this),
             content =  $this.attr('style'),
             newContent = cssRewriter(content, urlRewriter);
 
-        $this.attr('style',newContent);
+        $this.attr('style', newContent);
     });
 
-    $("style").each(function(){
-        var $this = $(this),
-            src = $this.attr('src')
-        ;
-
-        if (src)  {
-            $this.attr('src', urlRewriter(src))
-        } else {
-            $this.html(cssRewriter($this.html(), urlRewriter));
-        }
-    });
 
 
 //    $("head").prepend("<script type='text/javascript'>\

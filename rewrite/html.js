@@ -1,5 +1,6 @@
 
-var cheerio = require('cheerio')
+var cheerio = require('cheerio'),
+    cssRewriter = require('./css')
     ;
 
 module.exports = function(html, urlRewriter) {
@@ -35,6 +36,20 @@ module.exports = function(html, urlRewriter) {
         }
 
 
+    });
+
+
+    $("*[style]").each(function(){
+        var $this = $(this),
+            content =  $this.attr('style'),
+            newContent = cssRewriter(content, urlRewriter);
+
+        $this.attr('style',newContent);
+    });
+
+    $("style").each(function(){
+        var $this = $(this), content = $this.html();
+        $this.html(cssRewriter(content, urlRewriter));
     });
 
 

@@ -6,13 +6,19 @@ var http = require('http')
     ;
 
 
-function _getDestinationRequestParameters(request){
-    var dest = request.url.substr(1),   // kill the slash
-        opt;
+function _getDestinationUrl(request){
+    var dest = request.url.substr(1);   // kill the slash
 
     if (!dest.match(/^(http:|https:)?\/\//i)) {
         dest = "http://" + dest;
     }
+
+    return dest;
+}
+
+
+function _getDestinationRequestParameters(request){
+    var dest = _getDestinationUrl(request), opt;
 
     opt = url.parse(dest);
     opt.method = request.method;
@@ -30,7 +36,7 @@ function _writeResponseHeaders(request, response, proxyResponse){
     switch (proxyResponse.statusCode){
         case 301:
         case 302:
-            headers.location =  _createProxiedUrl(proxyResponse.headers.location, request);
+            headers.location =  _createProxiedUrl(proxyResponse.headers.location, _getDestinationUrl(request));
         break;
     }
 

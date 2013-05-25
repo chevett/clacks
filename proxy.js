@@ -152,6 +152,3 @@ exports.go = function(request, response) {
 
 }
 
-
-exports.toProxiedUrl = _createProxiedUrl;
-

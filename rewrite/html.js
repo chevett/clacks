@@ -1,6 +1,7 @@
 
 var cheerio = require('cheerio'),
-    cssRewriter = require('./css')
+    cssRewriter = require('./css'),
+    jsRewriter = require('./js')
     ;
 
 module.exports = function(html, urlRewriter) {
@@ -24,18 +25,23 @@ module.exports = function(html, urlRewriter) {
         $this.attr('action', urlRewriter($this.attr('action')))
     });
 
+    $("link[href]").each(function(){
+        var $this = $(this);
+        $this.attr('href', urlRewriter($this.attr('href')))
+    });
+
     $("script").each(function(){
-        var $this = $(this), src = $this.attr('src');
-
-
+        var $this = $(this),
+            src = $this.attr('src'),
+            content
+        ;
 
         if (src)  {
             $this.attr('src', urlRewriter(src))
         } else {
-            $this[0].children[0].data = "";
+            content =  $this[0].children[0].data;
+            $this[0].children[0].data = jsRewriter(content, urlRewriter);
         }
-
-
     });
 
 
@@ -48,8 +54,15 @@ module.exports = function(html, urlRewriter) {
     });
 
     $("style").each(function(){
-        var $this = $(this), content = $this.html();
-        $this.html(cssRewriter(content, urlRewriter));
+        var $this = $(this),
+            src = $this.attr('src')
+        ;
+
+        if (src)  {
+            $this.attr('src', urlRewriter(src))
+        } else {
+            $this.html(cssRewriter($this.html(), urlRewriter));
+        }
     });
 
 

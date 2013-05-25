@@ -2,22 +2,7 @@ var http = require('http')
     , url = require('url')
     , $ = require("jquery")
     , settings = require("./settings")()
-
-    , rewriters = (function(){
-        var o={}, html = require('./rewrite/html'), css = require('./rewrite/css'), js = require('./rewrite/js'), json = require('./rewrite/json');
-
-        o['text/html'] = html;
-
-        o['text/javascript'] =
-            o['application/javascript'] =
-            o['application/x-javascript'] = js;
-
-        o['application/json'] = json;
-
-        o['text/css'] = css;
-
-        return o;
-    })()
+    , rewriters = require("./rewrite/rewriters")
     ;
 
 
@@ -85,11 +70,11 @@ function _createProxiedUrl(originalUrl, referrer, forceSsl){
 
 function _getContentEncoding(repsonse){
     var matches = (repsonse.headers["content-type"] || '').match(/charset=(.+)/i),
-        encoding =   matches && matches.length>1 ? matches[1] : "utf-8";
+        encoding =   matches && matches.length>1 ? matches[1] : 'utf-8';
 
     switch (encoding){
-        case "iso-8859-1":
-           return "utf-8";
+        case 'iso-8859-1':
+           return 'utf-8';
 
         default:
             return encoding;

@@ -84,8 +84,18 @@ function _createProxiedUrl(originalUrl, referrer, forceSsl){
 }
 
 function _getContentEncoding(repsonse){
-    var matches = (repsonse.headers["content-type"] || '').match(/charset=(.+)/i);
-    return matches && matches.length>1 ? matches[1] : "utf-8";
+    var matches = (repsonse.headers["content-type"] || '').match(/charset=(.+)/i),
+        encoding =   matches && matches.length>1 ? matches[1] : "utf-8";
+
+    switch (encoding){
+        case "iso-8859-1":
+           return "utf-8";
+
+        default:
+            return encoding;
+
+    }
+
 }
 
 exports.go = function(request, response) {

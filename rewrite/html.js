@@ -39,7 +39,19 @@ module.exports = function(html, urlRewriter) {
         $this.attr('style', newContent);
     });
 
-
+    $('body').attr('style', 'margin-top:20px');
+    $('body').prepend(
+        '<form onsubmit="__handleIt__();return false;" style="position:relative;z-index:99999;background:#f5f5f5;top:-20px;"> \
+          <input type="text" id="miketown3-btn-nav-value"> \
+          <button type="submit">Submit</button> \
+        </form> \
+        <script> \
+            function __handleIt__() { \
+                var dest = document.getElementById("miketown3-btn-nav-value").value || ""; \
+                window.location = window.location.origin + "/" + dest; \
+            } \
+        </script>'
+    );
 
 //    $("head").prepend("<script type='text/javascript'>\
 //        XMLHttpRequest.prototype.reallySend = XMLHttpRequest.prototype.send;\

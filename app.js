@@ -13,7 +13,7 @@ var express = require('express')
 var app = express();
 
 // all environments
-app.set('port', process.env.PORT || 8080);
+app.set('port', process.env.PORT || 1234);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'hjs');
 app.set('domain', 'localhost');

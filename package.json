@@ -3,9 +3,9 @@
   "title": "miketown3",
   "version": "0.0.1",
   "private": true,
-  "repository" : {
-      "type" : "git",
-      "url" : "http://github.com/chevett/miketown3.git"
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/chevett/miketown3.git"
   },
   "scripts": {
     "start": "node app.js"
@@ -15,6 +15,7 @@
     "hjs": "*",
     "less-middleware": "*",
     "jquery": "~1.8.3",
-    "cheerio": "~0.11.0"
+    "cheerio": "~0.11.0",
+    "forever": "~0.10.8"
   }
 }

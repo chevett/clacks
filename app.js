@@ -14,6 +14,12 @@ var express = require('express')
 
 var app = express();
 
+if ('production' == app.get('env')) {
+    settings.hostname = 'miketown3.com';
+    settings.port = 80;
+}
+
+
 // all environments
 app.set('port', settings.port);
 app.set('views', __dirname + '/views');
@@ -33,10 +39,6 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-if ('production' == app.get('env')) {
-    settings.hostname = 'miketown3.com';
-    settings.port = 80;
-}
 
 
 app.get('/', routes.index);

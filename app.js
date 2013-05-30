@@ -29,13 +29,13 @@ app.use(app.router);
   app.use(require('less-middleware')({ src: __dirname + '/public' }));
 
 
-if ('production' == app.get('env')) {
+if ('production' == app.get('NODE_ENV')) {
     settings.hostname = 'miketown3.com';
     settings.port = 80;
 }
 
 // development only
-if ('development' == app.get('env')) {
+if ('development' == app.get('NODE_ENV')) {
   app.use(express.errorHandler());
 }
 

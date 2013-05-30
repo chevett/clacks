@@ -14,9 +14,8 @@ var express = require('express')
 
 var app = express();
 
-
 // all environments
-app.set('port', process.env.PORT);
+app.set('port', process.env.PORT || settings.port);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'hjs');
 app.set('domain', 'localhost');
@@ -26,20 +25,12 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
-  app.use(require('less-middleware')({ src: __dirname + '/public' }));
-
-
-if ('production' == app.get('NODE_ENV')) {
-    settings.hostname = 'miketown3.com';
-    settings.port = 80;
-}
+app.use(require('less-middleware')({ src: __dirname + '/public' }));
 
 // development only
 if ('development' == app.get('NODE_ENV')) {
   app.use(express.errorHandler());
 }
-
-
 
 app.get('/', routes.index);
 app.get('/*', proxy.go);

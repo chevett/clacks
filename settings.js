@@ -1,8 +1,8 @@
 
 
 var o = {
-  hostname: 'localhost',
-  port: process.env.PORT || 3000,
+  hostname: process.env.MT3_hostname || 'localhost',
+  port: process.env.MT3_PORT || 3000,
   forceSsl: false,
   showNavBar: true
 };

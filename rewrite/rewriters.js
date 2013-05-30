@@ -3,8 +3,11 @@
 var html = require('./html'),
     css = require('./css'),
     js = require('./js'),
-    json = require('./json');
+    json = require('./json'),
+    headers = require('./headers/rewriters')
+    ;
 
+exports.headers = headers;
 
 exports['text/html']  = html;
 exports['text/css'] = css;

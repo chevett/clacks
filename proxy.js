@@ -29,25 +29,23 @@ function _getDestinationRequestParameters(request){
     return opt;
 }
 
-function _writeResponseHeaders(request, response, proxyResponse){
-
+function _writeResponseHeaders(response, proxyResponse, urlRewriter){
     var headers = $.extend({}, proxyResponse.headers);
 
-    switch (proxyResponse.statusCode){
-        case 301:
-        case 302:
-            headers.location =  _createProxiedUrl(proxyResponse.headers.location, _getDestinationUrl(request));
-        break;
+    for (var header in headers) {
+        if (rewriters.headers[header]){
+            headers[header] = rewriters.headers[header](headers[header], urlRewriter);
+        }
     }
 
+
+    // todo: maybe handle these with individual header rewriters?
     delete headers['content-length'];
     delete headers['transfer-encoding'];
     headers['transfer-encoding'] = 'chunked';
 
     response.writeHead(proxyResponse.statusCode, headers);
-
 }
-
 
 function _getRewriter(proxyResponse){
     var contentType = (proxyResponse.headers["content-type"] || "").match(/^([\w\-/]+?)(;|$)+/i);
@@ -98,9 +96,14 @@ exports.go = function(request, response) {
         , html="", encoding;
 
     var proxy_request = http.request(destinationOptions, function(proxy_response){
-        var rewriter = _getRewriter(proxy_response);
+        var requestUrl = url.format(destinationOptions),
+            rewriter = _getRewriter(proxy_response),
+            urlRewriter = function(originalUrl){
+                return _createProxiedUrl(originalUrl, requestUrl);
+            }
+        ;
 
-        _writeResponseHeaders(request, response, proxy_response);
+        _writeResponseHeaders(response, proxy_response, urlRewriter);
 
         if (rewriter){
             encoding = _getContentEncoding(proxy_response);
@@ -111,10 +114,7 @@ exports.go = function(request, response) {
             });
 
             proxy_response.addListener('end', function() {
-                var requestUrl = url.format(destinationOptions)
-                response.write(rewriter(html, function(originalUrl){
-                    return _createProxiedUrl(originalUrl, requestUrl);
-                }), encoding);
+                response.write(rewriter(html, urlRewriter), encoding);
                 response.end();
             });
 

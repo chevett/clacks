@@ -40,6 +40,10 @@ function _writeResponseHeaders(request, response, proxyResponse){
         break;
     }
 
+    delete headers['content-length'];
+    delete headers['transfer-encoding'];
+    headers['transfer-encoding'] = 'chunked';
+
     response.writeHead(proxyResponse.statusCode, headers);
 
 }

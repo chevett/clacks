@@ -6,4 +6,4 @@ start \
 -al forever.log \
 -ao out.log \
 -ae err.log \
-app.js
+PORT=80 app.js

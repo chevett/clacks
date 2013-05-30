@@ -8,12 +8,14 @@ var express = require('express')
   , proxy = require('./proxy')
   , user = require('./routes/user')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , settings = require('./settings')()
+;
 
 var app = express();
 
 // all environments
-app.set('port', process.env.PORT || 8080);
+app.set('port', settings.port);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'hjs');
 app.set('domain', 'localhost');

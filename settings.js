@@ -2,8 +2,9 @@
 
 var o = {
   hostname: 'localhost',
-  port: 80,
-  forceSsl: false
+  port: process.env.PORT || 1234,
+  forceSsl: false,
+  showNavBar: true
 };
 
 module.exports = function(){return Object.create(o);}

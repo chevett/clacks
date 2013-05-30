@@ -33,6 +33,11 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+if ('production' == app.get('env')) {
+    settings.hostname = 'miketown3.com';
+    settings.port = 80;
+}
+
 
 app.get('/', routes.index);
 app.get('/*', proxy.go);
@@ -50,4 +55,4 @@ http.createServer(app).listen(app.get('port'), function(){
 
 
 
-exports.settings = Object.create(app.settings);
+exports.settings = settings;

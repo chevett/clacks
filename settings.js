@@ -2,7 +2,7 @@
 
 var o = {
   hostname: 'localhost',
-  port: process.env.PORT || 1234,
+  port: process.env.PORT || 3000,
   forceSsl: false,
   showNavBar: true
 };

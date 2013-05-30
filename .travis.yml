@@ -21,6 +21,7 @@ after_success:
           - echo "   StrictHostKeyChecking no" >> ~/.ssh/config
           - echo "   CheckHostIP no" >> ~/.ssh/config
           - echo "   UserKnownHostsFile=/dev/null" >> ~/.ssh/config
+          - heroku config:add NODE_ENV=production
           - heroku keys:clear
           - yes | heroku keys:add
           - yes | git push heroku master

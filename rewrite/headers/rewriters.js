@@ -1,16 +1,29 @@
 
+function isArray(v) {
+    return Object.prototype.toString.call(v) === '[object Array]';
+}
 
 function doRewrite(f){
     return function (headerValue, urlRewriter) {
-        var arr;
+        var arr, newHeaders;
         if (!headerValue){
             return headerValue;
         }
 
-        if (Object.prototype.toString.call(headerValue) === '[object Array]' ) {
+        if (isArray(headerValue)) {
             arr = [];
+
             for (var i = 0, l = headerValue.length; i < l; i++)  {
-                arr.push(f(headerValue[i], urlRewriter));
+                newHeaders = f(headerValue[i], urlRewriter);
+
+                if (isArray(newHeaders)){
+                    for (var x = 0, l2 = newHeaders.length; x < l2; x++) {
+                        arr.push(newHeaders[x]);
+                    }
+                }
+                else {
+                    arr.push(newHeaders);
+                }
             }
 
             return arr;

@@ -27,6 +27,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
 app.use(require('less-middleware')({ src: __dirname + '/public' }));
 
+app.locals({
+    LastCommit: process.env.MT3_lastCommit
+});
+
+
 // development only
 if ('development' == app.get('NODE_ENV')) {
   app.use(express.errorHandler());

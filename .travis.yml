@@ -21,6 +21,7 @@ after_success:
           - echo "   UserKnownHostsFile=/dev/null" >> ~/.ssh/config
           - heroku config:add MT3_port=80
           - heroku config:add MT3_hostname=www.miketown3.com
+          - heroku config:add MT3_lastCommit=`git rev-parse HEAD`
           - heroku keys:clear
           - yes | heroku keys:add
           - yes | git push heroku master

@@ -2,7 +2,7 @@
 var cheerio = require('cheerio'),
     cssRewriter = require('./css'),
     jsRewriter = require('./js'),
-    settings = require('../settings')()
+    settings = require('../../settings')()
     ;
 
 

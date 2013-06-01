@@ -1,10 +1,10 @@
 
 
-var html = require('./html'),
-    css = require('./css'),
-    js = require('./js'),
-    json = require('./json'),
-    headers = require('./headers/rewriters')
+var html = require('./response/html'),
+    css = require('./response/css'),
+    js = require('./response/js'),
+    json = require('./response/json'),
+    headers = require('./response/headers/rewriters')
     ;
 
 exports.headers = headers;

@@ -19,7 +19,7 @@
 
           <input id="txt" class="search-query" type="text" placeholder="http://www.google.com" />
           <button id="btn" type="button" class="btn btn-inverse">GO!</button>
-
+          <div id="commit-data-container"></div>
       </div>
       <div>
           <a href='http://github.com/chevett/miketown3/commit/{{LastCommit}}'>{{LastCommit}}</a>
@@ -70,8 +70,16 @@
   <script src="/cdnjs.cloudflare.com/ajax/libs/jquery/2.0.1/jquery.min.js" type="text/javascript"></script>
   <script  src='/cdnjs.cloudflare.com/ajax/libs/lettering.js/0.6.1/jquery.lettering.min.js' type="text/javascript"></script>
   <script src="/scripts/textillate.js" type="text/javascript"></script>
+  <script src="/cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0-rc.4/handlebars.min.js" type="text/javascript"></script>
+  <script src="/templates.js" type="text/javascript"></script>
 
   <script type="text/javascript">
+
+      function mt3_renderCommitData(response){
+          $("#commit-data-container").append(Handlebars.templates.lastCommit(response));
+      }
+
+
       $(function(){
           var $txt = $("#txt"), $btn = $("#btn");
           $("#search-container h1").textillate({ in: { effect: 'tada' } });
@@ -87,5 +95,7 @@
           });
       });
   </script>
+
+  <script src="https://api.github.com/repos/chevett/miketown3/git/commits/{{LastCommit}}?callback=mt3_renderCommitData" type="text/javascript"></script>
   </body>
 </html>

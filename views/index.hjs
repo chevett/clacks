@@ -21,9 +21,7 @@
           <button id="btn" type="button" class="btn btn-inverse">GO!</button>
           <div id="commit-data-container"></div>
       </div>
-      <div>
-          <a href='http://github.com/chevett/miketown3/commit/{{LastCommit}}'>{{LastCommit}}</a>
-      </div>
+
 
      <!-- <div id="alert" class="alert alert-info">
         Want to open blocked pages faster?  <strong><a href='#'>Then click here to get 'miketown3: The button!'</a></strong>
@@ -70,8 +68,8 @@
   <script src="/cdnjs.cloudflare.com/ajax/libs/jquery/2.0.1/jquery.min.js" type="text/javascript"></script>
   <script  src='/cdnjs.cloudflare.com/ajax/libs/lettering.js/0.6.1/jquery.lettering.min.js' type="text/javascript"></script>
   <script src="/scripts/textillate.js" type="text/javascript"></script>
-  <script src="/cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0-rc.4/handlebars.min.js" type="text/javascript"></script>
-  <script src="/templates.js" type="text/javascript"></script>
+  <script src="/scripts/handlebars.js" type="text/javascript"></script>
+  <script src="/scripts/templates.js" type="text/javascript"></script>
 
   <script type="text/javascript">
 

@@ -7,6 +7,7 @@ var express = require('express')
   , routes = require('./routes')
   , proxy = require('./proxy')
   , http = require('http')
+  , fs = require('fs')
   , path = require('path')
   , settings = require('./settings')()
 ;
@@ -25,7 +26,14 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(require('less-middleware')({ src: __dirname + '/public' }));
-app.use('/templates.js', require('connect-handlebars')( __dirname + '/public/templates', { ext: ['handlebars'] }))
+app.use('/scripts/templates.js', require('connect-handlebars')( __dirname + '/public/templates', { ext: ['handlebars'] }));
+app.use('/scripts/handlebars.js', function (req, res){
+    fs.readFile('node_modules/connect-handlebars/node_modules/handlebars/dist/handlebars.runtime.min.js', function(err, data) {
+        res.set('Content-Type', 'text/html');
+        res.send(200, data);
+    });
+});
+
 app.use(app.router);
 
 app.locals({

@@ -1,9 +1,18 @@
-var lookup = {},
-    fs = require('fs')
+var lookup = (function(){
+        var fs = require('fs'), o = {};
+
+        fs.readdirSync(__dirname).forEach(function(file) {
+            if (file!='index.js') {
+                o[file.replace(/\.js$/i, '')] = _doRewrite(require("./" + file ));
+            }
+        });
+
+        return o;
+    })
 ;
 
 
-function isArray(v) {
+function _isArray(v) {
     return Object.prototype.toString.call(v) === '[object Array]';
 }
 
@@ -19,13 +28,13 @@ function _doRewrite(f){
             return headerValue;
         }
 
-        if (isArray(headerValue)) {
+        if (_isArray(headerValue)) {
             arr = [];
 
             for (var i = 0, l = headerValue.length; i < l; i++)  {
                 newHeaders = f(headerValue[i], urlRewriter);
 
-                if (isArray(newHeaders)){
+                if (_isArray(newHeaders)){
                     for (var x = 0, l2 = newHeaders.length; x < l2; x++) {
                        _push(arr, newHeaders[x]);
                     }
@@ -42,21 +51,12 @@ function _doRewrite(f){
     }
 }
 
-
-
-fs.readdirSync(__dirname).forEach(function(file) {
-    if (file!='index.js') {
-        lookup[file.replace(/\.js$/i, '')] = _doRewrite(require("./" + file ));
-    }
-});
-
-
 module.exports = function (oldHeaders, urlRewriter) {
     var headerNames = Object.getOwnPropertyNames(oldHeaders),
         newHeaders = {}
     ;
 
-   headerNames.forEach(function(headerName) {
+   headerNames.forEach(function (headerName) {
         if (lookup[headerName]){
             newHeaders[headerName] = lookup[headerName](oldHeaders[headerName], urlRewriter);
         }

@@ -14,6 +14,10 @@ var express = require('express')
 
 var app = express();
 
+app.locals({
+    LastCommit: process.env.MT3_lastCommit || '2dd0af47bc8586681b48733ec8f27413d0489e6a'
+});
+
 // all environments
 app.set('port', process.env.PORT || settings.port);
 app.set('views', __dirname + '/views');
@@ -26,27 +30,11 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(require('less-middleware')({ src: __dirname + '/public' }));
-app.use('/scripts/templates.js', require('connect-handlebars')( __dirname + '/public/templates', { ext: ['handlebars'] }));
-app.use('/scripts/handlebars.js', function (req, res){
-    fs.readFile('node_modules/connect-handlebars/node_modules/handlebars/dist/handlebars.runtime.min.js', function(err, data) {
-        res.set('Content-Type', 'text/html');
-        res.send(200, data);
-    });
-});
-
 app.use(app.router);
 
-app.locals({
-    LastCommit: process.env.MT3_lastCommit || '2dd0af47bc8586681b48733ec8f27413d0489e6a'
-});
-
-
-// development only
-if ('development' == app.get('NODE_ENV')) {
-  app.use(express.errorHandler());
-}
-
-app.get('/', routes.index);
+app.get('/', routes.home);
+app.get('/scripts/handlebars.js', routes.handlebars);
+app.get('/scripts/templates.js', routes.templates);
 app.get('/*', proxy.go);
 
 

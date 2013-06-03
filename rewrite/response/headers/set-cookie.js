@@ -20,6 +20,22 @@ function _getPathFromCookie(cookieHeader){
 }
 
 
+function _replaceOrAppend(str, regex, replaceCb, strAppend) {
+    var temp = str;
+
+    str = str.replace(regex, replaceCb);
+
+    if (temp==str){
+        if (!str.match(/;\s*$/i)){
+            str += ';';
+        }
+
+        str += strAppend;
+    }
+
+    return str;
+}
+
 
 module.exports = function(headerValue, urlRewriter) {
 
@@ -37,32 +53,19 @@ module.exports = function(headerValue, urlRewriter) {
         return null;
     }
 
-    newHeaderValue = headerValue.replace(REGEX_DOMAIN, function(a, b, c, d){
-        return b + newDomain + d;
-    });
+    newHeaderValue = _replaceOrAppend(
+        headerValue,
+        REGEX_DOMAIN,
+        function(a, b, c, d) { return b + newDomain + d},
+        'Domain='+newDomain+';'
+    );
 
-    if (newHeaderValue==headerValue){
-        if (newHeaderValue.match(/;\s*$/i)) {
-            newHeaderValue += ';';
-        }
-
-        newHeaderValue += 'Domain='+newDomain+';';
-    }
-
-    headerValue = newHeaderValue;
-
-    newHeaderValue = newHeaderValue.replace(REGEX_PATH, function(a, b, c, d){
-        return b + newPath +d;
-    });
-
-    if (newHeaderValue==headerValue){
-        if (newHeaderValue.match(/;\s*$/i)) {
-            newHeaderValue += ';';
-        }
-
-        newHeaderValue += 'Path='+newPath+';';
-    }
-
+    newHeaderValue = _replaceOrAppend(
+        newHeaderValue,
+        REGEX_PATH,
+        function(a, b, c, d) { return b + newPath + d},
+        'Path='+newPath+';'
+    );
 
     return newHeaderValue;
 }

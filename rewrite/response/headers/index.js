@@ -33,6 +33,8 @@ function doRewrite(f){
     }
 }
 
-
-exports['location'] = doRewrite(require('./location'));
-exports['set-cookie'] = doRewrite(require('./set-cookie'));
+require("fs").readdirSync(__dirname).forEach(function(file) {
+    if (file!='index.js') {
+        exports[file.replace(/\.js$/i, '')] = doRewrite(require("./" + file ));
+    }
+});

@@ -2,7 +2,7 @@ var http = require('http')
     , url = require('url')
     , $ = require("jquery")
     , settings = require("./settings")()
-    , rewriters = require("./rewrite/rewriters")
+    , rewriters = require("./rewrite/")
     ;
 
 

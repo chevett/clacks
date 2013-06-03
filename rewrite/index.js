@@ -4,7 +4,7 @@ var html = require('./response/html'),
     css = require('./response/css'),
     js = require('./response/js'),
     json = require('./response/json'),
-    headers = require('./response/headers/rewriters')
+    headers = require('./response/headers/')
     ;
 
 exports.headers = headers;

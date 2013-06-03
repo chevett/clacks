@@ -8,9 +8,19 @@ var lookup = (function(){
         });
 
         return o;
-    })
+    })()
 ;
 
+function _extend(from){
+    var props = Object.getOwnPropertyNames(from);
+    var dest = {};
+
+    props.forEach(function(name) {
+        dest[name] = from[name];
+    });
+
+    return dest;
+}
 
 function _isArray(v) {
     return Object.prototype.toString.call(v) === '[object Array]';
@@ -52,22 +62,17 @@ function _doRewrite(f){
 }
 
 module.exports = function (oldHeaders, urlRewriter) {
-    var headerNames = Object.getOwnPropertyNames(oldHeaders),
-        newHeaders = {}
+    var headerNames = Object.getOwnPropertyNames(lookup),
+        newHeaders = _extend(oldHeaders)
     ;
 
    headerNames.forEach(function (headerName) {
-        if (lookup[headerName]){
-            newHeaders[headerName] = lookup[headerName](oldHeaders[headerName], urlRewriter);
-        }
-        else {
-            newHeaders[headerName] = oldHeaders[headerName];
+        var temp = lookup[headerName](oldHeaders[headerName], urlRewriter);
+
+        if (temp!==null && temp!==undefined) {
+            newHeaders[headerName] = temp;
         }
     });
-
-    delete newHeaders['content-length'];
-    delete newHeaders['transfer-encoding'];
-    newHeaders['transfer-encoding'] = 'chunked';
 
     return newHeaders;
 }

@@ -1,3 +1,3 @@
 module.exports = function(headerValue, urlRewriter) {
-      return urlRewriter(headerValue);
+      return headerValue ? urlRewriter(headerValue) : null;
 }

@@ -41,7 +41,7 @@ function _getDestinationRequestParameters(request){
 
 function _getRewriter(proxyResponse){
     var contentType = (proxyResponse.headers["content-type"] || "").match(/^([\w\-/]+?)(;|$)+/i);
-    return contentType && contentType.length>1 ? rewriters[contentType[1]] : null;
+    return contentType && contentType.length>1 ? rewriters.response[contentType[1]] : null;
 }
 
 function _isRelative(url){
@@ -67,7 +67,7 @@ function _createProxiedUrl(originalUrl, referrer, forceSsl){
 
 function _getContentEncoding(repsonse){
     var matches = (repsonse.headers["content-type"] || '').match(/charset=(.+)/i),
-        encoding =   matches && matches.length>1 ? matches[1] : 'utf-8';
+        encoding =   matches && matches.length>1 ? (matches[1] || '').toLowerCase() : 'utf-8';
 
     switch (encoding){
         case 'iso-8859-1':
@@ -90,7 +90,7 @@ exports.go = function(request, response) {
             }
         ;
 
-        response.writeHead(proxy_response.statusCode, rewriters.headers(proxy_response.headers, urlRewriter));
+        response.writeHead(proxy_response.statusCode, rewriters.response.headers(proxy_response.headers, urlRewriter));
 
         if (rewriter){
             encoding = _getContentEncoding(proxy_response);

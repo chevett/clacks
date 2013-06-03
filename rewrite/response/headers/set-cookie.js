@@ -38,6 +38,8 @@ function _replaceOrAppend(str, regex, replaceCb, strAppend) {
 
 
 module.exports = function(headerValue, urlRewriter) {
+    if (!headerValue)
+        return null;
 
     var domain = _getDomainFromCookie(headerValue) || _getDomain(urlRewriter),
         path = _getPathFromCookie(headerValue) || '/',

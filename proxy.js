@@ -39,24 +39,6 @@ function _getDestinationRequestParameters(request){
     return opt;
 }
 
-function _writeResponseHeaders(response, proxyResponse, urlRewriter){
-    var headers = _extend(proxyResponse.headers);
-
-    for (var header in headers) {
-        if (rewriters.headers[header]){
-            headers[header] = rewriters.headers[header](headers[header], urlRewriter);
-        }
-    }
-
-
-    // todo: maybe handle these with individual header rewriters?
-    delete headers['content-length'];
-    delete headers['transfer-encoding'];
-    headers['transfer-encoding'] = 'chunked';
-
-    response.writeHead(proxyResponse.statusCode, headers);
-}
-
 function _getRewriter(proxyResponse){
     var contentType = (proxyResponse.headers["content-type"] || "").match(/^([\w\-/]+?)(;|$)+/i);
     return contentType && contentType.length>1 ? rewriters[contentType[1]] : null;
@@ -74,9 +56,6 @@ function _createProxiedUrl(originalUrl, referrer, forceSsl){
     if (_isRelative(originalUrl)){
         originalUrl = url.resolve(referrer, originalUrl);
     }
-
-
-
 
     o = Object.create(settings);
     //o.pathname = originalUrl.replace(/http:\/\/|https:\/\//, '');
@@ -96,9 +75,7 @@ function _getContentEncoding(repsonse){
 
         default:
             return encoding;
-
     }
-
 }
 
 exports.go = function(request, response) {
@@ -113,7 +90,7 @@ exports.go = function(request, response) {
             }
         ;
 
-        _writeResponseHeaders(response, proxy_response, urlRewriter);
+        response.writeHead(proxy_response.statusCode, rewriters.headers(proxy_response.headers, urlRewriter));
 
         if (rewriter){
             encoding = _getContentEncoding(proxy_response);

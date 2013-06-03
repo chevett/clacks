@@ -1,14 +1,18 @@
+var lookup = {},
+    fs = require('fs')
+;
+
 
 function isArray(v) {
     return Object.prototype.toString.call(v) === '[object Array]';
 }
 
-function push(arr, v){
+function _push(arr, v){
     if (v!==null && v!==undefined)
         arr.push(v);
 }
 
-function doRewrite(f){
+function _doRewrite(f){
     return function (headerValue, urlRewriter) {
         var arr, newHeaders;
         if (!headerValue){
@@ -23,11 +27,11 @@ function doRewrite(f){
 
                 if (isArray(newHeaders)){
                     for (var x = 0, l2 = newHeaders.length; x < l2; x++) {
-                       push(arr, newHeaders[x]);
+                       _push(arr, newHeaders[x]);
                     }
                 }
                 else {
-                    push(arr, newHeaders);
+                    _push(arr, newHeaders);
                 }
             }
 
@@ -38,8 +42,34 @@ function doRewrite(f){
     }
 }
 
-require("fs").readdirSync(__dirname).forEach(function(file) {
+
+
+fs.readdirSync(__dirname).forEach(function(file) {
     if (file!='index.js') {
-        exports[file.replace(/\.js$/i, '')] = doRewrite(require("./" + file ));
+        lookup[file.replace(/\.js$/i, '')] = _doRewrite(require("./" + file ));
     }
 });
+
+
+module.exports = function (oldHeaders, urlRewriter) {
+    var headerNames = Object.getOwnPropertyNames(oldHeaders),
+        newHeaders = {}
+    ;
+
+   headerNames.forEach(function(headerName) {
+        if (lookup[headerName]){
+            newHeaders[headerName] = lookup[headerName](oldHeaders[headerName], urlRewriter);
+        }
+        else {
+            newHeaders[headerName] = oldHeaders[headerName];
+        }
+    });
+
+    delete newHeaders['content-length'];
+    delete newHeaders['transfer-encoding'];
+    newHeaders['transfer-encoding'] = 'chunked';
+
+    return newHeaders;
+}
+
+

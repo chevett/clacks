@@ -1,10 +1,20 @@
 var http = require('http')
     , url = require('url')
-    , $ = require("jquery")
     , settings = require("./settings")()
     , rewriters = require("./rewrite/")
     ;
 
+
+function _extend(from){
+    var props = Object.getOwnPropertyNames(from);
+    var dest = {};
+
+    props.forEach(function(name) {
+        dest[name] = from[name];
+    });
+
+    return dest;
+}
 
 function _getDestinationUrl(request){
     var dest = request.url.substr(1);   // kill the slash
@@ -22,7 +32,7 @@ function _getDestinationRequestParameters(request){
 
     opt = url.parse(dest);
     opt.method = request.method;
-    opt.headers = $.extend({}, request.headers);
+    opt.headers = _extend(request.headers);
     delete opt.headers.host;
     delete opt.headers['accept-encoding'];  // TODO: handle gzip
 
@@ -30,7 +40,7 @@ function _getDestinationRequestParameters(request){
 }
 
 function _writeResponseHeaders(response, proxyResponse, urlRewriter){
-    var headers = $.extend({}, proxyResponse.headers);
+    var headers = _extend(proxyResponse.headers);
 
     for (var header in headers) {
         if (rewriters.headers[header]){

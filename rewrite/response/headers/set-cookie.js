@@ -19,35 +19,50 @@ function _getPathFromCookie(cookieHeader){
     return path && path.length>2 ? path[2] : null;
 }
 
+
+
 module.exports = function(headerValue, urlRewriter) {
 
-    var domain = _getDomainFromCookie(headerValue),
-        path = _getPathFromCookie(headerValue),
-        isFullDomain,
+    var domain = _getDomainFromCookie(headerValue) || _getDomain(urlRewriter),
+        path = _getPathFromCookie(headerValue) || '/',
+        isFullDomain = !domain.match(/^\./),
+        newDomain = settings.hostname,
+        newPath = url.resolve('http://'+domain, path).replace(/^http:\/\//i,''),
         newHeaderValue
     ;
 
-    if (domain) {
-        isFullDomain = !domain.match(/^\./);
-    }
-    else {
-        isFullDomain = true;
-        domain = _getDomain(urlRewriter);
-    }
-
     if (!isFullDomain){
-        // just punting for now.  will need to create another cookie other something
+        // just punting for now.  will need to create another cookie or something
 
-        return headerValue;
+        return null;
     }
 
     newHeaderValue = headerValue.replace(REGEX_DOMAIN, function(a, b, c, d){
-        return b + settings.hostname + d;
+        return b + newDomain + d;
     });
 
+    if (newHeaderValue==headerValue){
+        if (newHeaderValue.match(/;\s*$/i)) {
+            newHeaderValue += ';';
+        }
+
+        newHeaderValue += 'Domain='+newDomain+';';
+    }
+
+    headerValue = newHeaderValue;
+
     newHeaderValue = newHeaderValue.replace(REGEX_PATH, function(a, b, c, d){
-        return b + url.resolve('http://'+domain, path).replace(/^http:\/\//i,'') +d;
+        return b + newPath +d;
     });
+
+    if (newHeaderValue==headerValue){
+        if (newHeaderValue.match(/;\s*$/i)) {
+            newHeaderValue += ';';
+        }
+
+        newHeaderValue += 'Path='+newPath+';';
+    }
+
 
     return newHeaderValue;
 }

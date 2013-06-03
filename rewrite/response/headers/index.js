@@ -3,6 +3,11 @@ function isArray(v) {
     return Object.prototype.toString.call(v) === '[object Array]';
 }
 
+function push(arr, v){
+    if (v!==null && v!==undefined)
+        arr.push(v);
+}
+
 function doRewrite(f){
     return function (headerValue, urlRewriter) {
         var arr, newHeaders;
@@ -18,11 +23,11 @@ function doRewrite(f){
 
                 if (isArray(newHeaders)){
                     for (var x = 0, l2 = newHeaders.length; x < l2; x++) {
-                        arr.push(newHeaders[x]);
+                       push(arr, newHeaders[x]);
                     }
                 }
                 else {
-                    arr.push(newHeaders);
+                    push(arr, newHeaders);
                 }
             }
 

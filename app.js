@@ -10,11 +10,7 @@ var express = require('express')
 var app = express();
 
 
-
 // settings
-app.locals({
-    LastCommit: process.env.MT3_lastCommit || '2dd0af47bc8586681b48733ec8f27413d0489e6a'
-});
 app.set('port', process.env.PORT || settings.port);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'hjs');

@@ -18,20 +18,17 @@ function _shouldSubmit(domain, cookieCookie){
 }
 
 module.exports = function(headerValue, urlRewriter) {
-
-
     var cookies = {},
         newCookies = {},
         domain = _getDomain(urlRewriter),
         cookieNames,
         newHeaderValue = '';
 
-
-   headerValue.replace(/((.*?)=)*?((.*?)=(.*?))(;|$)/gi, function (a,b,c,d,e,f,g){
-
+    headerValue.replace(/((.*?)=)*?((.*?)=(.*?))(;|$)/gi, function (a,b,c,d,e,f,g){
+    
        cookies[(c || e).trim()] = f;
        return a;
-   });
+    });
 
 
     cookieNames = Object.getOwnPropertyNames(cookies);
@@ -39,25 +36,14 @@ module.exports = function(headerValue, urlRewriter) {
     cookieNames.forEach(function (cookieName) {
         var cookieCookie = cookies[cookieCookiePrefix+cookieName];
 
-        if (!_shouldSubmit(domain, cookieCookie) || cookieName.match(new RegExp('^'+cookieCookiePrefix, 'i'))) {
-            return;
-        }
-
-        newCookies[cookieName] = cookies[cookieName];
+        if (_shouldSubmit(domain, cookieCookie) && !(new RegExp('^'+cookieCookiePrefix, 'i').test(cookieName))) {
+            if (newHeaderValue!=='' && !/;\s*&/i.test(newHeaderValue)) {
+                newHeaderValue += '; ';
+            }
+        
+            newHeaderValue += cookieName + '=' + newCookies[cookieName];
+        }        
     });
-
-
-    cookieNames = Object.getOwnPropertyNames(newCookies);
-
-    cookieNames.forEach(function (cookieName) {
-
-        if (newHeaderValue!=='' && !/;\s*&/i.test(newHeaderValue)) {
-            newHeaderValue += '; ';
-        }
-
-        newHeaderValue += cookieName + '=' + newCookies[cookieName];
-    });
-
 
     return newHeaderValue;
 }

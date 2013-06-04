@@ -41,7 +41,7 @@ module.exports = function(headerValue, urlRewriter) {
                 newHeaderValue += '; ';
             }
         
-            newHeaderValue += cookieName + '=' + newCookies[cookieName];
+            newHeaderValue += cookieName + '=' + cookies[cookieName];
         }        
     });
 

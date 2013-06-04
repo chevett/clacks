@@ -2,7 +2,6 @@ var url = require('url'),
     settings = require("../../../settings")(),
     REGEX_DOMAIN = /(Domain\s*=\s*)(.*?)(\s*?(;|$))/i,
     REGEX_PATH = /(Path\s*=\s*)(.*?)(\s*?(;|$))/i,
-    REGEX_NAME = /(.*?)\s*?=/i,
     cookieCookiePrefix = settings.cookieCookiePrefix;
 
 
@@ -58,7 +57,7 @@ function _convertSingleCookieValue(headerValue, urlRewriter){
         cookieCookie
         ;
 
-    if (headerValue.match(/^mt3__/i)){
+    if (headerValue.match(new RegExp('^'+cookieCookiePrefix, 'i'))) {
         return headerValue;  // not sure why this is needed
     }
 
@@ -123,7 +122,6 @@ module.exports = function(headerValue, urlRewriter) {
 
     if (!_isArray(headerValue))
         return _convertSingleCookieValue(headerValue, urlRewriter);
-
 
 
     for (var i= 0, l = headerValue.length; i<l; i++){

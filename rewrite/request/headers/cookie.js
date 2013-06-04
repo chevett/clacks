@@ -39,9 +39,10 @@ module.exports = function(headerValue, urlRewriter) {
     cookieNames.forEach(function (cookieName) {
         var cookieCookie = cookies[cookieCookiePrefix+cookieName];
 
-        if (!_shouldSubmit(domain, cookieCookie) || cookieName.match(/^mt3__/i)) {
+        if (!_shouldSubmit(domain, cookieCookie) || cookieName.match(new RegExp('^'+cookieCookiePrefix, 'i'))) {
             return;
         }
+
         newCookies[cookieName] = cookies[cookieName];
     });
 

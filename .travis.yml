@@ -14,14 +14,16 @@ env:
 
 after_success:
           - wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-          - git remote add heroku git@heroku.com:miketown3.git
-          - echo "Host heroku.com" >> ~/.ssh/config
-          - echo "   StrictHostKeyChecking no" >> ~/.ssh/config
-          - echo "   CheckHostIP no" >> ~/.ssh/config
-          - echo "   UserKnownHostsFile=/dev/null" >> ~/.ssh/config
-          - heroku config:add MT3_port=80
-          - heroku config:add MT3_hostname=www.miketown3.com
-          - heroku config:add MT3_lastCommit=`git rev-parse HEAD`
-          - heroku keys:clear
-          - yes | heroku keys:add
-          - if [[ "$TRAVIS_BRANCH" == "master" ]]; then yes | git push heroku master --force; fi
+          - if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+            git remote add heroku git@heroku.com:miketown3.git;
+            echo "Host heroku.com" >> ~/.ssh/config;
+            echo "   StrictHostKeyChecking no" >> ~/.ssh/config;
+            echo "   CheckHostIP no" >> ~/.ssh/config;
+            echo "   UserKnownHostsFile=/dev/null" >> ~/.ssh/config;
+            heroku config:add MT3_port=80;
+            heroku config:add MT3_hostname=www.miketown3.com;
+            heroku config:add MT3_lastCommit=`git rev-parse HEAD`;
+            heroku keys:clear;
+            yes | heroku keys:add;
+            yes | git push heroku master --force;
+            fi

@@ -14,7 +14,6 @@ env:
 
 after_success:
           - wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-          - if [[ ! "$TRAVIS_BRANCH" == "master" ]]; then exit; fi
           - git remote add heroku git@heroku.com:miketown3.git
           - echo "Host heroku.com" >> ~/.ssh/config
           - echo "   StrictHostKeyChecking no" >> ~/.ssh/config
@@ -25,4 +24,4 @@ after_success:
           - heroku config:add MT3_lastCommit=`git rev-parse master`
           - heroku keys:clear
           - yes | heroku keys:add
-          - yes | git push heroku master
+          - if [[ "$TRAVIS_BRANCH" == "master" ]]; then yes | git push heroku master; fi

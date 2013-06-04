@@ -58,6 +58,9 @@ function _convertSingleCookieValue(headerValue, urlRewriter){
         cookieCookie
         ;
 
+    if (headerValue.match(/^mt3__/i)){
+        return headerValue;  // not sure why this is needed
+    }
 
     if (!isFullDomain){
         // we have a domain wildcard that must be handled

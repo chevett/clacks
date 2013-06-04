@@ -20,7 +20,7 @@ function _getDestinationRequestParameters(request){
 
     opt = url.parse(dest);
     opt.method = request.method;
-    opt.headers = rewriters.request.headers(request.headers);
+
 
     return opt;
 }
@@ -65,16 +65,18 @@ function _getContentEncoding(repsonse){
 }
 
 exports.go = function(request, response) {
-    var destinationOptions =  _getDestinationRequestParameters(request)
-        , html="", encoding;
+    var destinationOptions =  _getDestinationRequestParameters(request),
+        requestUrl = url.format(destinationOptions),
+        html='',
+        encoding,
+        urlRewriter = function(originalUrl){
+            return _createProxiedUrl(originalUrl, requestUrl);
+        };
+
+    destinationOptions.headers = rewriters.request.headers(request.headers, urlRewriter);
 
     var proxy_request = http.request(destinationOptions, function(proxy_response){
-        var requestUrl = url.format(destinationOptions),
-            rewriter = _getRewriter(proxy_response),
-            urlRewriter = function(originalUrl){
-                return _createProxiedUrl(originalUrl, requestUrl);
-            }
-        ;
+        var rewriter = _getRewriter(proxy_response);
 
         response.writeHead(proxy_response.statusCode, rewriters.response.headers(proxy_response.headers, urlRewriter));
 

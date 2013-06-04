@@ -1,7 +1,10 @@
 var url = require('url'),
     settings = require("../../../settings")(),
     REGEX_DOMAIN = /(Domain\s*=\s*)(.*?)(\s*?(;|$))/i,
-    REGEX_PATH = /(Path\s*=\s*)(.*?)(\s*?(;|$))/i;
+    REGEX_PATH = /(Path\s*=\s*)(.*?)(\s*?(;|$))/i,
+    REGEX_NAME = /(.*?)\s*?=/i,
+    cookieCookiePrefix = settings.cookieCookiePrefix;
+
 
 
 function _getDomain(urlRewriter) {
@@ -9,23 +12,23 @@ function _getDomain(urlRewriter) {
 }
 
 
-function _getDomainFromCookie(cookieHeader) {
-    var domain = cookieHeader.match(REGEX_DOMAIN);
-    return domain && domain.length>2 ? domain[2] : null;
+function _getFromCookie(cookieHeader, regex, index) {
+    var o = cookieHeader.match(regex);
+    if (typeof index === 'undefined')  {
+        index = 2;
+    }
+
+    return o && o.length>index ? o[index] : null;
 }
 
-function _getPathFromCookie(cookieHeader){
-    var path = cookieHeader.match(REGEX_PATH);
-    return path && path.length>2 ? path[2] : null;
-}
 
 
 function _replaceOrAppend(str, regex, replaceCb, strAppend) {
-    var temp = str;
 
-    str = str.replace(regex, replaceCb);
-
-    if (temp==str){
+    if (str.match(regex)){
+        str = str.replace(regex, replaceCb);
+    }
+    else {
         if (!str.match(/;\s*$/i)){
             str += ';';
         }
@@ -41,18 +44,48 @@ module.exports = function(headerValue, urlRewriter) {
     if (!headerValue)
         return null;
 
-    var domain = _getDomainFromCookie(headerValue) || _getDomain(urlRewriter),
-        path = _getPathFromCookie(headerValue) || '/',
+    var domain = _getFromCookie(headerValue, REGEX_DOMAIN) || _getDomain(urlRewriter),
+        path = _getFromCookie(headerValue, REGEX_PATH) || '/',
         isFullDomain = !domain.match(/^\./),
         newDomain = settings.hostname,
         newPath = url.resolve('http://'+domain, path).replace(/^http:\/\//i,''),
-        newHeaderValue
+        newHeaderValue,
+        cookieCookie
     ;
 
     if (!isFullDomain){
-        // just punting for now.  will need to create another cookie or something
+        // we have a domain wildcard that must be handled
 
-        return null;
+        newPath = '/';
+
+        cookieCookie = (function(){
+            var name = cookieCookiePrefix + _getFromCookie(headerValue, /(.*?)\s*?=/i, 1),
+                newCookie,
+                data = {
+                    d: domain,
+                    p: path
+                };
+
+            newCookie =   name + '=' + encodeURIComponent(JSON.stringify(data)) + '; Path=/';
+            return newCookie;
+        })();
+
+        // remove domain
+        newHeaderValue  = _replaceOrAppend(
+            headerValue,
+            REGEX_DOMAIN,
+            function() { return ''},
+            ''
+        );
+
+        newHeaderValue = _replaceOrAppend(
+            newHeaderValue,
+            REGEX_PATH,
+            function(a, b, c, d) { return b + '/' + d},
+            'Path=/;'
+        );
+
+        return [newHeaderValue, cookieCookie];
     }
 
     newHeaderValue = _replaceOrAppend(

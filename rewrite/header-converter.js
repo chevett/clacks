@@ -13,42 +13,9 @@ function _extend(from){
     return dest;
 }
 
-function _isArray(v) {
-    return Object.prototype.toString.call(v) === '[object Array]';
-}
-
-function _push(arr, v){
-    if (v!==null && v!==undefined)
-        arr.push(v);
-}
-
 function _doRewrite(f){
     return function (headerValue, urlRewriter) {
-        var arr, newHeaders;
-        if (!headerValue){
-            return headerValue;
-        }
-
-        if (_isArray(headerValue)) {
-            arr = [];
-
-            for (var i = 0, l = headerValue.length; i < l; i++)  {
-                newHeaders = f(headerValue[i], urlRewriter);
-
-                if (_isArray(newHeaders)){
-                    for (var x = 0, l2 = newHeaders.length; x < l2; x++) {
-                        _push(arr, newHeaders[x]);
-                    }
-                }
-                else {
-                    _push(arr, newHeaders);
-                }
-            }
-
-            return arr;
-        }
-
-        return f(headerValue, urlRewriter);
+        return headerValue ? f(headerValue, urlRewriter) : headerValue;
     }
 }
 

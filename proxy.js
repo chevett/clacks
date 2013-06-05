@@ -116,16 +116,18 @@ exports.go = function(request, response) {
         response.end();
     });
 
-    proxy_request.addListener('response', function (proxy_response) {
 
+    if (request.mt3 && request.mt3.body){
 
-    });
+        proxy_request.write(request.mt3.body);
 
-    request.addListener('data', function(chunk) {
+    }
+
+    request.on('data', function(chunk) {
         proxy_request.write(chunk, 'binary');
     });
 
-    request.addListener('end', function() {
+    request.on('end', function() {
         proxy_request.end();
     });
 

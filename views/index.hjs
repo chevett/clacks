@@ -17,7 +17,7 @@
           <h1>miketown3</h1>
           <p>The champion of internet freedom.</p>
 
-          <input id="txt" class="search-query" type="text" placeholder="http://www.google.com" />
+          <input id="txt" class="search-query" type="text" placeholder="http://www.google.com" value="www.html-kit.com/tools/cookietester/" />
           <button id="btn" type="button" class="btn btn-inverse">GO!</button>
           <div id="commit-data-container"></div>
       </div>

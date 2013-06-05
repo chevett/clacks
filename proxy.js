@@ -116,12 +116,8 @@ exports.go = function(request, response) {
         response.end();
     });
 
+    request.pipe(proxy_request);
 
-    if (request.mt3 && request.mt3.body){
-
-        proxy_request.write(request.mt3.body);
-
-    }
 
     request.on('data', function(chunk) {
         proxy_request.write(chunk, 'binary');

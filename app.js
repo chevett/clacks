@@ -25,7 +25,7 @@ app.use(require('less-middleware')({ src: __dirname + '/public' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use(function(req, res, next){
+/*app.use(function(req, res, next){
     // just hack in some middleware to grab the request body.  i think proxy.js should be middleware itself.
 
     var buf = '';
@@ -51,7 +51,7 @@ app.use(function(req, res, next){
     // this feels wrong
     next();
 
-});
+});*/
 
 app.use(app.router);
 app.use(function(err, req, res, next){

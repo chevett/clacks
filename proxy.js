@@ -2,25 +2,15 @@ var http = require('http')
     , url = require('url')
     , settings = require("./settings")()
     , rewriters = require("./rewrite/")
+    , urlHelper = require('./url-helper')
     ;
 
-function _getDestinationUrl(request){
-    var dest = request.url.substr(1);   // kill the slash
-
-    if (!dest.match(/^(http:|https:)?\/\//i)) {
-        dest = "http://" + dest;
-    }
-
-    return dest;
-}
-
-
 function _getDestinationRequestParameters(request){
-    var dest = _getDestinationUrl(request), opt;
+    var dest = urlHelper.getTargetUrl(request),
+        opt = url.parse(dest)
+    ;
 
-    opt = url.parse(dest);
     opt.method = request.method;
-
 
     return opt;
 }
@@ -30,26 +20,7 @@ function _getRewriter(proxyResponse){
     return contentType && contentType.length>1 ? rewriters.response[contentType[1]] : null;
 }
 
-function _isRelative(url){
-    return !url.match(/^(http:|https:)?\/\//i);
-}
 
-function _createProxiedUrl(originalUrl, referrer, forceSsl){
-    var o, s;
-
-    originalUrl = typeof originalUrl === 'string' ? originalUrl : url.format(originalUrl);
-
-    if (_isRelative(originalUrl)){
-        originalUrl = url.resolve(referrer, originalUrl);
-    }
-
-    o = Object.create(settings);
-    //o.pathname = originalUrl.replace(/http:\/\/|https:\/\//, '');
-    o.protocol = forceSsl || settings.forceSsl || originalUrl.match(/https:\/\//) ? "https" : "http";
-
-    s = url.format(o) +'/'+ originalUrl.replace(/^(http:|https:)?\/\//i, '');
-    return s;
-}
 
 function _getContentEncoding(repsonse){
     var matches = (repsonse.headers["content-type"] || '').match(/charset=(.+)/i),
@@ -66,65 +37,60 @@ function _getContentEncoding(repsonse){
 
 exports.go = function(request, response) {
     var destinationOptions =  _getDestinationRequestParameters(request),
-        requestUrl = url.format(destinationOptions),
         html='',
         encoding,
-        urlRewriter = function(originalUrl){
-            return _createProxiedUrl(originalUrl, requestUrl);
-        };
+        urlRewriter = urlHelper.createProxyUrlRewriter(request);
 
     destinationOptions.headers = rewriters.request.headers(request.headers, urlRewriter);
 
-    var proxy_request = http.request(destinationOptions, function(proxy_response){
-        var rewriter = _getRewriter(proxy_response);
+    var proxyRequest = http.request(destinationOptions, function(proxyResponse){
+        var rewriter = _getRewriter(proxyResponse);
 
-        response.writeHead(proxy_response.statusCode, rewriters.response.headers(proxy_response.headers, urlRewriter));
+        response.writeHead(proxyResponse.statusCode, rewriters.response.headers(proxyResponse.headers, urlRewriter));
 
         if (rewriter){
-            encoding = _getContentEncoding(proxy_response);
+            encoding = _getContentEncoding(proxyResponse);
 
-            proxy_response.addListener('data', function(chunk) {
+            proxyResponse.on('data', function(chunk) {
 
                 html += new Buffer(Array.prototype.slice.call(chunk, 0), encoding).toString(encoding);
             });
 
-            proxy_response.addListener('end', function() {
+            proxyResponse.on('end', function() {
                 response.write(rewriter(html, urlRewriter), encoding);
                 response.end();
             });
 
         } else {
 
-            proxy_response.addListener('data', function(chunk) {
+            proxyResponse.on('data', function(chunk) {
                 response.write(chunk, 'binary');
             });
 
-            proxy_response.addListener('end', function() {
+            proxyResponse.on('end', function() {
                 response.end();
             });
         }
 
-        proxy_response.addListener('error', function(e) {
+        proxyResponse.on('error', function(e) {
             console.log('problem with request: ' + e.message);
         });
     });
 
-
-    proxy_request.on('error', function (err) {
+    proxyRequest.on('error', function (err) {
         console.log(err);
         response.writeHead(500);
         response.end();
     });
 
-    request.pipe(proxy_request);
-
+    request.pipe(proxyRequest);
 
     request.on('data', function(chunk) {
-        proxy_request.write(chunk, 'binary');
+        proxyRequest.write(chunk, 'binary');
     });
 
     request.on('end', function() {
-        proxy_request.end();
+        proxyRequest.end();
     });
 
 }

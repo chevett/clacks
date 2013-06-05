@@ -21,6 +21,9 @@ function _shouldSendCookie(domain, cookieName, allCookies){
 
     objFromCookie = JSON.parse(decodeURIComponent(cookieCookie));
 
+
+    // todo: need to handle path.  don't feel like it now.
+
     return domain.match(new RegExp(objFromCookie.d + '$'));
 }
 

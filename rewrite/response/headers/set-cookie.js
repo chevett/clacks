@@ -52,7 +52,10 @@ function _convertSingleCookieValue(headerValue, urlRewriter){
         path = _getFromCookie(headerValue, REGEX_PATH) || '/',
         isFullDomain = !domain.match(/^\./),
         newDomain = settings.hostname,
-        newPath = url.resolve('http://'+domain, path).replace(/^http:\/\//i,''),
+        newPath = url.resolve('http://'+domain, path)
+            .replace(/^http:\/\//i,'/')
+            .replace(/\/$/, '')
+        ,
         newHeaderValue,
         cookieCookie
         ;

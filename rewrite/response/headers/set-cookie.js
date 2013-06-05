@@ -51,7 +51,7 @@ function _convertSingleCookieValue(headerValue, urlRewriter){
     var domain = _getFromCookie(headerValue, REGEX_DOMAIN) || _getDomain(urlRewriter),
         path = _getFromCookie(headerValue, REGEX_PATH) || '/',
         isFullDomain = !domain.match(/^\./),
-        newDomain = settings.hostname,
+        newDomain = settings.hostname == 'localhost' ? '' : settings.hostname,
         newPath = url.resolve('http://'+domain, path)
             .replace(/^http:\/\//i,'/')
             .replace(/\/$/, '')

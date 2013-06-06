@@ -12,10 +12,10 @@ function _isSecure(url){
 
 function _isRequestSecure(req){
     if (settings.isProduction){
-        req.isSecure = req.headers['x-forwarded-proto'] == 'https';
+        return req.headers['x-forwarded-proto'] == 'https';
     }
     else {
-        req.isSecure = req.secure;
+        return req.secure;
     }
 }
 

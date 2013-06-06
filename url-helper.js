@@ -6,32 +6,53 @@ function _isRelative(url){
     return !/^(http:|https:)?\/\//i.test(url);
 }
 
-function _getDestinationUrl(request){
-    var dest = request.url.substr(1);   // kill the slash
+function _isSecure(url){
+    return /^https:\/\//.test(url);
+}
 
-    if (!dest.match(/^(http:|https:)?\/\//i)) {
-        dest = "http://" + dest;
-    }
+function _getTargetUrl(request){
+    var myUrl = request.url.substr(1),
+        o,
+        isSecure = request.connection.encrypted;
 
-    return dest;
+    myUrl = (isSecure ? 'https://' :  'http://') + myUrl;
+
+    o = url.parse(myUrl)
+    o.port = isSecure ? settings.sslPort : settings.port;
+
+    return url.format(o);
 }
 
 exports.createProxyUrlRewriter = function(request){
-
-    // we always return absolute urls, so use the request to resolve any relative urls.
-    var referrer =  _getDestinationUrl(request);
+    var requestTargetUrl = _getTargetUrl(request);
 
     return function (originalUrl){
         var o = Object.create(settings);
 
+        // we always return absolute urls, so use the current request to resolve any relative urls.
         if (_isRelative(originalUrl)){
-            originalUrl = url.resolve(referrer, originalUrl);
-        }
+            originalUrl = url.resolve(requestTargetUrl, originalUrl);
 
-        o.protocol = settings.forceSsl || /https:\/\//.test(originalUrl) ? "https" : "http";
+            if (request.connection.encrypted){
+                o.protocol = 'https:';
+                o.port = settings.sslPort;
+            }
+            else {
+                o.protocol = 'http:';
+                o.port = settings.port;
+            }
+        }
+        else if (_isSecure(originalUrl)){
+           o.protocol = 'https:';
+           o.port = settings.sslPort;
+        }
+        else {
+            o.protocol = 'http:';
+            o.port = settings.port;
+        }
 
         return url.format(o) +'/'+ originalUrl.replace(/^(http:|https:)?\/\//i, '');
     };
 }
 
-exports.getTargetUrl = _getDestinationUrl;
+exports.getTargetUrl = _getTargetUrl;

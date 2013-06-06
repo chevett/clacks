@@ -47,6 +47,26 @@ function _replaceOrAppend(str, regex, replaceCb, strAppend) {
     return str;
 }
 
+function _setDomainAndPath(headerValue, domain, path){
+    var newHeaderValue = headerValue;
+
+    newHeaderValue = _replaceOrAppend(
+        newHeaderValue,
+        REGEX_DOMAIN,
+        '$2'  + domain + '$4',
+        'Domain='+domain+';'
+    );
+
+    newHeaderValue = _replaceOrAppend(
+        newHeaderValue,
+        REGEX_PATH,
+        '$2'  + path + '$4',
+        'Path='+path+';'
+    );
+
+    return newHeaderValue;
+}
+
 function _convertSingleCookieValue(headerValue, urlRewriter){
     var domain = _getFromCookie(headerValue, REGEX_DOMAIN) || _getDomain(urlRewriter),
         path = _getFromCookie(headerValue, REGEX_PATH) || '/',
@@ -56,7 +76,6 @@ function _convertSingleCookieValue(headerValue, urlRewriter){
             .replace(/^http:\/\//i,'/')
             .replace(/\/$/, '')
         ,
-        newHeaderValue,
         cookieCookie
         ;
 
@@ -68,6 +87,7 @@ function _convertSingleCookieValue(headerValue, urlRewriter){
         // we have a domain wildcard that must be handled
 
         newPath = '/';
+        newDomain = '';
 
         cookieCookie = (function(){
             var name = cookieCookiePrefix + _getFromCookie(headerValue, /(.*?)\s*?=/i, 1),
@@ -81,39 +101,12 @@ function _convertSingleCookieValue(headerValue, urlRewriter){
             return newCookie;
         })();
 
-        // remove domain
-        newHeaderValue  = _replaceOrAppend(
-            headerValue,
-            REGEX_DOMAIN,
-            function() { return ''},
-            ''
-        );
-
-        newHeaderValue = _replaceOrAppend(
-            newHeaderValue,
-            REGEX_PATH,
-            function(a, b, c, d) { return b + '/' + d},
-            'Path=/;'
-        );
-
-        return [newHeaderValue, cookieCookie];
+        return [_setDomainAndPath(headerValue, '', '/'), cookieCookie];
     }
 
-    newHeaderValue = _replaceOrAppend(
-        headerValue,
-        REGEX_DOMAIN,
-        function(a, b, c, d) { return b + newDomain + d},
-        'Domain='+newDomain+';'
-    );
 
-    newHeaderValue = _replaceOrAppend(
-        newHeaderValue,
-        REGEX_PATH,
-        function(a, b, c, d) { return b + newPath + d},
-        'Path='+newPath+';'
-    );
 
-    return newHeaderValue;
+    return _setDomainAndPath(headerValue, newDomain, newPath);
 }
 
 

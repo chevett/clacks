@@ -1,17 +1,23 @@
 
-var express = require('express')
-  , routes = require('./routes')
-  , proxy = require('./proxy')
-  , http = require('http')
-  , path = require('path')
-  , settings = require('./settings')()
+var express = require('express'),
+  routes = require('./routes'),
+  proxy = require('./proxy'),
+  http = require('http'),
+  https = require('https'),
+  fs = require('fs'),
+  path = require('path'),
+  settings = require('./settings')(),
+  sslOptions /*= {
+      key: fs.readFileSync('local.pem'),
+      cert: fs.readFileSync('local-cert.pem')
+  }*/
 ;
 
 var app = express();
 
 
 // settings
-app.set('port', process.env.PORT || settings.port);
+app.set('port', settings.port);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'hjs');
 
@@ -37,6 +43,14 @@ app.post('/*', proxy.go);
 
 
 // start
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+http.createServer(app).listen(settings.port, function(){
+    console.log('Express server listening on port ' + settings.port);
 });
+
+/*if (sslOptions.key && sslOptions.cert){
+    https.createServer(sslOptions, app).listen(settings.sslPort, function(){
+        console.log('Express server listening on port ' + settings.sslPort);
+    });
+}*/
+
+

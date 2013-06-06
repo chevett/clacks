@@ -17,7 +17,7 @@ var app = express();
 
 
 // settings
-app.set('port', settings.port);
+app.set('port', process.env.PORT || settings.port);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'hjs');
 
@@ -43,8 +43,8 @@ app.post('/*', proxy.go);
 
 
 // start
-http.createServer(app).listen(settings.port, function(){
-    console.log('Express server listening on port ' + settings.port);
+http.createServer(app).listen(app.get('port'), function(){
+    console.log('Express server listening on port ' + app.get('port'));
 });
 
 /*if (sslOptions.key && sslOptions.cert){

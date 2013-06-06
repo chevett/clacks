@@ -7,10 +7,7 @@ var express = require('express'),
   fs = require('fs'),
   path = require('path'),
   settings = require('./settings')(),
-  sslOptions /*= {
-      key: fs.readFileSync('local.pem'),
-      cert: fs.readFileSync('local-cert.pem')
-  }*/
+  sslOptions
 ;
 
 var app = express();
@@ -43,14 +40,28 @@ app.post('/*', proxy.go);
 
 
 // start
-http.createServer(app).listen(app.get('port'), function(){
-    console.log('Express server listening on port ' + app.get('port'));
-});
 
-/*if (sslOptions.key && sslOptions.cert){
+if (settings.isProduction) {
+    app.listen(process.env.PORT);
+}
+else {
+
+    http.createServer(app).listen(app.get('port'), function(){
+        console.log('Express server listening on port ' + app.get('port'));
+    });
+
+    sslOptions = {
+        key: fs.readFileSync('local.pem'),
+        cert: fs.readFileSync('local-cert.pem')
+    };
+
     https.createServer(sslOptions, app).listen(settings.sslPort, function(){
         console.log('Express server listening on port ' + settings.sslPort);
     });
-}*/
+}
+
+
+
+
 
 

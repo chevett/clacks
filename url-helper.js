@@ -10,10 +10,20 @@ function _isSecure(url){
     return /^https:\/\//.test(url);
 }
 
+function _isRequestSecure(req){
+    if (settings.isProduction){
+        req.isSecure = req.headers['x-forwarded-proto'] == 'https';
+    }
+    else {
+        req.isSecure = req.secure;
+    }
+}
+
+
 function _getTargetUrl(request){
     var myUrl = request.url.substr(1),
-        o,
-        isSecure = request.connection.encrypted;
+        isSecure = _isRequestSecure(request),
+        o;
 
     myUrl = (isSecure ? 'https://' :  'http://') + myUrl;
 
@@ -33,7 +43,7 @@ exports.createProxyUrlRewriter = function(request){
         if (_isRelative(originalUrl)){
             originalUrl = url.resolve(requestTargetUrl, originalUrl);
 
-            if (request.connection.encrypted){
+            if (request.isSecure){
                 o.protocol = 'https:';
                 o.port = settings.sslPort;
             }

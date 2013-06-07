@@ -4,20 +4,26 @@ var http = require('http')
     , settings = require("./settings")()
     , rewriters = require("./rewrite/")
     , urlHelper = require('./url-helper')
+    , navbarBuilder = require('./navbar')
     ;
 
 function _buildRequester(request){
     var options = url.parse(urlHelper.getTargetUrl(request)), 
         urlRewriter = urlHelper.createProxyUrlRewriter(request),
+        requestHeaders = {
+            original: request.headers,
+            rewritten: rewriters.request.headers(request.headers, urlRewriter)
+        },
         f = function(cb){
             var f = /^https/i.test(options.protocol) ? https.request : http.request;
             return f(options, function(proxyResponse){
 
                 var headers = {
-                    sourceToMt3: request.headers,
-                    mt3ToTarget: rewriters.request.headers(request.headers, urlRewriter),
-                    targetToMt3: proxyResponse.headers,
-                    mt3ToSource: rewriters.response.headers(proxyResponse.headers, urlRewriter)
+                    request: requestHeaders,
+                    response: {
+                        original: proxyResponse.headers,
+                        rewritten: rewriters.response.headers(proxyResponse.headers, urlRewriter)
+                    }
                 };
 
                 cb(proxyResponse, headers, urlRewriter);
@@ -26,14 +32,14 @@ function _buildRequester(request){
     ;
     
     options.method = request.method;
-    f.options = options;
+    options.headers = requestHeaders.rewritten;
 
     return f;
 }
 
-function _getRewriter(proxyResponse){
-    var contentType = (proxyResponse.headers["content-type"] || "").match(/^([\w\-/]+?)(;|$)+/i);
-    return contentType && contentType.length>1 ? rewriters.response[contentType[1]] : null;
+function _getContentType(proxyResponse){
+    var contentType = (proxyResponse.headers['content-type'] || '').match();
+    return contentType && contentType.length>1 ? contentType[1] : null;
 }
 
 function _getContentEncoding(repsonse){
@@ -53,12 +59,13 @@ exports.go = function(request, response) {
     var requester =  _buildRequester(request);
     
     var proxyRequest = requester(function(proxyResponse, headers, urlRewriter){
-        var rewriter = _getRewriter(proxyResponse),
+        var contentType = _getContentType(proxyResponse),
+            rewriter = rewriters.response[contentType],
             body='',
             encoding
         ;
 
-        response.writeHead(proxyResponse.statusCode, headers.mt3ToSource);
+        response.writeHead(proxyResponse.statusCode, headers.response.rewritten);
 
         if (rewriter){
             encoding = _getContentEncoding(proxyResponse);
@@ -69,7 +76,14 @@ exports.go = function(request, response) {
             });
 
             proxyResponse.on('end', function() {
-                response.write(rewriter(body, urlRewriter), encoding);
+
+                body = rewriter(body, urlRewriter);
+
+                if (contentType==='text/html'){
+                    body = navbarBuilder(body, {headers:headers});
+                }
+
+                response.write(body, encoding);
                 response.end();
             });
 

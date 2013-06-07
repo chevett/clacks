@@ -1,15 +1,7 @@
-
 var cheerio = require('cheerio'),
     cssRewriter = require('./css'),
-    jsRewriter = require('./js'),
-    settings = require('../../settings')(),
-    handleBars = require('../../node_modules/connect-handlebars/node_modules/handlebars/lib/handlebars'),
-    fs = require('fs'),
-    navBarTemplate = handleBars.compile(fs.readFileSync('public/templates/navbar.handlebars', {encoding:'utf-8'}))
+    jsRewriter = require('./js')
     ;
-
-
-
 
 module.exports = function(html, urlRewriter) {
 
@@ -42,18 +34,6 @@ module.exports = function(html, urlRewriter) {
 
         $this.attr('style', newContent);
     });
-
-    if (settings.showNavBar) {
-        $('body').prepend(navBarTemplate({}));
-    }
-
-//    $("head").prepend("<script type='text/javascript'>\
-//        XMLHttpRequest.prototype.reallySend = XMLHttpRequest.prototype.send;\
-//        XMLHttpRequest.prototype.send = function(body) { \
-//        alert('shit');     \
-//        this.reallySend(body);\
-//    };</script>")
-
 
     return $.html();
 }

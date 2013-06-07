@@ -35,7 +35,11 @@
         wrapper = document.getElementById('mt3-navbar'),
         tab = document.getElementById('mt3-btn-nav-tab'),
         openBtn = document.getElementById('mt3-nav-tab-open'),
-        closeBtn = document.getElementById('mt3-navbar-close');
+        closeBtn = document.getElementById('mt3-navbar-close'),
+        showDebugButton = document.getElementById('mt3-show-debug'),
+        hidebugButton = document.getElementById('mt3-hide-debug'),
+        debugPanel = document.getElementById('mt3-debug-info')
+        ;
 
     mt3.on(form, 'submit', function (evt) {
         evt.preventDefault();
@@ -51,5 +55,19 @@
     mt3.on(closeBtn, 'click', function (evt) {
         wrapper.style.display = "none";
         tab.style.display = "block";
+    });
+
+    mt3.on(showDebugButton, 'click', function (evt) {
+
+        if (debugPanel.style.display=="block"){
+            debugPanel.style.display = "none";
+        }
+        else {
+        debugPanel.style.display = "block";
+        }
+    });
+
+    mt3.on(hidebugButton, 'click', function (evt) {
+        debugPanel.style.display = "none";
     });
 }());

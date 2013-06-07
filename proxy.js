@@ -38,7 +38,7 @@ function _buildRequester(request){
 }
 
 function _getContentType(proxyResponse){
-    var contentType = (proxyResponse.headers['content-type'] || '').match();
+    var contentType = (proxyResponse.headers['content-type'] || '').match(/^([\w\-/]+?)(;|$)+/i);
     return contentType && contentType.length>1 ? contentType[1] : null;
 }
 

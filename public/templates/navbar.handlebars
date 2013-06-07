@@ -1,16 +1,54 @@
 <div>
     <link href="/stylesheets/navbar.css" rel="stylesheet" type="text/css"></link>
+
+    <div id="mt3-debug-info">
+        <a id="mt3-hide-debug">close</a>
+        <div class="headers-container">
+
+            <ul>
+                {{#each headers.request.original}}
+                <li><strong>{{key}}</strong>: '{{value}}'</li>
+                {{/each}}
+            </ul>
+        </div>
+        <div class="headers-container">
+            <ul>
+                {{#each headers.request.rewritten}}
+                <li><strong>{{key}}</strong>: '{{value}}'</li>
+                {{/each}}
+            </ul>
+        </div>
+        <div class="headers-container">
+            <ul>
+                {{#each headers.response.original}}
+                <li><strong>{{key}}</strong>: '{{value}}'</li>
+                {{/each}}
+            </ul>
+        </div>
+        <div class="headers-container">
+            <ul>
+                {{#each headers.response.rewritten}}
+                <li><strong>{{key}}</strong>: '{{value}}'</li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+
     <div id="mt3-navbar">
         <div class="mt3-navbar-inner">
             <button type="button" id="mt3-navbar-close" >&larr;</button>
             <form id="mt3-navbar-form">
                 <input type="text" class="mt3-input" id="mt3-btn-nav-value" placeholder="http://www.google.com"></input>
                 <button type="submit" class="mt3-btn">Go</button>
+                <button id="mt3-show-debug" type="button" class="mt3-btn">Debug</button>
+
             </form>
         </div>
     </div>
+
     <div id="mt3-btn-nav-tab">
-        <button type="button" id="mt3-nav-tab-open" style="">&rarr;</button>
+        <button type="button" id="mt3-nav-tab-open">&rarr;</button>
     </div>
-    <script src="/scripts/helpers.js"></script>
+
+    <script src="/scripts/navbar.js"></script>
 </div>

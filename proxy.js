@@ -54,7 +54,7 @@ exports.go = function(request, response) {
     
     var proxyRequest = requester(function(proxyResponse, headers, urlRewriter){
         var rewriter = _getRewriter(proxyResponse),
-            html='',
+            body='',
             encoding
         ;
 
@@ -65,11 +65,11 @@ exports.go = function(request, response) {
 
             proxyResponse.on('data', function(chunk) {
 
-                html += new Buffer(Array.prototype.slice.call(chunk, 0), encoding).toString(encoding);
+                body += new Buffer(Array.prototype.slice.call(chunk, 0), encoding).toString(encoding);
             });
 
             proxyResponse.on('end', function() {
-                response.write(rewriter(html, urlRewriter), encoding);
+                response.write(rewriter(body, urlRewriter), encoding);
                 response.end();
             });
 

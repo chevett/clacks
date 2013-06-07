@@ -12,13 +12,20 @@ function _buildRequester(request){
         f = function(cb){
             var f = /^https/i.test(options.protocol) ? https.request : http.request;
             return f(options, function(proxyResponse){
-                cb(proxyResponse, urlRewriter);
+
+                var headers = {
+                    sourceToMt3: request.headers,
+                    mt3ToTarget: rewriters.request.headers(request.headers, urlRewriter),
+                    targetToMt3: proxyResponse.headers,
+                    mt3ToSource: rewriters.response.headers(proxyResponse.headers, urlRewriter)
+                };
+
+                cb(proxyResponse, headers, urlRewriter);
             });
         }
     ;
     
     options.method = request.method;
-    options.headers = rewriters.request.headers(request.headers, urlRewriter);
     f.options = options;
 
     return f;
@@ -45,13 +52,13 @@ function _getContentEncoding(repsonse){
 exports.go = function(request, response) {
     var requester =  _buildRequester(request);
     
-    var proxyRequest = requester(function(proxyResponse, urlRewriter){
+    var proxyRequest = requester(function(proxyResponse, headers, urlRewriter){
         var rewriter = _getRewriter(proxyResponse),
             html='',
-            encoding;
+            encoding
         ;
 
-        response.writeHead(proxyResponse.statusCode, rewriters.response.headers(proxyResponse.headers, urlRewriter));
+        response.writeHead(proxyResponse.statusCode, headers.mt3ToSource);
 
         if (rewriter){
             encoding = _getContentEncoding(proxyResponse);

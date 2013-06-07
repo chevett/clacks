@@ -51,8 +51,8 @@ else {
     });
 
     sslOptions = {
-        key: fs.readFileSync('local.pem'),
-        cert: fs.readFileSync('local-cert.pem')
+        key: fs.readFileSync('local_ssl/local.pem'),
+        cert: fs.readFileSync('local_ssl/local-cert.pem')
     };
 
     https.createServer(sslOptions, app).listen(settings.sslPort, function(){

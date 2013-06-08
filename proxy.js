@@ -4,7 +4,7 @@ var http = require('http')
     , settings = require("./settings")()
     , rewriters = require("./rewrite/")
     , urlHelper = require('./url-helper')
-    , navbarBuilder = require('./navbar')
+    , navbarBuilder = require('./navbar-injector')
     ;
 
 function _buildRequester(request){

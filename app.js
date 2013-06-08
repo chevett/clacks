@@ -40,16 +40,11 @@ app.post('/*', proxy.go);
 
 
 // start
+http.createServer(app).listen(app.get('port'), function(){
+    console.log('Express server listening on port ' + app.get('port'));
+});
 
-if (settings.isProduction) {
-    app.listen(process.env.PORT);
-}
-else {
-
-    http.createServer(app).listen(app.get('port'), function(){
-        console.log('Express server listening on port ' + app.get('port'));
-    });
-
+if (!settings.isProduction) {
     sslOptions = {
         key: fs.readFileSync('local_ssl/local.pem'),
         cert: fs.readFileSync('local_ssl/local-cert.pem')

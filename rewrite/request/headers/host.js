@@ -1,3 +1,8 @@
 module.exports = function(headerValue, urlRewriter) {
-    return null;     // not really sure if this header needs to be removed
+    var o = urlRewriter('/').match(/^(\w*:\/\/)?.+?\/(.+?)(\/|$)/i); // get the target hostname, ex www.wwwwwwwwwwwwwwwww.com
+    if (o && o.length > 2){
+        return o[2];
+    }
+
+    return null;
 }

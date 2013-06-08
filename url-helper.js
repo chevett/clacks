@@ -7,13 +7,10 @@ function _isRelative(url){
 }
 
 function _isSecure(url){
-    return false;
     return /^https:\/\//.test(url);
 }
 
 function _isRequestSecure(req){
-
-      return false;
     return settings.isProduction? req.headers['x-forwarded-proto'] == 'https' : req.secure;
 }
 

@@ -57,13 +57,13 @@ function _convertHeadersToDiff(originalHeaders, newHeaders){
     // todo: figure out how traverse these in the order they are submitted
 
     for (var p in originalHeaders){
-        a = '<strong>' + p + '</strong>: ' + originalHeaders[p];
+        a = '<strong>' + p + ': </strong>' + originalHeaders[p];
 
         if (!newHeaders.hasOwnProperty(p)){
             line = _wrapWithDel(a);
         }
         else {
-            line = '<strong>' + p + '</strong>: ' + _writeDiff(originalHeaders[p], newHeaders[p]);
+            line = '<strong>' + p + ': </strong>' + _writeDiff(originalHeaders[p], newHeaders[p]);
         }
 
         result += line + '<br>';
@@ -71,7 +71,7 @@ function _convertHeadersToDiff(originalHeaders, newHeaders){
 
     for (var p in newHeaders){
         if (!originalHeaders[p]){
-            line = '<strong>' + p + '</strong>: ' + newHeaders[p] + '<br>';
+            line = '<strong>' + p + ': </strong>' + newHeaders[p] + '<br>';
             line = _wrapWithIns(line);
             result += line + '<br>';
         }

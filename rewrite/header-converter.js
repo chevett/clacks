@@ -15,8 +15,8 @@ function _extend(from){
 
 
 
-function _buildConverter(dir) {
-    var lookup = {};
+function _buildConverter(dir, lookup) {
+    lookup = lookup || {};
 
     fs.readdirSync(dir).forEach(function(file) {
         if (file!='index.js') {

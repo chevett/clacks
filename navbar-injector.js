@@ -7,22 +7,23 @@ var cheerio = require('cheerio'),
 ;
 
 
-function _objectToArray(o){
-    var arr = [];
-    for (var prop in o){
-        if (o.hasOwnProperty(prop)){
-            arr.push({
-                'key' : prop,
-                'value' : o[prop]
-            });
-        }
-    }
 
-    return arr;
+function _isArray(v) {
+    return Object.prototype.toString.call(v) === '[object Array]';
 }
 
 function _writeDiff(a, b){
-    var result ='', diffResult = diff.diffLines(a, b);;
+    var result ='', diffResult;
+
+    try {
+        diffResult = diff.diffWords(a, b);
+    }
+    catch (e) {
+        console.log('a=' + a);
+        console.log('b=' + b);
+
+    }
+
     for (var i=0; i < diffResult.length; i++) {
 
         if (diffResult[i].added && diffResult[i + 1] && diffResult[i + 1].removed) {
@@ -43,6 +44,20 @@ function _writeDiff(a, b){
     return result;
 }
 
+function _writeHeaderLine(headerName, oldValue, newValue){
+    var line;
+
+    if (!newValue){
+        line = '<strong>' + headerName + ': </strong>' + oldValue;
+        line = _wrapWithDel(line);
+    }
+    else {
+        line = '<strong>' + headerName + ': </strong>' + _writeDiff(oldValue, newValue);
+    }
+
+    return line + '<br>';
+}
+
 function _wrapWithDel(line){
     return '<del>'+line+'</del>';
 }
@@ -52,21 +67,28 @@ function _wrapWithIns(line){
 }
 
 function _convertHeadersToDiff(originalHeaders, newHeaders){
-    var a='',b='', result='', line;
+    var oldValue,newValue, result='', line;
 
     // todo: figure out how traverse these in the order they are submitted
 
     for (var p in originalHeaders){
-        a = '<strong>' + p + ': </strong>' + originalHeaders[p];
+        oldValue =  originalHeaders[p];
+        newValue =   newHeaders[p];
 
-        if (!newHeaders.hasOwnProperty(p)){
-            line = _wrapWithDel(a);
+        if (_isArray(oldValue) && _isArray(newValue)){
+
+             // todo: should really try to perform the best match before diffing the elements
+             for (var i= 0, l=Math.max(oldValue.length, newValue.length); i<l; i++){
+                 result += _writeHeaderLine(p, oldValue[i], newValue[i]);
+             }
+
+        }
+        else if (_isArray(oldValue) || _isArray(newValue)){
+            result += '<strong>' + p + ': </strong> error printing value';
         }
         else {
-            line = '<strong>' + p + ': </strong>' + _writeDiff(originalHeaders[p], newHeaders[p]);
+            result += _writeHeaderLine(p, oldValue, newValue);
         }
-
-        result += line + '<br>';
     }
 
     for (var p in newHeaders){

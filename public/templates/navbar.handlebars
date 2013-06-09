@@ -4,33 +4,12 @@
     <div id="mt3-debug-info">
         <a id="mt3-hide-debug">close</a>
         <div class="headers-container">
-
-            <ul>
-                {{#each headers.request.original}}
-                <li><strong>{{key}}</strong>: '{{value}}'</li>
-                {{/each}}
-            </ul>
+            <h1>Request Headers</h1>
+            <div>{{{requestHeadersHtml}}}</div>
         </div>
         <div class="headers-container">
-            <ul>
-                {{#each headers.request.rewritten}}
-                <li><strong>{{key}}</strong>: '{{value}}'</li>
-                {{/each}}
-            </ul>
-        </div>
-        <div class="headers-container">
-            <ul>
-                {{#each headers.response.original}}
-                <li><strong>{{key}}</strong>: '{{value}}'</li>
-                {{/each}}
-            </ul>
-        </div>
-        <div class="headers-container">
-            <ul>
-                {{#each headers.response.rewritten}}
-                <li><strong>{{key}}</strong>: '{{value}}'</li>
-                {{/each}}
-            </ul>
+            <h1>Response Headers</h1>
+            <div>{{{responseHeadersHtml}}}</div>
         </div>
     </div>
 

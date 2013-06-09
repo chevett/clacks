@@ -185,24 +185,29 @@
   padding:4px;
   aaborder: 3px solid black;
   color:greenyellow;
-
+  margin-top: 50px;
+  strong{
+    color:ghostwhite;
+  }
 
   h1{
-    color:deepskyblue;
-    background-color: midnightblue;
+    color:black;
+    background-color: white;
+    .opacity(.8);
+    padding:4px;
+    font-size: 16px;
+    font-weight: bold;
   }
   ul{
     list-style: none;
-    li strong{
-      color:ghostwhite;
-    }
+
   }
 
   #mt3-hide-debug{
     position: absolute;
     right:15px;
     top:10px;
-    color:white;
+    color:black;
     z-index: 99999;
     cursor: pointer;
     text-decoration: underline;
@@ -217,5 +222,16 @@
     padding:8px;
     background-color: black;
     .opacity(.8);
+    > div{
+      padding-top: 5px;
+      padding-left: 10px;
+    }
+
+    del{
+      color:red;
+    }
+    ins{
+      color:#008000;
+    }
   }
 }

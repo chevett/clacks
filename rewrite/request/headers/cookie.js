@@ -28,6 +28,11 @@ function _shouldSendCookie(domain, cookieName, allCookies){
 }
 
 module.exports = function(headerValue, urlRewriter) {
+
+    if (!headerValue){
+        return headerValue;
+    }
+
     var cookies = {},
         domain = _getDomain(urlRewriter),
         newHeaderValue = '';

@@ -13,18 +13,14 @@ function _extend(from){
     return dest;
 }
 
-function _doRewrite(f){
-    return function (headerValue, urlRewriter) {
-        return headerValue ? f(headerValue, urlRewriter) : headerValue;
-    }
-}
+
 
 function _buildConverter(dir) {
     var lookup = {};
 
     fs.readdirSync(dir).forEach(function(file) {
         if (file!='index.js') {
-            lookup[file.replace(/\.js$/i, '')] = _doRewrite(require(dir + '/' + file ));
+            lookup[file.replace(/\.js$/i, '')] = require(dir + '/' + file );
         }
     });
 

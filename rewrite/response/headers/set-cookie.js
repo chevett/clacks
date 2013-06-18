@@ -4,21 +4,9 @@ var url = require('url'),
     REGEX_PATH = /(Path\s*=\s*)(.*?)(\s*?(;|$))/i,
     cookieCookiePrefix = settings.cookieCookiePrefix;
 
-
-function _isArray(v) {
-    return Object.prototype.toString.call(v) === '[object Array]';
-}
-
-function _push(arr, v){
-    if (v!==null && v!==undefined)
-        arr.push(v);
-}
-
-
 function _getDomain(urlRewriter) {
     return url.parse(urlRewriter('/')).pathname.replace(/\//g, '');
 }
-
 
 function _getFromCookie(cookieHeader, regex, index) {
     var o = cookieHeader.match(regex);
@@ -28,8 +16,6 @@ function _getFromCookie(cookieHeader, regex, index) {
 
     return o && o.length>index ? o[index] : null;
 }
-
-
 
 function _replaceOrAppend(str, regex, replaceCb, strAppend) {
 
@@ -67,7 +53,10 @@ function _setDomainAndPath(headerValue, domain, path){
     return newHeaderValue;
 }
 
-function _convertSingleCookieValue(headerValue, urlRewriter){
+module.exports = function(headerValue, urlRewriter, additionalHeaders) {
+    if (!headerValue)
+        return null;
+
     var domain = _getFromCookie(headerValue, REGEX_DOMAIN) || _getDomain(urlRewriter),
         path = _getFromCookie(headerValue, REGEX_PATH) || '/',
         isFullDomain = !domain.match(/^\./),
@@ -101,38 +90,9 @@ function _convertSingleCookieValue(headerValue, urlRewriter){
             return newCookie;
         })();
 
-        return [_setDomainAndPath(headerValue, '', '/'), cookieCookie];
+        additionalHeaders.push({name: 'set-cookie', value: cookieCookie, state:'added'});
+        return _setDomainAndPath(headerValue, '', '/');
     }
-
-
 
     return _setDomainAndPath(headerValue, newDomain, newPath);
-}
-
-
-module.exports = function(headerValue, urlRewriter) {
-    var arr = [], newHeaders;
-
-    if (!headerValue)
-        return null;
-
-    if (!_isArray(headerValue))
-        return _convertSingleCookieValue(headerValue, urlRewriter);
-
-
-    for (var i= 0, l = headerValue.length; i<l; i++){
-        newHeaders = _convertSingleCookieValue(headerValue[i], urlRewriter);
-
-        if (_isArray(newHeaders)){
-            for (var x = 0, l2 = newHeaders.length; x < l2; x++) {
-                _push(arr, newHeaders[x]);
-            }
-        }
-        else {
-            _push(arr, newHeaders);
-        }
-
-    }
-
-    return arr;
 }

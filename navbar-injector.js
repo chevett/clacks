@@ -8,21 +8,8 @@ var cheerio = require('cheerio'),
 
 
 
-function _isArray(v) {
-    return Object.prototype.toString.call(v) === '[object Array]';
-}
-
 function _writeDiff(a, b){
-    var result ='', diffResult;
-
-    try {
-        diffResult = diff.diffWords(a, b);
-    }
-    catch (e) {
-        console.log('a=' + a);
-        console.log('b=' + b);
-
-    }
+    var result ='', diffResult = diff.diffWords(a, b);
 
     for (var i=0; i < diffResult.length; i++) {
 
@@ -33,29 +20,15 @@ function _writeDiff(a, b){
         }
 
         if (diffResult[i].removed) {
-            result += '<del>'+diffResult[i].value+'</del>'
+            result += _wrapWithDel(diffResult[i].value);
         } else if (diffResult[i].added) {
-            result += '<ins>'+diffResult[i].value+'</ins>'
+            result += _wrapWithIns(diffResult[i].value);
         } else {
             result += diffResult[i].value;
         }
     }
 
     return result;
-}
-
-function _writeHeaderLine(headerName, oldValue, newValue){
-    var line;
-
-    if (!newValue){
-        line = '<strong>' + headerName + ': </strong>' + oldValue;
-        line = _wrapWithDel(line);
-    }
-    else {
-        line = '<strong>' + headerName + ': </strong>' + _writeDiff(oldValue, newValue);
-    }
-
-    return line + '<br>';
 }
 
 function _wrapWithDel(line){
@@ -66,40 +39,24 @@ function _wrapWithIns(line){
     return '<ins>'+line+'</ins>';
 }
 
-function _convertHeadersToDiff(originalHeaders, newHeaders){
-    var oldValue,newValue, result='', line;
+function _adaptHeaders(headers){
+    var arr = [];
 
-    // todo: figure out how traverse these in the order they are submitted
+    headers.forEach(function(header){
+        var headerViewModel = Object.create(header);
+        headerViewModel.added = (headerViewModel.state === 'added');
+        headerViewModel.removed = (headerViewModel.state === 'removed');
+        headerViewModel.changed = (headerViewModel.state === 'changed');
+        headerViewModel.unchanged = (headerViewModel.state === 'unchanged');
 
-    for (var p in originalHeaders){
-        oldValue =  originalHeaders[p];
-        newValue =   newHeaders[p];
-
-        if (_isArray(oldValue) && _isArray(newValue)){
-
-             // todo: should really try to perform the best match before diffing the elements
-             for (var i= 0, l=Math.max(oldValue.length, newValue.length); i<l; i++){
-                 result += _writeHeaderLine(p, oldValue[i], newValue[i]);
-             }
-
+        if (headerViewModel.changed){
+            headerViewModel.valueDiff = _writeDiff(headerViewModel.originalValue, headerViewModel.value);
         }
-        else if (_isArray(oldValue) || _isArray(newValue)){
-            result += '<strong>' + p + ': </strong> error printing value';
-        }
-        else {
-            result += _writeHeaderLine(p, oldValue, newValue);
-        }
-    }
 
-    for (var p in newHeaders){
-        if (!originalHeaders[p]){
-            line = '<strong>' + p + ': </strong>' + newHeaders[p] + '<br>';
-            line = _wrapWithIns(line);
-            result += line + '<br>';
-        }
-    }
+        arr.push(headerViewModel);
+    });
 
-    return result;
+    return arr;
 }
 
 module.exports = function(html, data)     {
@@ -107,11 +64,15 @@ module.exports = function(html, data)     {
         return html;
     }
 
-    var $ = cheerio.load(html), $body = $('body'), viewModel = {};
+    var $ = cheerio.load(html),
+        $body = $('body'),
+        viewModel = {
+            headers:{}
+        }
+        ;
 
-
-    viewModel.requestHeadersHtml = _convertHeadersToDiff(data.headers.request.original, data.headers.request.rewritten);
-    viewModel.responseHeadersHtml = _convertHeadersToDiff(data.headers.response.original, data.headers.response.rewritten);
+    viewModel.headers.response = _adaptHeaders(data.headers.response)
+    viewModel.headers.request = _adaptHeaders(data.headers.request)
 
     $body.prepend(navBarTemplate(viewModel));
 

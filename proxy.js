@@ -7,23 +7,18 @@ var http = require('http')
     , navbarBuilder = require('./navbar-injector')
     ;
 
+
 function _buildRequester(request){
-    var options = url.parse(urlHelper.getTargetUrl(request)), 
+    var options = url.parse(urlHelper.getTargetUrl(request)),
         urlRewriter = urlHelper.createProxyUrlRewriter(request),
-        requestHeaders = {
-            original: request.headers,
-            rewritten: rewriters.request.headers(request.headers, urlRewriter)
-        },
+        requestHeaders = rewriters.request.headers(request.headers, urlRewriter),
         f = function(cb){
             var f = /^https/i.test(options.protocol) ? https.request : http.request;
             return f(options, function(proxyResponse){
 
                 var headers = {
                     request: requestHeaders,
-                    response: {
-                        original: proxyResponse.headers,
-                        rewritten: rewriters.response.headers(proxyResponse.headers, urlRewriter)
-                    }
+                    response: rewriters.response.headers(proxyResponse.headers, urlRewriter)
                 };
 
                 cb(proxyResponse, headers, urlRewriter);
@@ -32,7 +27,7 @@ function _buildRequester(request){
     ;
     
     options.method = request.method;
-    options.headers = requestHeaders.rewritten;
+    options.headers = requestHeaders.toObject();
 
     return f;
 }
@@ -65,7 +60,7 @@ exports.go = function(request, response) {
             encoding
         ;
 
-        response.writeHead(proxyResponse.statusCode, headers.response.rewritten);
+        response.writeHead(proxyResponse.statusCode, headers.response.toObject());
 
         if (rewriter){
             encoding = _getContentEncoding(proxyResponse);

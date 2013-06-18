@@ -1,6 +1,56 @@
 var fs = require('fs')
 ;
 
+function _isArray(v) {
+    return Object.prototype.toString.call(v) === '[object Array]';
+}
+
+function _headerObjectToArray(headers){
+    var arr = [], v;
+
+    Object.defineProperty(arr, "toObject", {
+        enumerable: false,
+        configurable: false,
+        writable: false,
+        value: function(){
+            var o = {};
+
+            this.forEach(function(header){
+
+                if (header.state!=='removed'){
+
+                    if (!o[header.name]){
+                        o[header.name] = header.value;
+                    }
+                    else if (_isArray(v)){
+                        o[header.name].push(header.value);
+                    }
+                    else {
+                        o[header.name] = [o[header.name], header.value];
+                    }
+                }
+            });
+
+            return o;
+        }
+    });
+
+    for (var headerName in headers){
+        v = headers[headerName];
+
+        if (_isArray(v)){
+            v.forEach(function(v2){
+                arr.push({name:headerName, value: v2});
+            });
+        }
+        else {
+            arr.push({name:headerName, value: headers[headerName]});
+        }
+
+    }                                                 0
+
+    return arr;
+}
 
 function _extend(from){
     var props = Object.getOwnPropertyNames(from);
@@ -13,8 +63,6 @@ function _extend(from){
     return dest;
 }
 
-
-
 function _buildConverter(dir, lookup) {
     lookup = lookup || {};
 
@@ -24,25 +72,52 @@ function _buildConverter(dir, lookup) {
         }
     });
 
-    return function (oldHeaders, urlRewriter) {
-        var headerNames = Object.getOwnPropertyNames(lookup),
-            newHeaders = _extend(oldHeaders)
-            ;
+    return function (headers, urlRewriter) {
+        var requiredHeaderHandlers = _extend(lookup), val, additionalHeaders = [];
 
-        headerNames.forEach(function (headerName) {
-            var oldHeaderValue = oldHeaders[headerName],
-                newHeaderValue = lookup[headerName](oldHeaderValue, urlRewriter)
-            ;
+        if (!_isArray(headers))
+            headers = _headerObjectToArray(headers);
 
-            if (newHeaderValue) {
-                newHeaders[headerName] = newHeaderValue;
+        // first convert any header we've received.
+        headers.forEach(function (header) {
+            header.originalValue = header.value;
+
+            if (lookup[header.name]){
+                header.value = lookup[header.name](header.value, urlRewriter, additionalHeaders);
             }
-            else if (oldHeaderValue) {
-                delete newHeaders[headerName];
+
+            delete requiredHeaderHandlers[header.name];
+
+            if (header.value === header.originalValue) {
+                header.state = 'unchanged';
+            }
+            else if (header.value){
+                header.state = 'changed';
+            }
+            else {
+                header.state = 'removed';
             }
         });
 
-        return newHeaders;
+        // next, run any un-run header handlers
+        for (var headerName in requiredHeaderHandlers) {
+            val = requiredHeaderHandlers[headerName](undefined, urlRewriter);
+
+            if (val){
+                headers.push({
+                    value : requiredHeaderHandlers[headerName](undefined, urlRewriter),
+                    state :'added'
+                });
+            }
+        }
+
+        // finally, add any additional headers created during the process
+        additionalHeaders.forEach(function(header){
+            header.state = 'added';
+            headers.push(header);
+        })
+
+        return headers;
     }
 }
 

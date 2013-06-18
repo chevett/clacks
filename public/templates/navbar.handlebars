@@ -5,11 +5,51 @@
         <a id="mt3-hide-debug">close</a>
         <div class="headers-container">
             <h1>Request Headers</h1>
+
+            {{#each headers.request}}
+                {{#if added}}
+                    <ins><strong>{{name}}</strong>:&nbsp; {{value}}</ins>
+                {{/if}}
+
+                {{#if unchanged}}
+                    <strong>{{name}}</strong>:&nbsp; {{value}}
+                {{/if}}
+
+                {{#if changed}}
+                    <strong>{{name}}</strong>:&nbsp; {{{valueDiff}}}
+                {{/if}}
+
+                {{#if removed}}
+                    <del><strong>{{name}}</strong>:&nbsp; {{originalValue}}</del>
+                {{/if}}
+
+                <br/>
+            {{/each}}
+
             <div>{{{requestHeadersHtml}}}</div>
         </div>
         <div class="headers-container">
             <h1>Response Headers</h1>
-            <div>{{{responseHeadersHtml}}}</div>
+
+            {{#each headers.response}}
+                {{#if added}}
+                    <ins><strong>{{name}}</strong>:&nbsp; {{value}}</ins>
+                {{/if}}
+
+                {{#if unchanged}}
+                    <strong>{{name}}</strong>:&nbsp; {{value}}
+                {{/if}}
+
+                {{#if changed}}
+                    <strong>{{name}}</strong>:&nbsp; {{{valueDiff}}}
+                {{/if}}
+
+                {{#if removed}}
+                    <del><strong>{{name}}</strong>:&nbsp; {{originalValue}}</del>
+                {{/if}}
+
+                <br/>
+            {{/each}}
         </div>
     </div>
 
@@ -20,7 +60,6 @@
                 <input type="text" class="mt3-input" id="mt3-btn-nav-value" placeholder="http://www.google.com"></input>
                 <button type="submit" class="mt3-btn">Go</button>
                 <button id="mt3-show-debug" type="button" class="mt3-btn">Debug</button>
-
             </form>
         </div>
     </div>

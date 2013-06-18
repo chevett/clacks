@@ -105,6 +105,7 @@ function _buildConverter(dir, lookup) {
 
             if (val){
                 headers.push({
+                    name: headerName,
                     value : requiredHeaderHandlers[headerName](undefined, urlRewriter),
                     state :'added'
                 });

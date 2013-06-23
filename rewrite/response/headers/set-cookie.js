@@ -39,6 +39,7 @@ module.exports = function(headerValue, urlRewriter, additionalHeaders) {
 
     var domain = _getFromCookie(headerValue, /(Domain\s*=\s*)(.*?)(\s*?(;|$))/i) || _getDomain(urlRewriter),
         path = _getFromCookie(headerValue, REGEX_PATH) || '/',
+        expires = _getFromCookie(headerValue, /(expires\s*=\s*)(.*?)(\s*?(;|$))/i) || '/',
         isFullDomain = !domain.match(/^\./),
         newPath = url.resolve('http://'+domain, path)
             .replace(/^http:\/\//i,'/')
@@ -58,7 +59,11 @@ module.exports = function(headerValue, urlRewriter, additionalHeaders) {
             var name = cookieCookiePrefix + _getFromCookie(headerValue, /(.*?)\s*?=/i, 1),
                 newCookie;
 
-            newCookie =   name + '=' + domain+path+ '; Path=/';
+            newCookie =   name + '=' + domain+path +'Path=/';
+            if (expires){
+                newCookie += '; expires=' +expires;
+            }
+
             return newCookie;
         })();
 

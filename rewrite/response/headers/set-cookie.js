@@ -33,39 +33,19 @@ function _replaceOrAppend(str, regex, replaceCb, strAppend) {
     return str;
 }
 
-function _setDomainAndPath(headerValue, domain, path){
-    var newHeaderValue = headerValue;
-
-    newHeaderValue = _replaceOrAppend(
-        newHeaderValue,
-        REGEX_DOMAIN,
-        '$2'  + domain + '$4',
-        'Domain='+domain+';'
-    );
-
-    newHeaderValue = _replaceOrAppend(
-        newHeaderValue,
-        REGEX_PATH,
-        '$2'  + path + '$4',
-        'Path='+path+';'
-    );
-
-    return newHeaderValue;
-}
-
 module.exports = function(headerValue, urlRewriter, additionalHeaders) {
     if (!headerValue)
         return null;
 
-    var domain = _getFromCookie(headerValue, REGEX_DOMAIN) || _getDomain(urlRewriter),
+    var domain = _getFromCookie(headerValue, /(Domain\s*=\s*)(.*?)(\s*?(;|$))/i) || _getDomain(urlRewriter),
         path = _getFromCookie(headerValue, REGEX_PATH) || '/',
         isFullDomain = !domain.match(/^\./),
-        newDomain = settings.hostname == 'localhost' ? '' : settings.hostname,
         newPath = url.resolve('http://'+domain, path)
             .replace(/^http:\/\//i,'/')
             .replace(/\/$/, '')
         ,
-        cookieCookie
+        cookieCookie    ,
+        newHeaderValue
         ;
 
     if (headerValue.match(new RegExp('^'+cookieCookiePrefix, 'i'))) {
@@ -74,25 +54,42 @@ module.exports = function(headerValue, urlRewriter, additionalHeaders) {
 
     if (!isFullDomain){
         // we have a domain wildcard that must be handled
-
-        newPath = '/';
-        newDomain = '';
-
         cookieCookie = (function(){
             var name = cookieCookiePrefix + _getFromCookie(headerValue, /(.*?)\s*?=/i, 1),
-                newCookie,
-                data = {
-                    d: domain,
-                    p: path
-                };
+                newCookie;
 
-            newCookie =   name + '=' + encodeURIComponent(JSON.stringify(data)) + '; Path=/';
+            newCookie =   name + '=' + domain+path+ '; Path=/';
             return newCookie;
         })();
 
         additionalHeaders.push({name: 'set-cookie', value: cookieCookie, state:'added'});
-        return _setDomainAndPath(headerValue, '', '/');
+        newHeaderValue = headerValue
+            .replace(/Domain\s*=\s*.*?($|;)/i, '')
+            .replace(/Path\s*=\s*.*?($|;)/i, '');
+
+        if (!/;\s*$/.test(newHeaderValue))
+            newHeaderValue += '; ';
+
+        newHeaderValue += 'path=/';
+
+        return newHeaderValue
     }
 
-    return _setDomainAndPath(headerValue, newDomain, newPath);
+
+    newHeaderValue = _replaceOrAppend(
+        headerValue,
+        REGEX_DOMAIN,
+        '',
+        ''
+    );
+
+    newHeaderValue = _replaceOrAppend(
+        newHeaderValue,
+        REGEX_PATH,
+        '$1'  + newPath + '$3',
+        'path='+newPath+';'
+    );
+
+
+    return newHeaderValue;
 }

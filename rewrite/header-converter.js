@@ -22,7 +22,7 @@ function _headerObjectToArray(headers){
                     if (!o[header.name]){
                         o[header.name] = header.value;
                     }
-                    else if (_isArray(v)){
+                    else if (_isArray(o[header.name])){
                         o[header.name].push(header.value);
                     }
                     else {

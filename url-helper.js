@@ -34,6 +34,13 @@ exports.createProxyUrlRewriter = function(request){
     return function (originalUrl){
         var o = Object.create(settings);
 
+        console.log(originalUrl);
+
+        if (/^(data:|#)/i.test(originalUrl) ){
+            return originalUrl;
+        }
+
+
         if (_isRelative(originalUrl)){
 
             // we always return absolute urls, so use the current request to resolve any relative urls.

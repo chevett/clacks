@@ -7,7 +7,7 @@ var o = {
   forceSsl: true,
   showNavBar: true,
   lastCommit: process.env.MT3_lastCommit || '2dd0af47bc8586681b48733ec8f27413d0489e6a',
-  cookieCookiePrefix: 'mt3___',
+  cookieCookiePrefix: 'mt3_',
   isProduction: process.env.NODE_ENV === 'production'
 };
 

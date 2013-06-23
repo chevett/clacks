@@ -8,8 +8,14 @@ function _getDomain(urlRewriter) {
     return url.parse(urlRewriter('/')).pathname.replace(/\//g, '');
 }
 
-function _shouldSendCookie(domain, cookieName, allCookies){
-    var cookieCookie, objFromCookie;
+function _getPath(urlRewriter) {
+    var o = url.parse('http:/'+ url.parse(urlRewriter('temp')).pathname);
+
+    return o.pathname.replace(/temp$/, '');
+}
+
+function _shouldSendCookie(domain, path, cookieName, allCookies){
+    var cookieCookie;
 
     if (new RegExp('^'+cookieCookiePrefix, 'i').test(cookieName))
         return false;
@@ -19,12 +25,19 @@ function _shouldSendCookie(domain, cookieName, allCookies){
     if (!cookieCookie)
         return true;
 
-    objFromCookie = JSON.parse(decodeURIComponent(cookieCookie));
+    var components = cookieCookie.split('/');
+    var arr =[components.shift(), components.join('/')];
 
+    if (!domain.match(new RegExp(arr[0] + '$'))){
+         return false;
+    }
 
-    // todo: need to handle path.  don't feel like it now.
+    if (!new RegExp('$'+arr[1]).test(path)) {
+        return false;
+    }
 
-    return domain.match(new RegExp(objFromCookie.d + '$'));
+    return true;
+
 }
 
 module.exports = function(headerValue, urlRewriter) {
@@ -35,6 +48,7 @@ module.exports = function(headerValue, urlRewriter) {
 
     var cookies = {},
         domain = _getDomain(urlRewriter),
+        path = _getPath(urlRewriter),
         newHeaderValue = '';
 
     headerValue.replace(/((.*?)=)*?((.*?)=(.*?))(;|$)/gi, function (a,b,c,d,e,f,g){
@@ -45,7 +59,7 @@ module.exports = function(headerValue, urlRewriter) {
 
     Object.getOwnPropertyNames(cookies).forEach(function (cookieName) {
 
-        if (_shouldSendCookie(domain, cookieName, cookies)) {
+        if (_shouldSendCookie(domain, path, cookieName, cookies)) {
             if (newHeaderValue!=='' && !/;\s*$/i.test(newHeaderValue)) {
                 newHeaderValue += '; ';
             }

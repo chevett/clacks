@@ -59,7 +59,7 @@ module.exports = function(headerValue, urlRewriter, additionalHeaders) {
             var name = cookieCookiePrefix + _getFromCookie(headerValue, /(.*?)\s*?=/i, 1),
                 newCookie;
 
-            newCookie =   name + '=' + domain+path +'Path=/';
+            newCookie =   name + '=' + domain+path +'; Path=/';
             if (expires){
                 newCookie += '; expires=' +expires;
             }

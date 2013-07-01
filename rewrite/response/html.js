@@ -15,7 +15,13 @@ module.exports = function(html, urlRewriter) {
         rewriteContent = function (rewriter){
             return function(){
                 var $this = $(this);
-                $this.html(rewriter($this.html(), urlRewriter));
+                var tagName = $this[0].name;
+                // we must include the original outer tag, otherwise cheerio doesn't know how to parse it correctly.
+                // for example, script content will be parsed as html
+                var $new = $('<'+ tagName + '>' + rewriter($this.html(), urlRewriter) + '</'+ tagName + '>');
+
+                $this.after($new);
+                $this.remove();
             };
         }
         ;

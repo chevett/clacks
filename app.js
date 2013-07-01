@@ -26,8 +26,9 @@ app.use(require('less-middleware')({ src: __dirname + '/public' }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
 app.use(function(err, req, res, next){
-    console.error(err.stack);
-    res.send(500, 'Something broke!');
+    console.log('mt3 global error handler: ');
+    console.log(err)
+    res.end();
 });
 
 

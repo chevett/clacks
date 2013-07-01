@@ -100,7 +100,7 @@ exports.go = function(request, response) {
 
     proxyRequest.on('error', function (err) {
         console.log('proxyRequest error: '+err);
-        response.writeHead(500);
+        //response.writeHead(500);
         //response.write(err.toString());
         response.end();
     });

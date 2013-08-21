@@ -16,7 +16,11 @@ function _isRequestSecure(req){
 
 
 function _getTargetUrl(request){
-    var myUrl = request.url.substr(1),
+	if (request==null){
+		return null;
+	}
+
+	var myUrl = request.url.substr(1),
         isSecure = _isRequestSecure(request),
         o;
 

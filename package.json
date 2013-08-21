@@ -8,7 +8,8 @@
     "url": "http://github.com/chevett/miketown3.git"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "mocha $(find *.spec.js)"
   },
   "dependencies": {
     "express": "3.2.4",

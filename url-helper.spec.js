@@ -3,16 +3,28 @@
 	
  describe('url-helper', function(){
  
-	 
- 	describe('urlRewriter', function(){
+ 	describe('createProxyUrlRewriter(...)', function(){
  	
-		it('should handle absolute url without a valid request', function (){
- 			var urlHelper = require('./url-helper');
-			var url = 'http://www.google.com';
-			var urlRewriter = urlHelper.createProxyUrlRewriter(null);
+		describe('no request context', function(){
 
-			var port = settings.port==80 ? '' : ':' + settings.port;
-			assert.equal(urlRewriter(url), 'http://'+settings.hostname+port+'/www.google.com');
+			it('should handle absolute url', function (){
+ 				var urlHelper = require('./url-helper');
+				var url = 'http://www.google.com';
+				var urlRewriter = urlHelper.createProxyUrlRewriter(null);
+
+				var port = settings.port==80 ? '' : ':' + settings.port;
+				assert.equal(urlRewriter(url), 'http://'+settings.hostname+port+'/www.google.com');
+			});
+
+			it('should keep trailing slash', function (){
+ 				var urlHelper = require('./url-helper');
+				var url = 'http://www.google.com/';
+				var urlRewriter = urlHelper.createProxyUrlRewriter(null);
+
+				var port = settings.port==80 ? '' : ':' + settings.port;
+				assert.equal(urlRewriter(url), 'http://'+settings.hostname+port+'/www.google.com/');
+			});
+
 		});
 	});
 			

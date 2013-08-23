@@ -5,7 +5,7 @@
  
  	describe('createProxyUrlRewriter(...)', function(){
  	
-		describe('no request context', function(){
+		describe('has no request context', function(){
 
 			it('should handle absolute url', function (){
  				var urlHelper = require('./url-helper');
@@ -25,6 +25,34 @@
 				assert.equal(urlRewriter(url), 'http://'+settings.hostname+port+'/www.google.com/');
 			});
 
+		});
+
+		describe('has a request context', function(){
+		
+			var request = {
+				url: '/github.com',
+				headers: [
+				]
+			};
+
+			it('should handle relative urls', function(){
+ 				var urlHelper = require('./url-helper');
+				var url = '/chevett';
+				var urlRewriter = urlHelper.createProxyUrlRewriter(request);
+
+				var port = settings.port==80 ? '' : ':' + settings.port;
+				assert.equal(urlRewriter(url), 'http://'+settings.hostname+port+'/github.com/chevett');
+			});
+		
+
+			it('should handle really relative urls', function(){
+ 				var urlHelper = require('./url-helper');
+				var url = '/chevett';
+				var urlRewriter = urlHelper.createProxyUrlRewriter(request);
+
+				var port = settings.port==80 ? '' : ':' + settings.port;
+				assert.equal(urlRewriter(url), 'http://'+settings.hostname+port+'/github.com/chevett');
+			});
 		});
 	});
 			

@@ -21,16 +21,40 @@ function _getTargetUrl(request){
 	return function(myUrl){
 		if (!myUrl)return null;
 		var isSecure = _isRequestSecure(request),
-			o;
+			o,protocolOverride, portOverride;
 		
 		if (/^/.test(myUrl)){
 			myUrl = myUrl.substr(1);
 		}
-		myUrl = (isSecure ? 'https://' :  'http://') + myUrl;
+
+		while (!/^\w\./.test(myUrl)){ // while we are not to the domain name yet
+			
+			if (/^https\//i.test(myUrl)){
+				protocolOverride = 'https';
+				myUrl = myUrl.substr(6);
+			} else if (/^http\//i.test(myUrl)){
+				protocolOverride = 'http';
+				myUrl = myUrl.substr(5);
+			} else if (/^\d+\//i.test(myUrl)){
+				portOverride = myUrl.match(/^\d+/i)[0];
+				myUrl = myUrl.replace(/^\d+\//i, '');
+			} else {
+				break;
+			}	
+		}
+
+		if (protocolOverride){
+			myUrl = protocolOverride + '://' + myUrl;
+		} else {
+			myUrl = (isSecure ? 'https://' :  'http://') + myUrl;
+		}
 
 		o = url.parse(myUrl);
-		o.port = isSecure ? settings.sslPort : settings.port;
-
+		if (portOverride){
+			o.port = portOverride;
+			delete o.host;
+		}
+	
 		return url.format(o);
 	};
 }
@@ -67,8 +91,16 @@ exports.createToProxyUrlFn = function(request){
             o.port = settings.port;
         }
 
-        return url.format(o) +'/'+ originalUrl.replace(/^(http:|https:)?\/\//i, '');
+		originalUrl = originalUrl.replace(/^(http:|https:)?\/\//i, '');
+
+		// handle moving the port to the front of the url
+		if (/:\d+(\/|$)/.test(originalUrl)){
+			originalUrl = originalUrl.match(/:(\d+)/)[1] + '/' + originalUrl;
+			originalUrl = originalUrl.replace(/:\d+/, '');
+		}
+
+        return url.format(o) +'/'+ originalUrl ;
     };
-}
+};
 
 exports.createFromProxyUrlFn = _getTargetUrl;

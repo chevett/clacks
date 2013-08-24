@@ -9,19 +9,21 @@ var http = require('http')
 
 
 function _buildRequester(request){
-    var options = url.parse(urlHelper.getTargetUrl(request)),
-        urlRewriter = urlHelper.createProxyUrlRewriter(request),
-        requestHeaders = rewriters.request.headers(request.headers, urlRewriter),
+    var fromProxyUrl = urlHelper.createFromProxyUrlFn(request),
+        toProxyUrl = urlHelper.createToProxyUrlFn(request),
+    	 options = url.parse(fromProxyUrl(request.url)),
+		 
+        requestHeaders = rewriters.request.headers(request.headers, toProxyUrl),
         f = function(cb){
             var f = /^https/i.test(options.protocol) ? https.request : http.request;
             return f(options, function(proxyResponse){
 
                 var headers = {
                     request: requestHeaders,
-                    response: rewriters.response.headers(proxyResponse.headers, urlRewriter)
+                    response: rewriters.response.headers(proxyResponse.headers, toProxyUrl)
                 };
 
-                cb(proxyResponse, headers, urlRewriter);
+                cb(proxyResponse, headers, toProxyUrl);
             });
         }
     ;

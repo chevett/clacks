@@ -70,6 +70,14 @@
 			var port = settings.port==80 ? '' : ':' + settings.port;
 			assert.equal(toProxyUrlFn(url), 'http://'+settings.hostname+port+'/555/www.google.com/');
 		});
+		
+		it('should preserve protocol from absolute url', function (){
+			var url = 'https://www.google.com';
+			var toProxyUrlFn = require('./url-helper').createToProxyUrlFn(null);
+
+			var port = settings.port==443 ? '' : ':' + settings.sslPort;
+			assert.equal(toProxyUrlFn(url), 'https://'+settings.hostname+port+'/www.google.com');
+		});
 	});
 			
  

@@ -15,7 +15,7 @@ function _buildRequester(request){
         requestHeaders = rewriters.request.headers(request.headers, toProxyUrl),
         f = function(cb){
             var f = /^https/i.test(options.protocol) ? https.request : http.request;
-            return f(url.format(options), function(proxyResponse){
+            return f(options, function(proxyResponse){
                 var headers = {
                     request: requestHeaders,
                     response: rewriters.response.headers(proxyResponse.headers, toProxyUrl)
@@ -28,7 +28,8 @@ function _buildRequester(request){
     
     options.method = request.method;
     options.headers = requestHeaders.toObject();
-
+	options.host = options.headers.host;
+	console.log(options);
     return f;
 }
 

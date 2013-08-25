@@ -2,9 +2,9 @@
  var settings = require('./settings')();
 	
  describe('url-helper', function(){
- 
- 	describe('#createToProxyUrlFn(...)(...)', function(){
- 	
+
+	describe('#createToProxyUrlFn(...)(...)', function(){
+
 		it('should convert absolute urls when there is no request context', function (){
 			var url = 'http://www.google.com';
 			var toProxyUrlFn = require('./url-helper').createToProxyUrlFn(null);
@@ -25,6 +25,34 @@
 			assert.equal(toProxyUrlFn(url), 'http://'+settings.hostname+port+'/github.com/chevett/miketown3');
 		});
 		
+		it('should create secure absolute urls from relative urls when there is a secure request context', function(){
+			var url = '/chevett/miketown3';
+			var toProxyUrlFn = require('./url-helper').createToProxyUrlFn({
+				url: '/github.com',
+				secure: true, 
+				headers: {
+					'x-forwarded-proto': 'https'
+				}
+			});
+
+			var port = settings.port==443 ? '' : ':' + settings.sslPort;
+			assert.equal(toProxyUrlFn(url), 'https://'+settings.hostname+port+'/github.com/chevett/miketown3');
+		});
+
+		it('should preserve the protocol override from the context when creating relative urls', function(){
+			var url = '/chevett/miketown3';
+			var toProxyUrlFn = require('./url-helper').createToProxyUrlFn({
+				url: '/http/github.com',
+				secure: true, 
+				headers: {
+					'x-forwarded-proto': 'https'
+				}
+			});
+
+			var port = settings.port==443 ? '' : ':' + settings.sslPort;
+			assert.equal(toProxyUrlFn(url), 'https://'+settings.hostname+port+'/http/github.com/chevett/miketown3');
+		});
+
 		it('should convert really relative urls when there is a request context', function(){
 			var url = 'miketown3';
 			var toProxyUrlFn = require('./url-helper').createToProxyUrlFn({
@@ -81,7 +109,7 @@
 	});
 			
  
- 	describe('#createFromProxyUrlFn(...)(...)', function(){
+	describe('#createFromProxyUrlFn(...)(...)', function(){
 		it('should convert valid url', function(){
 			var url = '/github.com/chevett/miketown3';
 			var fromProxyUrlFn = require('./url-helper').createFromProxyUrlFn({

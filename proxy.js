@@ -11,13 +11,11 @@ var http = require('http')
 function _buildRequester(request){
     var fromProxyUrl = urlHelper.createFromProxyUrlFn(request),
         toProxyUrl = urlHelper.createToProxyUrlFn(request),
-    	 options = url.parse(fromProxyUrl(request.url)),
-		 
+		options = url.parse(fromProxyUrl(request.url)),
         requestHeaders = rewriters.request.headers(request.headers, toProxyUrl),
         f = function(cb){
             var f = /^https/i.test(options.protocol) ? https.request : http.request;
-            return f(options, function(proxyResponse){
-
+            return f(url.format(options), function(proxyResponse){
                 var headers = {
                     request: requestHeaders,
                     response: rewriters.response.headers(proxyResponse.headers, toProxyUrl)

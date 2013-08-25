@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node app.js",
-    "test": "mocha --reporter spec $(find *.spec.js)"
+    "test": "mocha --reporter spec $(find . -path ./node_modules -prune -o -name '*.spec.js' -print)"
   },
   "dependencies": {
     "express": "3.2.4",

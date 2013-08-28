@@ -94,6 +94,6 @@
       });
   </script>
 
-  <script src="https://api.github.com/repos/chevett/miketown3/git/commits/{{LastCommit}}?callback=mt3_renderCommitData" type="text/javascript"></script>
+  <script src="https://api.github.com/repos/chevett/clacks/git/commits/{{LastCommit}}?callback=mt3_renderCommitData" type="text/javascript"></script>
   </body>
 </html>

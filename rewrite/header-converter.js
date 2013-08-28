@@ -67,7 +67,7 @@ function _buildConverter(dir, lookup) {
     lookup = lookup || {};
 
     fs.readdirSync(dir).forEach(function(file) {
-        if (file!='index.js' && !/\.spec\.js$/i.test(file)) {
+        if (/\.js$/i.test(file) && file!='index.js' && !/\.spec\.js$/i.test(file)) {
             lookup[file.replace(/\.js$/i, '')] = require(dir + '/' + file );
         }
     });

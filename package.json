@@ -17,9 +17,11 @@
     "less-middleware": "*",
     "cheerio": "~0.12.0",
     "connect-handlebars": "0.0.5",
-    "diff": "~1.0.4"
+    "diff": "~1.0.4",
+	"absolurl": "git://github.com/chevett/absolurl.git#master"
   },
   "devDependencies":{
-  	"mocha": "*"
+  	"mocha": "*",
+  	"nodemon": "*"
   }
 }

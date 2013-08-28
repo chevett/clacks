@@ -1,8 +1,8 @@
-module.exports = function(headerValue, urlRewriter) {
-    var o = urlRewriter('/').match(/^(\w*:\/\/)?.+?\/(.+?)(\/|$)/i); // get the target hostname, ex www.wwwwwwwwwwwwwwwww.com
-    if (o && o.length > 2){
-        return o[2];
-    }
+var url = require('url');
 
-    return null;
-}
+module.exports = function(headerValue, urlRewriter) {
+	var oUrl = url.parse(urlRewriter('/'));
+	oUrl = url.parse(oUrl.pathname.substr(1));
+
+	return oUrl.hostname;
+};

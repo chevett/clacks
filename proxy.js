@@ -11,7 +11,7 @@ var http = require('http')
 function _buildRequester(request){
     var fromProxyUrl = urlHelper.createFromProxyUrlFn(request),
         toProxyUrl = urlHelper.createToProxyUrlFn(request),
-		options = url.parse(fromProxyUrl(request.url)),
+		options = url.parse(fromProxyUrl(request.url.substr(1))),
         requestHeaders = rewriters.request.headers(request.headers, toProxyUrl),
         f = function(cb){
             var f = /^https/i.test(options.protocol) ? https.request : http.request;
@@ -26,9 +26,12 @@ function _buildRequester(request){
         }
     ;
     
-    options.method = request.method;
+   console.log(url.format(options)); 
+//	delete options.headers
+//	console.log(options);
+	options.method = request.method;
     options.headers = requestHeaders.toObject();
-	options.host = options.headers.host;
+	//options.host = options.headers.host;
 	console.log(options);
     return f;
 }

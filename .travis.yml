@@ -4,7 +4,7 @@ language: node_js
     - '0.10'
 branches:
     only:
-        - master
+    - master
 
 env:
   global:

@@ -1,9 +1,10 @@
-var url = require('url'),
-    settings = require('../../../settings')(),
-    dropMikeTown3Regex  = new RegExp(settings.hostname+'(:('+settings.port+'|'+settings.sslPort+'))?\\/', 'i');
-;
+var url = require('url');
 
-module.exports = function(headerValue, urlRewriter) {
-    return headerValue ? headerValue.replace(dropMikeTown3Regex, '') : null;
+module.exports = function(headerValue) {
+	if (!headerValue) return headerValue;
+	var oUrl = url.parse(headerValue);
 
-}
+	if (!oUrl || !oUrl.path) return null;
+
+	return oUrl.path.substr(1);
+};

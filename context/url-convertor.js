@@ -1,4 +1,4 @@
-var settings = require('./settings')(),
+var settings = require('../settings')(),
     url = require('url'),
 	absolurl = require('absolurl');
 
@@ -22,6 +22,7 @@ function _createAbsolurlDefaults(request){
 		port: _isClientConnectionSecure(request) ? 443 : 80
 	};
 }
+
 function _isClientConnectionSecure(req){
 	if (!req) return false;
 
@@ -59,7 +60,13 @@ exports.createToProxyUrlFn = function(request){
 
 		var conversionOptions =_createAbsolurlDefaults(request);
 		var clacksHomeUrl = settings.createHttpUrl();
+		
+		console.log('broken here');
+		console.log('internet url: ' + internetUrl);
+		console.log('request url: ' + requestUrl);
+
 		internetUrl = absolurl.ensureComplete(internetUrl, requestUrl, conversionOptions);
+
 
 		if (!internetUrl) return internetUrl;
 

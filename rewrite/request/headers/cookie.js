@@ -20,7 +20,7 @@ function _shouldSendCookie(domain, path, cookieName, allCookies){
     if (new RegExp('^'+cookieCookiePrefix, 'i').test(cookieName))
         return false;
 
-    cookieCookie = allCookies[cookieCookiePrefix+cookieName]
+    cookieCookie = allCookies[cookieCookiePrefix+cookieName];
 
     if (!cookieCookie)
         return true;
@@ -40,8 +40,8 @@ function _shouldSendCookie(domain, path, cookieName, allCookies){
 
 }
 
-module.exports = function(headerValue, urlRewriter) {
-
+module.exports = function(headerValue, context) {
+	var urlRewriter = context.convert.toProxyUrl;
     if (!headerValue){
         return headerValue;
     }

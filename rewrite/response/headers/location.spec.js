@@ -1,14 +1,14 @@
-var urlHelper = require('../../../url-helper');
+var Context = require('../../../context/');
 var testHelper = require('../../../test/helper');
 var headerRewriter = require('./location');
 var assert = require('assert');
 
 describe('location request header', function(){
 	it('should convert to the proxied location', function  (){
-		var toProxyUrlFn = urlHelper.createToProxyUrlFn(testHelper.createRequest('http://www.google.com'));
+		var context = new Context(testHelper.createRequest('http://www.google.com'));
 		var url = 'http://www.github.com/chevett';
-		var proxiedLocation = headerRewriter(url, toProxyUrlFn);
+		var proxiedLocation = headerRewriter(url, context);
 		
-		assert.equal(proxiedLocation, toProxyUrlFn(url));
+		assert.equal(proxiedLocation, context.convert.toProxyUrl(url));
 	});
 });

@@ -3,13 +3,12 @@ var cheerio = require('cheerio'),
     jsRewriter = require('./js')
     ;
 
-module.exports = function(html, urlRewriter) {
-
+module.exports = function(html, context) {
     var $ = cheerio.load(html),
         rewriteUrlAttribute = function (attributeName){
             return function(){
                 var $this = $(this);
-                $this.attr(attributeName, urlRewriter($this.attr(attributeName)));
+                $this.attr(attributeName, context.convert.toProxyUrl($this.attr(attributeName)));
             };
         },
         rewriteContent = function (rewriter){
@@ -18,7 +17,7 @@ module.exports = function(html, urlRewriter) {
                 var tagName = $this[0].name;
                 // we must include the original outer tag, otherwise cheerio doesn't know how to parse it correctly.
                 // for example, script content will be parsed as html
-                var $new = $('<'+ tagName + '>' + rewriter($this.html(), urlRewriter) + '</'+ tagName + '>');
+                var $new = $('<'+ tagName + '>' + rewriter($this.html(), context) + '</'+ tagName + '>');
 
                 $this.after($new);
                 $this.remove();
@@ -36,10 +35,10 @@ module.exports = function(html, urlRewriter) {
     $("*[style]").each(function(){
             var $this = $(this),
             content =  $this.attr('style'),
-            newContent = cssRewriter(content, urlRewriter);
+            newContent = cssRewriter(content, context);
 
         $this.attr('style', newContent);
     });
 
     return $.html();
-}
+};

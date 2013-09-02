@@ -1,4 +1,4 @@
-var urlHelper = require('../url-helper');
+var urlHelper = require('../context/url-convertor');
 
 exports.createSecureRequest = function(url, referer){
 	var o = {

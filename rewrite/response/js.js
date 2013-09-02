@@ -1,3 +1,3 @@
-module.exports = function(js, urlRewriter) {
+module.exports = function(js, context) {
     return js;
-}
+};

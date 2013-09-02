@@ -1,8 +1,7 @@
 var fs = require('fs');
 var assert = require('assert');
-var settings = require('../../settings')();
 var helper = require('../../test/helper');
-var urlHelper = require('../../url-helper');
+var Context = require('../../context/');
 var cheerio = require('cheerio');
 var htmlRewriter = require('./html');
 
@@ -14,12 +13,13 @@ describe('html response rewriter', function(){
 
 
 	function _shouldConvertElementAttributeUrl(elementName, attributeName){
-		var toProxyUrlFn = urlHelper.createToProxyUrlFn(helper.createRequest('www.google.com'));
-		
+		var context = new Context(helper.createRequest('www.google.com'));
+		console.log(context);
+		var toProxyUrlFn = context.convert.toProxyUrl;
 		var $fruits = cheerio.load(_getFruitsString());
 		var $elements = $fruits(elementName + '['+ attributeName + ']');
 		
-		var $newFruits = cheerio.load(htmlRewriter($fruits.html(), toProxyUrlFn));
+		var $newFruits = cheerio.load(htmlRewriter($fruits.html(), context));
 		var $newElements = $newFruits(elementName + '['+ attributeName + ']');
 	
 		var $element, $newElement;

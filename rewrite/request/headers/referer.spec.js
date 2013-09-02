@@ -1,4 +1,4 @@
-var urlHelper = require('../../../url-helper');
+var urlHelper = require('../../../context/url-convertor');
 var testHelper = require('../../../test/helper');
 var headerRewriter = require('./referer');
 var assert = require('assert');

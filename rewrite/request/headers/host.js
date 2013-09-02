@@ -1,8 +1,3 @@
-var url = require('url');
-
-module.exports = function(headerValue, urlRewriter) {
-	var oUrl = url.parse(urlRewriter('/'));
-	oUrl = url.parse(oUrl.pathname.substr(1));
-
-	return oUrl.hostname;
+module.exports = function(headerValue, context) {
+	return context.target.oUrl.hostname;
 };

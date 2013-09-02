@@ -33,7 +33,8 @@ function _replaceOrAppend(str, regex, replaceCb, strAppend) {
     return str;
 }
 
-module.exports = function(headerValue, urlRewriter, additionalHeaders) {
+module.exports = function(headerValue, context, additionalHeaders) {
+	var urlRewriter = context.convert.toProxyUrl;
     if (!headerValue)
         return null;
 

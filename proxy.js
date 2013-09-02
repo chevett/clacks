@@ -1,33 +1,29 @@
-var http = require('http')
-    ,https = require('https')
-    , url = require('url')
-    , settings = require("./settings")()
-    , rewriters = require("./rewrite/")
-    , urlHelper = require('./url-helper')
-    , navbarBuilder = require('./navbar-injector')
-    ;
-
+var http = require('http'),
+	https = require('https'), 
+	url = require('url'), 
+	rewriters = require("./rewrite/"), 
+	Context = require("./context/"), 
+	navbarBuilder = require('./navbar-injector');
 
 function _buildRequester(request){
-    var fromProxyUrl = urlHelper.createFromProxyUrlFn(request),
-        toProxyUrl = urlHelper.createToProxyUrlFn(request),
-		options = url.parse(fromProxyUrl(request.url.substr(1))),
-        requestHeaders = rewriters.request.headers(request.headers, toProxyUrl),
+	var requestContext = new Context(request),
+		options = url.parse(requestContext.target.oUrl),
+        requestHeaders = rewriters.request.headers(request.headers, requestContext),
         f = function(cb){
             var f = /^https/i.test(options.protocol) ? https.request : http.request;
             return f(options, function(proxyResponse){
                 var headers = {
                     request: requestHeaders,
-                    response: rewriters.response.headers(proxyResponse.headers, toProxyUrl)
+                    response: rewriters.response.headers(proxyResponse.headers, requestContext)
                 };
 
-                cb(proxyResponse, headers, toProxyUrl);
+                cb(proxyResponse, headers, requestContext);
             });
         }
     ;
     
-   console.log(url.format(options)); 
-//	delete options.headers
+//   console.log(url.format(options)); 
+//	delete options.headere
 //	console.log(options);
 	options.method = request.method;
     options.headers = requestHeaders.toObject();
@@ -54,10 +50,11 @@ function _getContentEncoding(repsonse){
     }
 }
 
+
 exports.go = function(request, response) {
     var requester =  _buildRequester(request);
     
-    var proxyRequest = requester(function(proxyResponse, headers, urlRewriter){
+    var proxyRequest = requester(function(proxyResponse, headers, requestContext){
         var contentType = _getContentType(proxyResponse),
             rewriter = rewriters.response[contentType],
             body='',
@@ -76,7 +73,7 @@ exports.go = function(request, response) {
 
             proxyResponse.on('end', function() {
 
-                body = rewriter(body, urlRewriter);
+                body = rewriter(body, requestContext);
 
                 if (contentType==='text/html'){
                     body = navbarBuilder(body, {headers:headers});
@@ -119,5 +116,5 @@ exports.go = function(request, response) {
         proxyRequest.end();
     });
 
-}
+};
 

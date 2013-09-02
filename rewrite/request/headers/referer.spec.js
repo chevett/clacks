@@ -1,6 +1,4 @@
-
 var urlHelper = require('../../../url-helper');
-var settings = require('../../../settings')();
 var testHelper = require('../../../test/helper');
 var headerRewriter = require('./referer');
 var assert = require('assert');

@@ -1,13 +1,12 @@
 var http = require('http'),
 	https = require('https'), 
-	url = require('url'), 
 	rewriters = require("./rewrite/"), 
 	Context = require("./context/"), 
 	navbarBuilder = require('./navbar-injector');
 
 function _buildRequester(request){
 	var requestContext = new Context(request),
-		options = url.parse(requestContext.target.oUrl),
+		options = requestContext.target.oUrl,
         requestHeaders = rewriters.request.headers(request.headers, requestContext),
         f = function(cb){
             var f = /^https/i.test(options.protocol) ? https.request : http.request;

@@ -1,6 +1,6 @@
 var fs = require('fs');
 var assert = require('assert');
-var helper = require('../../test/helper');
+var FakeRequest = require('../../test/fake-request');
 var Context = require('../../context/');
 var cheerio = require('cheerio');
 var htmlRewriter = require('./html');
@@ -13,7 +13,7 @@ describe('html response rewriter', function(){
 
 
 	function _shouldConvertElementAttributeUrl(elementName, attributeName){
-		var context = new Context(helper.createRequest('www.google.com'));
+		var context = new Context(new FakeRequest());
 		console.log(context);
 		var toProxyUrlFn = context.convert.toProxyUrl;
 		var $fruits = cheerio.load(_getFruitsString());

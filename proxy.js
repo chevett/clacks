@@ -2,7 +2,7 @@ var http = require('http'),
 	https = require('https'), 
 	rewriters = require("./rewrite/"), 
 	Context = require("./context/"), 
-	navbarBuilder = require('./navbar-injector');
+	navbarBuilder = require('./injectors/navbar');
 
 function _buildRequester(request){
 	var requestContext = new Context(request),

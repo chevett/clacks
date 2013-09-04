@@ -1,7 +1,7 @@
 var cheerio = require('cheerio'),
     diff = require('diff'),
-    settings = require('./settings')()
-    handleBars = require('./node_modules/connect-handlebars/node_modules/handlebars/lib/handlebars'),
+    settings = require('../settings')(),
+    handleBars = require('../node_modules/connect-handlebars/node_modules/handlebars/lib/handlebars'),
     fs = require('fs'),
     navBarTemplate = handleBars.compile(fs.readFileSync('public/templates/navbar.handlebars', {encoding:'utf-8'}))
 ;
@@ -71,10 +71,10 @@ module.exports = function(html, data)     {
         }
         ;
 
-    viewModel.headers.response = _adaptHeaders(data.headers.response)
-    viewModel.headers.request = _adaptHeaders(data.headers.request)
+    viewModel.headers.response = _adaptHeaders(data.headers.response);
+    viewModel.headers.request = _adaptHeaders(data.headers.request);
 
     $body.prepend(navBarTemplate(viewModel));
 
     return $.html();
-}
+};

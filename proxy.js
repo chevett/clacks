@@ -1,6 +1,6 @@
 var http = require('http'),
 	https = require('https'), 
-	rewriters = require("./rewrite/"), 
+	rewriters = require("./rewriters/"), 
 	Context = require("./context/"), 
 	injectors = require('./injectors/');
 

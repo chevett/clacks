@@ -1,3 +1,6 @@
+var urlConvertor = require('./url-convertor'),
+	ToProxyUrlFn = urlConvertor.ToProxyUrlFn,
+	FromProxyUrlFn = urlConvertor.FromProxyUrlFn;
 var assert = require('assert');
 var settings = require('../settings')();
 var testHelper = require('../test/helper');
@@ -11,21 +14,21 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 
 		it('should convert absolute urls when there is no request context', function (){
 			var url = 'http://www.google.com/';
-			var toProxyUrlFn = require('./url-convertor').createToProxyUrlFn();
+			var toProxyUrlFn = new ToProxyUrlFn();
 
 			assert.equal(toProxyUrlFn(url), httpClacksHomeUrl + 'http://www.google.com/');
 		});
 
 		it('should preserve https in absolute urls when there is no request context', function (){
 			var url = 'https://www.google.com/';
-			var toProxyUrlFn = require('./url-convertor').createToProxyUrlFn();
+			var toProxyUrlFn = new ToProxyUrlFn();
 
 			assert.equal(toProxyUrlFn(url), httpsClacksHomeUrl + 'https://www.google.com/');
 		});
 
 		it('should convert relative urls when there is a request context', function(){
 			var url = '/chevett/miketown3';
-			var toProxyUrlFn = require('./url-convertor').createToProxyUrlFn(new FakeRequest({url:'github.com'}));
+			var toProxyUrlFn = new ToProxyUrlFn(new FakeRequest({url:'github.com'}));
 
 			var port = settings.port==80 ? '' : ':' + settings.port;
 			assert.equal(toProxyUrlFn(url), 'http://'+settings.hostname+port+'/http://github.com/chevett/miketown3');
@@ -33,7 +36,7 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 		
 		it('should create secure absolute urls from relative urls when the parent request is secure', function(){
 			var url = '/chevett/miketown3';
-			var toProxyUrlFn = require('./url-convertor').createToProxyUrlFn(new FakeRequest({url:'github.com', secure: true}));
+			var toProxyUrlFn = new ToProxyUrlFn(new FakeRequest({url:'github.com', secure: true}));
 
 			var port = settings.port==443 ? '' : ':' + settings.sslPort;
 			assert.equal(toProxyUrlFn(url), 'https://'+settings.hostname+port+'/https://github.com/chevett/miketown3');
@@ -41,7 +44,7 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 
 		it('should preserve the protocol override from the context when creating relative urls', function(){
 			var url = '/chevett/miketown3';
-			var toProxyUrlFn = require('./url-convertor').createToProxyUrlFn(new FakeRequest({url:'http://github.com', secure: true}));
+			var toProxyUrlFn = new ToProxyUrlFn(new FakeRequest({url:'http://github.com', secure: true}));
 
 			var port = settings.port==443 ? '' : ':' + settings.sslPort;
 			assert.equal(toProxyUrlFn(url), 'https://'+settings.hostname+port+'/http://github.com/chevett/miketown3');
@@ -49,7 +52,7 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 
 		it('should convert really relative urls when there is a request context', function(){
 			var url = 'miketown3';
-			var toProxyUrlFn = require('./url-convertor').createToProxyUrlFn(new FakeRequest({url:'github.com/chevett/'}));
+			var toProxyUrlFn = new ToProxyUrlFn(new FakeRequest({url:'github.com/chevett/'}));
 
 			var port = settings.port==80 ? '' : ':' + settings.port;
 			assert.equal(toProxyUrlFn(url), 'http://'+settings.hostname+port+'/http://github.com/chevett/miketown3');
@@ -57,14 +60,14 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 
 		it('shouldn\'t convert relative urls when there is no request context', function(){
 			var url = '/chevett';
-			var toProxyUrlFn = require('./url-convertor').createToProxyUrlFn();
+			var toProxyUrlFn = new ToProxyUrlFn();
 
 			assert.equal(toProxyUrlFn(url), null);
 		});
 		
 		it('should preserve the trailing slash in an absolute url when there is no request context', function (){
 			var url = 'http://www.google.com/';
-			var toProxyUrlFn = require('./url-convertor').createToProxyUrlFn();
+			var toProxyUrlFn = new ToProxyUrlFn();
 
 			var port = settings.port==80 ? '' : ':' + settings.port;
 			assert.equal(toProxyUrlFn(url), 'http://'+settings.hostname+port+'/http://www.google.com/');
@@ -72,7 +75,7 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 		
 		it('should preserve non-standard port', function (){
 			var url = 'http://www.google.com:555/';
-			var toProxyUrlFn = require('./url-convertor').createToProxyUrlFn();
+			var toProxyUrlFn = new ToProxyUrlFn();
 
 			var port = settings.port==80 ? '' : ':' + settings.port;
 			assert.equal(toProxyUrlFn(url), 'http://'+settings.hostname+port+'/http://www.google.com:555/');
@@ -80,7 +83,7 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 		
 		it('should preserve protocol from absolute url', function (){
 			var url = 'https://www.google.com/';
-			var toProxyUrlFn = require('./url-convertor').createToProxyUrlFn();
+			var toProxyUrlFn = new ToProxyUrlFn();
 
 			assert.equal(toProxyUrlFn(url), httpsClacksHomeUrl+'https://www.google.com/');
 		});
@@ -90,49 +93,49 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 	describe('#createFromProxyUrlFn(...)(...)', function(){
 		it('should convert valid url', function(){
 			var url = 'github.com/chevett/miketown3';
-			var fromProxyUrlFn = require('./url-convertor').createFromProxyUrlFn(new FakeRequest({url:'github.com'}));
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:'github.com'}));
 
 			assert.equal(fromProxyUrlFn(url), 'http://github.com/chevett/miketown3');
 		});
 		
 		it('should preserve trailing slash in a valid url', function(){
 			var url = 'github.com/chevett/miketown3/';
-			var fromProxyUrlFn = require('./url-convertor').createFromProxyUrlFn(new FakeRequest({url:'github.com'}));
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:'github.com'}));
 
 			assert.equal(fromProxyUrlFn(url), 'http://github.com/chevett/miketown3/');
 		});
 
 		it('should preserve querystring parameters', function(){
 			var url = 'github.com/chevett/miketown3?name1=value1&name2=value2';
-			var fromProxyUrlFn = require('./url-convertor').createFromProxyUrlFn(new FakeRequest({url:'github.com'}));
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:'github.com'}));
 
 			assert.equal(fromProxyUrlFn(url), 'http://github.com/chevett/miketown3?name1=value1&name2=value2');
 		});
 
 		it('should default to https for a secure connection with no protocol', function(){
 			var url = 'github.com/chevett/miketown3';
-			var fromProxyUrlFn = require('./url-convertor').createFromProxyUrlFn(new FakeRequest({url:'github.com', secure: true}));
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:'github.com', secure: true}));
 
 			assert.equal(fromProxyUrlFn(url), 'https://github.com/chevett/miketown3');
 		});
 
 		it('should use protocol in the url regardless of the context', function(){
 			var url = 'ftp://github.com/chevett/miketown3';
-			var fromProxyUrlFn = require('./url-convertor').createFromProxyUrlFn(new FakeRequest({url:'https://github.com', secure: true}));
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:'https://github.com', secure: true}));
 
 			assert.equal(fromProxyUrlFn(url), 'ftp://github.com/chevett/miketown3');
 		});
 	
 		it('should respect http override', function(){
 			var url = 'http://github.com/chevett/miketown3';
-			var fromProxyUrlFn = require('./url-convertor').createFromProxyUrlFn(new FakeRequest({url:'https://github.com', secure: true}));
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:'https://github.com', secure: true}));
 
 			assert.equal(fromProxyUrlFn(url), 'http://github.com/chevett/miketown3');
 		});
 		
 		it('should respect port override', function(){
 			var url = 'github.com:8888/chevett/miketown3?name1=value1&name2=value2';
-			var fromProxyUrlFn = require('./url-convertor').createFromProxyUrlFn(new FakeRequest({url:'https://github.com', secure: true}));
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:'https://github.com', secure: true}));
 
 			assert.equal(fromProxyUrlFn(url), 'https://github.com:8888/chevett/miketown3?name1=value1&name2=value2');
 		});
@@ -140,7 +143,7 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 
 		it('should respect port and protocol override', function(){
 			var url = 'http://github.com:8080/chevett/miketown3?name1=value1&name2=value2';
-			var fromProxyUrlFn = require('./url-convertor').createFromProxyUrlFn(new FakeRequest({url:'/github.com', secure: true}));
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:'/github.com', secure: true}));
 
 			assert.equal(fromProxyUrlFn(url), 'http://github.com:8080/chevett/miketown3?name1=value1&name2=value2');
 		});
@@ -151,7 +154,7 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 				referer: testHelper.createProxyUrl('http://www.github.com')
 			});
 
-			var fromProxyUrlFn = require('./url-convertor').createFromProxyUrlFn(request);
+			var fromProxyUrlFn = new FromProxyUrlFn(request);
 
 			assert.equal(fromProxyUrlFn('clacks'), 'http://www.github.com/chevett/clacks');
 		});
@@ -161,7 +164,7 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 				url: 'chevett/clacks',
 				referer: testHelper.createProxyUrl('https://www.github.com')
 			});
-			var fromProxyUrlFn = require('./url-convertor').createFromProxyUrlFn(request);
+			var fromProxyUrlFn = new FromProxyUrlFn(request);
 
 			assert.equal(fromProxyUrlFn(request.url), 'https://www.github.com/chevett/clacks');
 		});
@@ -171,7 +174,7 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 				url: 'chevett/clacks',
 				referer: testHelper.createProxyUrl('http://www.github.com')
 			});
-			var fromProxyUrlFn = require('./url-convertor').createFromProxyUrlFn(request);
+			var fromProxyUrlFn = new FromProxyUrlFn(request);
 
 			assert.equal(fromProxyUrlFn('/miketown3'), 'http://www.github.com/miketown3');
 		});
@@ -181,7 +184,7 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 				url: 'chevett/clacks',
 				referer: testHelper.createProxyUrl('http://www.github.com')
 			});
-			var fromProxyUrlFn = require('./url-convertor').createFromProxyUrlFn(request);
+			var fromProxyUrlFn = new FromProxyUrlFn(request);
 
 			assert.equal(fromProxyUrlFn('miketown3'), 'http://www.github.com/chevett/miketown3');
 		});

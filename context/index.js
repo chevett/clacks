@@ -1,5 +1,7 @@
 var url = require('url'),
 	urlConvertor = require('./url-convertor'),
+	ToProxyUrlFn = urlConvertor.ToProxyUrlFn,
+	FromProxyUrlFn = urlConvertor.FromProxyUrlFn,
 	settings = require('../settings')(),
 	serverUrl = settings.createHttpUrl(),
 	secureServerUrl = settings.createHttpsUrl();
@@ -22,13 +24,14 @@ function _ipAddress(req){
 var Context = function(request){
 	if (request.url === '/') request.url = '/' + settings.homepage;
 
-	var fromProxyUrlFn = urlConvertor.createFromProxyUrlFn(request),
+	var fromProxyUrlFn = new FromProxyUrlFn(request),
+		toProxyUrlFn = new ToProxyUrlFn(request),
 		targetUrl = fromProxyUrlFn(request.url.substr(1)),
 		oTargetUrl = url.parse(targetUrl);
 	
 	this.convert =  {
-		toProxyUrl: urlConvertor.createToProxyUrlFn(request),
-		fromProxyUrl: urlConvertor.createFromProxyUrlFn(request),
+		toProxyUrl: toProxyUrlFn,
+		fromProxyUrl: fromProxyUrlFn,
 	};
 	this.client =  {
 		id: _id(request),

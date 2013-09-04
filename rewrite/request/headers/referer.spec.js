@@ -6,7 +6,7 @@ var assert = require('assert');
 
 describe('referer request header', function(){
 	it('should convert to the target referer', function  (){
-		var toProxyUrlFn = urlHelper.createToProxyUrlFn(new FakeRequest({url: 'http://www.google.com'}));
+		var toProxyUrlFn = new urlHelper.ToProxyUrlFn(new FakeRequest({url: 'http://www.google.com'}));
 		var url = 'http://www.github.com?search=what';
 		var targetReferer = headerRewriter(toProxyUrlFn(url), toProxyUrlFn);
 		

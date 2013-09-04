@@ -1,8 +1,7 @@
 var util = require("util"),
 	concatStream = require('concat-stream'),
 	PassThrough = require('stream').PassThrough,
-	rewriters = require('./rewriters/').response,
-	injectors =  require('./injectors/')
+	rewriters = require('./rewriters/').response
 ;
 
 
@@ -25,22 +24,15 @@ function _getEncoding(innerResponse){
 	}
 }
 
-function TranslatedResponse(context, innerResponse){
-	PassThrough.call(this);
+function _doBodyWrite(self, context, innerResponse){
 
-	var _self = this,
-		contentType = _getContentType(innerResponse),
+	var contentType = _getContentType(innerResponse),
 		bodyRewriter = rewriters[contentType],
 		encoding = _getEncoding(innerResponse);
 
-	process.nextTick(function(){
-		var newHeaders = rewriters.headers(innerResponse.headers, context);
-		_self.emit('headers', innerResponse.statusCode, newHeaders);
-	});
-
 	// something like an image just gets piped without making any changes
 	if (!bodyRewriter){
-		innerResponse.pipe(this);
+		innerResponse.pipe(self);
 		return this;
 	}
 
@@ -53,17 +45,28 @@ function TranslatedResponse(context, innerResponse){
 			contentType: contentType,
 			body: body
 		};
-		
-		_self.emit('before-write', model);
 
-		_self.write(model.body, encoding);
-		_self.end();
+		self.emit('before-write', model);
+
+		self.write(model.body, encoding);
+		self.end();
 	});
 
 	innerResponse.pipe(bodyBuilder);
 }
 
+function TranslatedResponse(context, innerResponse){
+	PassThrough.call(this);
 
+	var _self = this;
+
+	process.nextTick(function(){
+		rewriters.headers(innerResponse.headers, context, function(newHeaders){
+			_self.emit('headers', innerResponse.statusCode, newHeaders);
+			_doBodyWrite(_self, context, innerResponse);
+		});
+	});
+}
 
 util.inherits(TranslatedResponse, PassThrough);
 module.exports = TranslatedResponse;

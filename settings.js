@@ -10,7 +10,8 @@ var o = {
   isProduction: process.env.NODE_ENV === 'production',
   homepage: 'http://about.miketown3.com',
   cookieSecret: process.env.MT3_cookieSecret || 'you have gross feet',
-  idCookieName: 'chocolate'
+  idCookieName: 'chocolate',
+  redisUrl:  process.env.REDISTOGO_URL
 };
 
 o.createHttpsUrl = function(){

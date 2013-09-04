@@ -14,15 +14,19 @@
   "dependencies": {
     "less-middleware": "*",
     "cheerio": "*",
-    "connect-handlebars": "0.0.5",
-    "diff": "~1.0.4",
+    "connect-handlebars": "0.0.x",
+    "diff": "~1.0.x",
     "absolurl": "git://github.com/chevett/absolurl.git#master",
-    "node-uuid": "~1.4.1",
-    "express": "~3.4.0",
-    "concat-stream": "~1.0.1"
+    "node-uuid": "~1.4.x",
+    "express": "~3.4.x",
+    "concat-stream": "~1.0.x",
+    "short-bread": "git://github.com/chevett/short-bread.git#master",
+    "redis": "~0.8.x",
+    "hiredis": "~0.1.x",
+    "async": "~0.2.x",
+    "underscore": "~1.5.x"
   },
   "devDependencies": {
-    "mocha": "*",
-    "nodemon": "*"
+    "mocha": "*"
   }
 }

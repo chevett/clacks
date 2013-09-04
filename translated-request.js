@@ -16,28 +16,31 @@ function _getRequestor(myUrl){
 	}
 }
 
-function TranslatedRequest(context, options){
-	PassThrough.call(this);
-
-	var _self = this;
-	var headers = rewriters.headers(options.headers, context);
+function _sendRequest(self, context, options, newHeaders){
 	var outRequestOptions = url.parse(options.url);
-
-	process.nextTick(function(){
-		_self.emit('headers', headers);
-	});
-
-
-	outRequestOptions.headers = headers.toObject();
+	outRequestOptions.headers = newHeaders.toObject();
 	outRequestOptions.method = options.method;
 
 	var outRequest = _getRequestor(options.url)(outRequestOptions, function(inResponse){
-		_self.emit('ready', new TranslatedResponse(context, inResponse));
+		self.emit('ready', new TranslatedResponse(context, inResponse));
 	});
 
 	outRequest.on('error', function(err){ console.log(err); });
 
-	this.pipe(outRequest);
+	self.pipe(outRequest);
+}
+
+function TranslatedRequest(context, options){
+	PassThrough.call(this);
+
+	var _self = this;
+
+	process.nextTick(function(){
+		rewriters.headers(options.headers, context, function(newHeaders){
+			_sendRequest(_self, context, options, newHeaders);
+			_self.emit('headers', newHeaders);
+		});
+	});
 }
 
 util.inherits(TranslatedRequest, PassThrough);

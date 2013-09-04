@@ -1,5 +1,6 @@
 var url = require('url'),
 	urlConvertor = require('./url-convertor'),
+	cookieStore = require('./url-convertor'),
 	ToProxyUrlFn = urlConvertor.ToProxyUrlFn,
 	FromProxyUrlFn = urlConvertor.FromProxyUrlFn,
 	settings = require('../settings')(),
@@ -16,6 +17,16 @@ function _id(request, response){
 	response.cookie(settings.idCookieName, id, {signed: true});
 
 	return id;
+}
+
+function _cookies(context){
+	return [];
+	var oUrl = context.target.oUrl;
+
+	return cookieStore.getAll({
+		userId: context.client.id,
+		url: oUrl.hostname + oUrl.pathname   
+	});
 }
 
 function _isClientConnectionSecure(req){
@@ -44,7 +55,7 @@ var Context = function(request, response){
 
 	this.convert =  {
 		toProxyUrl: toProxyUrlFn,
-		fromProxyUrl: fromProxyUrlFn,
+		fromProxyUrl: fromProxyUrlFn
 	};
 	this.client =  {
 		id: _id(request, response),

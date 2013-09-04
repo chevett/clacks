@@ -1,128 +1,116 @@
-var fs = require('fs')
-;
+var fs = require('fs'),
+	async = require('async'), 
+	_ = require('underscore');
 
-function _isArray(v) {
-    return Object.prototype.toString.call(v) === '[object Array]';
+function _addToObjectMethod(headers){
+	Object.defineProperty(headers, "toObject", {
+		enumerable: false,
+		configurable: false,
+		writable: false,
+		value: function(){
+			var o = {};
+
+			this.forEach(function(header){
+
+				if (header.state!=='removed'){
+
+					if (!o[header.name]){
+						o[header.name] = header.value;
+					}
+					else if (_isArray(o[header.name])){
+						o[header.name].push(header.value);
+					}
+					else {
+						o[header.name] = [o[header.name], header.value];
+					}
+				}
+			});
+
+			return o;
+		}
+	});
 }
 
 function _headerObjectToArray(headers){
-    var arr = [], v;
+	var arr = [], v;
 
-    Object.defineProperty(arr, "toObject", {
-        enumerable: false,
-        configurable: false,
-        writable: false,
-        value: function(){
-            var o = {};
+	for (var headerName in headers){
+		v = headers[headerName];
 
-            this.forEach(function(header){
-
-                if (header.state!=='removed'){
-
-                    if (!o[header.name]){
-                        o[header.name] = header.value;
-                    }
-                    else if (_isArray(o[header.name])){
-                        o[header.name].push(header.value);
-                    }
-                    else {
-                        o[header.name] = [o[header.name], header.value];
-                    }
-                }
-            });
-
-            return o;
-        }
-    });
-
-    for (var headerName in headers){
-        v = headers[headerName];
-
-        if (_isArray(v)){
-            v.forEach(function(v2){
-                arr.push({name:headerName, value: v2});
-            });
-        }
-        else {
-            arr.push({name:headerName, value: headers[headerName]});
-        }
-
-    }                                                 0
+		if (_.isArray(v)){
+			v.forEach(function(v2){
+				arr.push({name:headerName, value: v2});
+			});
+		}
+		else {
+			arr.push({name:headerName, value: headers[headerName]});
+		}
+	}
 
     return arr;
 }
 
-function _extend(from){
-    var props = Object.getOwnPropertyNames(from);
-    var dest = {};
-
-    props.forEach(function(name) {
-        dest[name] = from[name];
-    });
-
-    return dest;
-}
-
 function _buildConverter(dir, lookup) {
-    lookup = lookup || {};
+	lookup = lookup || {};
 
-    fs.readdirSync(dir).forEach(function(file) {
-        if (/\.js$/i.test(file) && file!='index.js' && !/\.spec\.js$/i.test(file)) {
-            lookup[file.replace(/\.js$/i, '')] = require(dir + '/' + file );
-        }
-    });
+	fs.readdirSync(dir).forEach(function(file) {
+		if (/\.js$/i.test(file) && file!='index.js' && !/\.spec\.js$/i.test(file)) {
+			lookup[file.replace(/\.js$/i, '')] = require(dir + '/' + file );
+		}
+	});
 
-    return function (headers, urlRewriter) {
-        var requiredHeaderHandlers = _extend(lookup), val, additionalHeaders = [];
+	var lookupKeys = Object.keys(lookup);
 
-        if (!_isArray(headers))
+    return function (headers, context, cb) {
+		var convertValueFn = function(header, cb){
+			var fn = lookup[header.name];
+			header.originalValue = header.value;
+			
+			if(fn){
+				fn(header.value, context, function(value){
+					header.value  = value;
+					cb(null, header);
+				});
+			} else {
+				cb(null, header);
+			}
+		};
+
+        if (!_.isArray(headers))
             headers = _headerObjectToArray(headers);
 
-        // first convert any header we've received.
-        headers.forEach(function (header) {
-            header.originalValue = header.value;
+		_.difference(lookupKeys, _.map(headers, function(h){ return h.name; }))
+			.forEach(function(headerName){
+				headers.push({
+					name: headerName,
+					state :'added'
+				});
+			});
 
-            if (lookup[header.name]){
-                header.value = lookup[header.name](header.value, urlRewriter, additionalHeaders);
-            }
+		async.map(headers, convertValueFn, function(){
+			headers.forEach(function (header) {
+				if (!header.state){
+					if (header.value === header.originalValue) {
+						header.state = 'unchanged';
+					} else if (header.value){
+						header.state = 'changed';
+					} else {
+						header.state = 'removed';
+					}
+				}
+			});
 
-            delete requiredHeaderHandlers[header.name];
+			headers = _.filter(headers, function(h){
+				return h.state !== 'added' || h.originalValue !== undefined;
+			});
 
-            if (header.value === header.originalValue) {
-                header.state = 'unchanged';
-            }
-            else if (header.value){
-                header.state = 'changed';
-            }
-            else {
-                header.state = 'removed';
-            }
-        });
-
-        // next, run any un-run header handlers
-        for (var headerName in requiredHeaderHandlers) {
-            val = requiredHeaderHandlers[headerName](undefined, urlRewriter);
-
-            if (val){
-                headers.push({
-                    name: headerName,
-                    value : requiredHeaderHandlers[headerName](undefined, urlRewriter),
-                    state :'added'
-                });
-            }
-        }
-
-        // finally, add any additional headers created during the process
-        additionalHeaders.forEach(function(header){
-            header.state = 'added';
-            headers.push(header);
-        })
-
-        return headers;
-    }
+			_addToObjectMethod(headers);
+			cb(headers);
+		});
+    };
 }
 
-exports.create = _buildConverter
+exports.create = _buildConverter;
 
 
 

@@ -1,3 +1,1 @@
-module.exports = function(headerValue, context) {
-    return 'chunked';
-};
+module.exports = function(headerValue, context, cb) { cb('chunked'); };

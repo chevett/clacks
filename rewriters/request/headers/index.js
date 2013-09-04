@@ -1,5 +1,5 @@
 var o = {};
-function _deleteHeader(){return null;}
+function _deleteHeader(headerValue, context, cb){cb();}
 
 
 // delete some heroku headers

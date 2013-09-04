@@ -2,7 +2,7 @@ var diff = require('diff'),
     settings = require('../settings')(),
     handleBars = require('../node_modules/connect-handlebars/node_modules/handlebars/lib/handlebars'),
     fs = require('fs'),
-    navBarTemplate = handleBars.compile(fs.readFileSync('public/templates/navbar.handlebars', {encoding:'utf-8'}))
+    navBarTemplate = handleBars.compile(fs.readFileSync('injectors/navbar.handlebars', {encoding:'utf-8'}))
 ;
 
 

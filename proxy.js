@@ -2,7 +2,7 @@ var http = require('http'),
 	https = require('https'), 
 	rewriters = require("./rewrite/"), 
 	Context = require("./context/"), 
-	navbarBuilder = require('./injectors/navbar');
+	injectors = require('./injectors/');
 
 function _buildRequester(request){
 	var requestContext = new Context(request),
@@ -75,7 +75,7 @@ exports.go = function(request, response) {
                 body = rewriter(body, requestContext);
 
                 if (contentType==='text/html'){
-                    body = navbarBuilder(body, {headers:headers});
+                    body = injectors(requestContext, {body: body, headers:headers});
                 }
 
                 response.write(body, encoding);

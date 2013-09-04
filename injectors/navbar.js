@@ -1,5 +1,4 @@
-var cheerio = require('cheerio'),
-    diff = require('diff'),
+var diff = require('diff'),
     settings = require('../settings')(),
     handleBars = require('../node_modules/connect-handlebars/node_modules/handlebars/lib/handlebars'),
     fs = require('fs'),
@@ -59,22 +58,18 @@ function _adaptHeaders(headers){
     return arr;
 }
 
-module.exports = function(html, data)     {
+module.exports = function($, context, data){
     if (!settings.showNavBar){
-        return html;
+        return;
     }
 
-    var $ = cheerio.load(html),
-        $body = $('body'),
+    var $body = $('body'),
         viewModel = {
             headers:{}
-        }
-        ;
+        };
 
     viewModel.headers.response = _adaptHeaders(data.headers.response);
     viewModel.headers.request = _adaptHeaders(data.headers.request);
 
     $body.prepend(navBarTemplate(viewModel));
-
-    return $.html();
 };

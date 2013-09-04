@@ -1,12 +1,12 @@
 
 var express = require('express'),
-  routes = require('./routes'),
   proxy = require('./proxy'),
   http = require('http'),
   https = require('https'),
   fs = require('fs'),
   path = require('path'),
   settings = require('./settings')(),
+  context = require('./context'),
   sslOptions
 ;
 
@@ -27,15 +27,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
 app.use(function(err, req, res, next){
     console.log('mt3 global error handler: ');
-    console.log(err)
+    console.log(err);
     res.end();
 });
 
 
 // routing
-app.get('/', routes.home);
-app.get('/scripts/handlebars.js', routes.handlebars);
-app.get('/scripts/templates.js', routes.templates);
 app.get('/*', proxy.go);
 app.post('/*', proxy.go);
 

@@ -20,9 +20,11 @@ function _ipAddress(req){
 }
 
 var Context = function(request){
+	if (request.url === '/') request.url = '/' + settings.homepage;
+
 	var fromProxyUrlFn = urlConvertor.createFromProxyUrlFn(request),
-	targetUrl = fromProxyUrlFn(request.url.substr(1)),
-	oTargetUrl = url.parse(targetUrl);
+		targetUrl = fromProxyUrlFn(request.url.substr(1)),
+		oTargetUrl = url.parse(targetUrl);
 	
 	this.convert =  {
 		toProxyUrl: urlConvertor.createToProxyUrlFn(request),

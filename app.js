@@ -10,18 +10,12 @@ var express = require('express'),
 ;
 
 var app = express();
-
-
-// settings
-app.set('port', process.env.PORT || settings.port);
-app.set('views', __dirname + '/views');
-app.set('view engine', 'hjs');
-
+var port = process.env.PORT || settings.port;
 
 // middleware
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(require('less-middleware')({ src: __dirname + '/injectors/public' }));
+app.use(require('less-middleware')({ src: __dirname + '/injectors/public/css' }));
 app.use(express.static(path.join(__dirname, '/injectors/public')));
 app.use(app.router);
 app.use(function(err, req, res, next){
@@ -37,8 +31,8 @@ app.post('/*', proxy.go);
 
 
 // start
-http.createServer(app).listen(app.get('port'), function(){
-    console.log('Express server listening on port ' + app.get('port'));
+http.createServer(app).listen(port, function(){
+    console.log('listening on port ' + port);
 });
 
 if (!settings.isProduction) {
@@ -48,7 +42,7 @@ if (!settings.isProduction) {
     };
 
     https.createServer(sslOptions, app).listen(settings.sslPort, function(){
-        console.log('Express server listening on port ' + settings.sslPort);
+        console.log('listening on port ' + settings.sslPort);
     });
 }
 

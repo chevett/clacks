@@ -21,8 +21,8 @@ app.set('view engine', 'hjs');
 // middleware
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(require('less-middleware')({ src: __dirname + '/public' }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(require('less-middleware')({ src: __dirname + '/injectors/public' }));
+app.use(express.static(path.join(__dirname, '/injectors/public')));
 app.use(app.router);
 app.use(function(err, req, res, next){
     console.log('mt3 global error handler: ');

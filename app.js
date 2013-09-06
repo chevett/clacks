@@ -15,7 +15,7 @@ var port = process.env.PORT || settings.port;
 // middleware
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(require('less-middleware')({ src: __dirname + '/injectors/public/css' }));
+app.use(require('less-middleware')({ src: __dirname + '/injectors/public' }));
 app.use(express.static(path.join(__dirname, '/injectors/public')));
 app.use(app.router);
 app.use(function(err, req, res, next){

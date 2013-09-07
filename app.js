@@ -1,4 +1,4 @@
-var express = require('express'),
+var connect = require('connect'),
   proxy = require('./proxy'),
   http = require('http'),
   https = require('https'),
@@ -9,25 +9,20 @@ var express = require('express'),
   sslOptions
 ;
 
-var app = express();
+var app = connect();
 var port = process.env.PORT || settings.port;
 
 // middleware
-app.use(express.favicon());
-app.use(express.logger('dev'));
+app.use(connect.favicon());
+app.use(connect.logger('dev'));
 app.use(require('less-middleware')({ src: __dirname + '/injectors/public' }));
-app.use(express.static(path.join(__dirname, '/injectors/public')));
-app.use(app.router);
+app.use(connect.static(path.join(__dirname, '/injectors/public')));
+app.use(proxy.go);
 app.use(function(err, req, res, next){
     console.log('mt3 global error handler: ');
     console.log(err);
     res.end();
 });
-
-
-// routing
-app.get('/*', proxy.go);
-app.post('/*', proxy.go);
 
 
 // start

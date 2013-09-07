@@ -12,16 +12,15 @@
     "test": "mocha --reporter spec $(find . -path ./node_modules -prune -o -name '*.spec.js' -print)"
   },
   "dependencies": {
-    "express": "3.2.4",
-    "hjs": "*",
     "less-middleware": "*",
     "cheerio": "~0.12.0",
     "connect-handlebars": "0.0.5",
     "diff": "~1.0.4",
-	"absolurl": "git://github.com/chevett/absolurl.git#master"
+    "absolurl": "git://github.com/chevett/absolurl.git#master",
+    "connect": "~2.8.8"
   },
-  "devDependencies":{
-  	"mocha": "*",
-  	"nodemon": "*"
+  "devDependencies": {
+    "mocha": "*",
+    "nodemon": "*"
   }
 }

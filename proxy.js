@@ -75,7 +75,13 @@ exports.go = function(request, response) {
 
             proxyResponse.on('end', function() {
 
-                body = rewriter(body, requestContext);
+				try {
+                     body = rewriter(body, requestContext);
+				} catch (e) {
+					response.write(e.message || e, encoding);
+					response.end();
+					return;
+				}
 
                 if (contentType==='text/html'){
                     body = injectors(requestContext, {body: body, headers:headers});

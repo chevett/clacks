@@ -5,7 +5,8 @@ var http = require('http'),
 	injectors = require('./injectors/');
 
 function _buildRequester(request, response){
-	var requestContext = new Context(request, response),
+	var requestUrl = request.url.substr(1),
+		requestContext = new Context(request, response),
 		options = requestContext.target.oUrl,
         requestHeaders = rewriters.request.headers(request.headers, requestContext),
         f = function(cb){
@@ -23,6 +24,11 @@ function _buildRequester(request, response){
     
 	options.method = request.method;
     options.headers = requestHeaders.toObject();
+
+	if (requestUrl !== requestContext.target.url){
+		response.redirect(301, requestContext.convert.toProxyUrl(requestContext.target.url));
+		return;
+	}
 
     return f;
 }
@@ -48,7 +54,8 @@ function _getContentEncoding(repsonse){
 
 exports.go = function(request, response) {
     var requester =  _buildRequester(request, response);
-    
+    if (!requester) return;
+
     var proxyRequest = requester(function(proxyResponse, headers, requestContext){
         var contentType = _getContentType(proxyResponse),
             rewriter = rewriters.response[contentType],
@@ -96,8 +103,8 @@ exports.go = function(request, response) {
 
     proxyRequest.on('error', function (err) {
         console.log('proxyRequest error: '+err);
-        //response.writeHead(500);
-        //response.write(err.toString());
+        response.write('Unable to contact the requested site.\r\n');
+        response.write(err.toString());
         response.end();
     });
 

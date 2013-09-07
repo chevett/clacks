@@ -18,11 +18,6 @@ app.use(express.logger('dev'));
 app.use(require('less-middleware')({ src: __dirname + '/injectors/public' }));
 app.use(express.static(path.join(__dirname, '/injectors/public')));
 app.use(proxy.go);
-app.use(function(err, req, res, next){
-	res.write(err);
-	console.log(err);
-	res.end();
-});
 
 // start
 http.createServer(app).listen(port, function(){

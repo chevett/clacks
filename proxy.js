@@ -21,13 +21,9 @@ function _buildRequester(request, response){
         }
     ;
     
-//   console.log(url.format(options)); 
-//	delete options.headere
-//	console.log(options);
 	options.method = request.method;
     options.headers = requestHeaders.toObject();
-	//options.host = options.headers.host;
-	console.log(options);
+
     return f;
 }
 

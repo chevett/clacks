@@ -9,7 +9,7 @@ var url = require('url'),
 
 function _id(request, response){
 	var id = request.signedCookies[settings.idCookieName];
-	console.log(id);
+
 	if (id) return id;
 
 	id = uuid.v4();

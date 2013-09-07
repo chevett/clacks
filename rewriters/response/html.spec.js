@@ -14,7 +14,7 @@ describe('html response rewriter', function(){
 
 	function _shouldConvertElementAttributeUrl(elementName, attributeName){
 		var context = new Context(new FakeRequest());
-		console.log(context);
+
 		var toProxyUrlFn = context.convert.toProxyUrl;
 		var $fruits = cheerio.load(_getFruitsString());
 		var $elements = $fruits(elementName + '['+ attributeName + ']');

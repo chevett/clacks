@@ -4,10 +4,18 @@ var url = require('url'),
 	FromProxyUrlFn = urlConvertor.FromProxyUrlFn,
 	settings = require('../settings')(),
 	serverUrl = settings.createHttpUrl(),
-	secureServerUrl = settings.createHttpsUrl();
+	secureServerUrl = settings.createHttpsUrl(),
+	uuid = require('node-uuid');
 
-function _id(request){
-	return 'shit';
+function _id(request, response){
+	var id = request.signedCookies[settings.idCookieName];
+	console.log(id);
+	if (id) return id;
+
+	id = uuid.v4();
+	response.cookie(settings.idCookieName, id, {signed: true});
+
+	return id;
 }
 
 function _isClientConnectionSecure(req){
@@ -21,7 +29,7 @@ function _ipAddress(req){
 	return req.headers['x-forwarded-for'];
 }
 
-var Context = function(request){
+var Context = function(request, response){
 	if (request.url === '/') request.url = '/' + settings.homepage;
 
 	var fromProxyUrlFn = new FromProxyUrlFn(request),
@@ -34,7 +42,7 @@ var Context = function(request){
 		fromProxyUrl: fromProxyUrlFn,
 	};
 	this.client =  {
-		id: _id(request),
+		id: _id(request, response),
 		isSecure: _isClientConnectionSecure(request),
 		ipAddress: _ipAddress(request)
 	};

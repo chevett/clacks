@@ -1,29 +1,23 @@
-var connect = require('connect'),
+var express = require('express'),
   proxy = require('./proxy'),
   http = require('http'),
   https = require('https'),
   fs = require('fs'),
   path = require('path'),
   settings = require('./settings')(),
-  context = require('./context'),
   sslOptions
 ;
 
-var app = connect();
+var app = express();
 var port = process.env.PORT || settings.port;
 
 // middleware
-app.use(connect.favicon());
-app.use(connect.logger('dev'));
+app.use(express.favicon());
+app.use(express.cookieParser(settings.cookieSecret));
+app.use(express.logger('dev'));
 app.use(require('less-middleware')({ src: __dirname + '/injectors/public' }));
-app.use(connect.static(path.join(__dirname, '/injectors/public')));
+app.use(express.static(path.join(__dirname, '/injectors/public')));
 app.use(proxy.go);
-app.use(function(err, req, res, next){
-    console.log('mt3 global error handler: ');
-    console.log(err);
-    res.end();
-});
-
 
 // start
 http.createServer(app).listen(port, function(){
@@ -40,9 +34,3 @@ if (!settings.isProduction) {
         console.log('listening on port ' + settings.sslPort);
     });
 }
-
-
-
-
-
-

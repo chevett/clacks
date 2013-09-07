@@ -4,8 +4,8 @@ var http = require('http'),
 	Context = require("./context/"), 
 	injectors = require('./injectors/');
 
-function _buildRequester(request){
-	var requestContext = new Context(request),
+function _buildRequester(request, response){
+	var requestContext = new Context(request, response),
 		options = requestContext.target.oUrl,
         requestHeaders = rewriters.request.headers(request.headers, requestContext),
         f = function(cb){
@@ -51,7 +51,7 @@ function _getContentEncoding(repsonse){
 
 
 exports.go = function(request, response) {
-    var requester =  _buildRequester(request);
+    var requester =  _buildRequester(request, response);
     
     var proxyRequest = requester(function(proxyResponse, headers, requestContext){
         var contentType = _getContentType(proxyResponse),

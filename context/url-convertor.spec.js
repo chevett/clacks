@@ -169,6 +169,15 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 			assert.equal(fromProxyUrlFn(request.url), 'https://www.github.com/chevett/clacks');
 		});
 
+		it('should return the request url when passed undefined', function(){
+			var request = new FakeRequest({
+				url: 'chevett/clacks',
+				referer: testHelper.createProxyUrl('https://www.github.com')
+			});
+			var fromProxyUrlFn = new FromProxyUrlFn(request);
+
+			assert.equal(fromProxyUrlFn(), 'https://www.github.com/chevett/clacks');
+		});
 		it('should use the referer to resolve invalid urls and then handle another relative url', function(){
 			var request = new FakeRequest({
 				url: 'chevett/clacks',

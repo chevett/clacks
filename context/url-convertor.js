@@ -55,6 +55,7 @@ exports.ToProxyUrlFn = function(request){
 exports.FromProxyUrlFn = function (request){
 	var requestUrl = _getRequestUrl(request);
 	return function(myUrl){
+		if (myUrl === undefined) return requestUrl;
 		if (!myUrl) return null;
 
 		var conversionoptions = _createAbsolurlDefaults(request);

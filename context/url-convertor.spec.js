@@ -26,6 +26,13 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 			assert.equal(toProxyUrlFn(url), httpsClacksHomeUrl + 'https://www.google.com/');
 		});
 
+		it('should not double proxy a url', function (){
+			var url = 'https://www.google.com';
+			var toProxyUrlFn = new ToProxyUrlFn();
+
+			assert.equal(toProxyUrlFn(toProxyUrlFn(url)), httpsClacksHomeUrl + 'https://www.google.com');
+		});
+
 		it('should convert relative urls when there is a request context', function(){
 			var url = '/chevett/miketown3';
 			var toProxyUrlFn = new ToProxyUrlFn(new FakeRequest({url:'github.com'}));

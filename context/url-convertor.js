@@ -2,6 +2,11 @@ var settings = require('../settings')(),
     url = require('url'),
 	absolurl = require('absolurl');
 
+var httpBaseUrl = settings.createHttpUrl(),
+	httpsBaseUrl = settings.createHttpsUrl(),
+	httpBaseRegex = new RegExp('^' + httpBaseUrl.replace('.', '\\.').replace('/', '\\/'), 'i'),
+	httpsBaseRegex = new RegExp('^' + httpsBaseUrl.replace('.', '\\.').replace('/', '\\/'), 'i');
+
 function _createAbsolurlDefaults(request){
 	return {
 		protocol: _isClientConnectionSecure(request) ? 'https:' : 'http:',
@@ -36,16 +41,18 @@ exports.ToProxyUrlFn = function(request){
 
     return function (internetUrl){
 		if (!internetUrl) return internetUrl;
+		if (httpBaseRegex.test(internetUrl)) return internetUrl;
+		if (httpsBaseRegex.test(internetUrl)) return internetUrl;
 
 		var conversionOptions =_createAbsolurlDefaults(request);
-		var clacksHomeUrl = settings.createHttpUrl();
+		var clacksHomeUrl = httpBaseUrl;
 		
 		internetUrl = absolurl.ensureComplete(internetUrl, requestUrl, conversionOptions);
 
 		if (!internetUrl) return internetUrl;
 
 		if (/^https/.test(internetUrl) || isHttpDowngrade) {
-			clacksHomeUrl = settings.createHttpsUrl();
+			clacksHomeUrl = httpsBaseUrl;
 		}
 
 		return clacksHomeUrl + internetUrl ;

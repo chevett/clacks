@@ -26,7 +26,7 @@ function _buildRequester(request, response){
     options.headers = requestHeaders.toObject();
 
 	if (requestUrl !== requestContext.target.url){
-		response.redirect(301, requestContext.convert.toProxyUrl(requestContext.target.url));
+		response.redirect(302, requestContext.convert.toProxyUrl(requestContext.target.url));
 		return;
 	}
 

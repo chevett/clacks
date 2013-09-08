@@ -2,8 +2,8 @@ var settings = require('../settings')(),
     url = require('url'),
 	absolurl = require('absolurl');
 
-var httpBaseUrl = settings.createHttpUrl(),
-	httpsBaseUrl = settings.createHttpsUrl(),
+var httpBaseUrl = absolurl.ensureComplete(settings.createHttpUrl()),
+	httpsBaseUrl = absolurl.ensureComplete(settings.createHttpsUrl()),
 	httpBaseRegex = new RegExp('^' + httpBaseUrl.replace('.', '\\.').replace('/', '\\/'), 'i'),
 	httpsBaseRegex = new RegExp('^' + httpsBaseUrl.replace('.', '\\.').replace('/', '\\/'), 'i');
 

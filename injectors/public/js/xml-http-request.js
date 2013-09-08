@@ -1,8 +1,10 @@
-(function(){
-	var reallySend = XMLHttpRequest.prototype.send;
-	XMLHttpRequest.prototype.send = function() {
+(function(open) {
+	XMLHttpRequest.prototype.open = function(method, url, async, user, pass) {
 
-		console.log(this);
-		reallySend.apply(this, arguments);
+
+		console.log('currentUrl: ' + window.location);
+		console.log('intercepted: ' + url);
+		open.call(this, method, url, async, user, pass);
 	};
-})();
+
+})(XMLHttpRequest.prototype.open);

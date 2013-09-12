@@ -1,11 +1,11 @@
 {
-  "name": "mike-town-three",
-  "title": "miketown3",
+  "name": "clacks",
+  "title": "clacks",
   "version": "0.0.1",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "http://github.com/chevett/miketown3.git"
+    "url": "http://github.com/chevett/clacks.git"
   },
   "scripts": {
     "start": "node app.js",

@@ -18,7 +18,8 @@
     "diff": "~1.0.4",
     "absolurl": "git://github.com/chevett/absolurl.git#master",
     "node-uuid": "~1.4.1",
-    "express": "~3.4.0"
+    "express": "~3.4.0",
+    "concat-stream": "~1.0.1"
   },
   "devDependencies": {
     "mocha": "*",

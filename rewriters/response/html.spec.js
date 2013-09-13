@@ -11,16 +11,22 @@ describe('html response rewriter', function(){
 		return fs.readFileSync('test/fruits.html');
     }
 
+	var context = new Context(new FakeRequest());
+	var toProxyUrlFn = context.convert.toProxyUrl;
 
-	function _shouldConvertElementAttributeUrl(elementName, attributeName){
-		var context = new Context(new FakeRequest());
-
-		var toProxyUrlFn = context.convert.toProxyUrl;
+	function _convertFruits(){
 		var $fruits = cheerio.load(_getFruitsString());
-		var $elements = $fruits(elementName + '['+ attributeName + ']');
-		
 		var $newFruits = cheerio.load(htmlRewriter($fruits.html(), context));
-		var $newElements = $newFruits(elementName + '['+ attributeName + ']');
+	
+		return {
+			old: $fruits,
+			new: $newFruits
+		};
+	}
+	function _shouldConvertElementAttributeUrl(elementName, attributeName){
+		var $fruits = _convertFruits();
+		var $elements = $fruits.old(elementName + '['+ attributeName + ']');
+		var $newElements = $fruits.new(elementName + '['+ attributeName + ']');
 	
 		var $element, $newElement;
 
@@ -28,8 +34,8 @@ describe('html response rewriter', function(){
 		assert.equal($elements.length, $newElements.length);
 
 		for (var i=0; i<$elements.length; i++){
-			$element = $fruits($elements[i]);
-			$newElement = $newFruits($newElements[i]);
+			$element = $fruits.old($elements[i]);
+			$newElement = $fruits.new($newElements[i]);
 
 			assert.equal(toProxyUrlFn($element.attr(attributeName)), $newElement.attr(attributeName));
 		}
@@ -53,5 +59,15 @@ describe('html response rewriter', function(){
 	
 	it('should convert form action attributes', function (){
 		_shouldConvertElementAttributeUrl('form', 'action');
+	});
+	it('should handle elements that have attributes with lame casing', function (){
+		var $fruits = _convertFruits();
+		var originalUrl = $fruits.old('#upper-case-href').attr('href');
+		var newUrl = $fruits.new('#upper-case-href').attr('href');
+		
+		console.log(originalUrl);
+		console.log(newUrl);
+		assert.notEqual(originalUrl, '');
+		assert.equal(toProxyUrlFn(originalUrl), newUrl);
 	});
 });

@@ -68,8 +68,8 @@ module.exports = function($, context, data){
             headers:{}
         };
 
-    viewModel.headers.response = _adaptHeaders(data.headers.response);
-    viewModel.headers.request = _adaptHeaders(data.headers.request);
+    viewModel.headers.response = _adaptHeaders(data.headers.response || []);
+    viewModel.headers.request = _adaptHeaders(data.headers.request || []);
 
     $body.prepend(navBarTemplate(viewModel));
 };

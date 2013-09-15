@@ -20,6 +20,10 @@ function _isClientConnectionSecure(req){
 	return settings.isProduction? req.headers['x-forwarded-proto'] == 'https' : req.secure;
 }
 
+function _shouldProxy(myUrl){
+	return !/^\s*(mailto|data|javascript):/i.test(myUrl);
+}
+
 
 function _getRequestUrl(request){
 	var conversionOptions =_createAbsolurlDefaults(request); 
@@ -46,10 +50,11 @@ exports.ToProxyUrlFn = function(request){
 
 		var conversionOptions =_createAbsolurlDefaults(request);
 		var clacksHomeUrl = httpBaseUrl;
-		
+
 		internetUrl = absolurl.ensureComplete(internetUrl, requestUrl, conversionOptions);
 
 		if (!internetUrl) return internetUrl;
+		if (!_shouldProxy(internetUrl)) return internetUrl;
 
 		if (/^https/.test(internetUrl) || isHttpDowngrade) {
 			clacksHomeUrl = httpsBaseUrl;

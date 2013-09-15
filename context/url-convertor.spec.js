@@ -94,6 +94,20 @@ var httpsClacksHomeUrl = settings.createHttpsUrl();
 
 			assert.equal(toProxyUrlFn(url), httpsClacksHomeUrl+'https://www.google.com/');
 		});
+
+		it('should not change a data url', function (){
+			var url = 'data:image/png;base64,iVBOR';
+			var toProxyUrlFn = new ToProxyUrlFn();
+
+			assert.equal(toProxyUrlFn(url), url);
+		});
+
+		it('should not change a mailto url', function (){
+			var url = 'mailto:bgates@mircosoft.com';
+			var toProxyUrlFn = new ToProxyUrlFn();
+
+			assert.equal(toProxyUrlFn(url), url);
+		});
 	});
 			
  

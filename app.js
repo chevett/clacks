@@ -22,6 +22,13 @@ app.use(express.static(path.join(__dirname, '/injectors/public')));
 app.use(function(req, res){
 	var headers = {};
 	var ctx = new Context(req, res);
+	if (!ctx.target){
+		res.writeHead(400, {});
+		res.write('<h1>400</h1>');
+		res.write(req.url.substr(1) + ' is a bed request');
+		return;
+	}
+
 
     var request = new TranslatedRequest(ctx, {
 		url: ctx.target.url,

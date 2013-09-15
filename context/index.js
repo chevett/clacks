@@ -35,7 +35,12 @@ var Context = function(request, response){
 	var fromProxyUrlFn = new FromProxyUrlFn(request),
 		toProxyUrlFn = new ToProxyUrlFn(request),
 		targetUrl = fromProxyUrlFn(),
-		oTargetUrl = url.parse(targetUrl);
+		oTargetUrl;
+
+	if (!targetUrl) return;
+
+	oTargetUrl = url.parse(targetUrl);
+
 
 	this.convert =  {
 		toProxyUrl: toProxyUrlFn,

@@ -20,8 +20,9 @@ app.use(express.logger('dev'));
 app.use(require('less-middleware')({ src: __dirname + '/injectors/public' }));
 app.use(express.static(path.join(__dirname, '/injectors/public')));
 app.use(function(req, res){
-	var headers = {};
+	var headersModel = {};
 	var ctx = new Context(req, res);
+
 	if (!ctx.target){
 		res.writeHead(400, {});
 		res.write('<h1>400</h1>');
@@ -36,8 +37,8 @@ app.use(function(req, res){
 		headers: req.headers
 	});
 
-	request.on('headers', function(statusCode, headers){
-		headers.request = headers;
+	request.on('headers', function(headers){
+		headersModel.request = headers;
 	});
 
 	req.pipe(request);
@@ -45,12 +46,12 @@ app.use(function(req, res){
 	request.on('ready', function(response){
 		response.on('headers', function(statusCode, headers){
 			res.writeHead(statusCode, headers.toObject());
-			headers.response = headers;
+			headersModel.response = headers;
 		});
 
 		response.on('before-write', function(data){
 			if (data.contentType==='text/html'){
-				data.body = injectors(ctx, {body: data.body, headers: headers});
+				data.body = injectors(ctx, {body: data.body, headers: headersModel});
 			}
 		});
 

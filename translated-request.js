@@ -20,9 +20,15 @@ function TranslatedRequest(context, options){
 	PassThrough.call(this);
 
 	var _self = this;
-
+	var headers = rewriters.headers(options.headers, context);
 	var outRequestOptions = url.parse(options.url);
-	outRequestOptions.headers = rewriters.headers(options.headers, context).toObject();
+
+	process.nextTick(function(){
+		_self.emit('headers', headers);
+	});
+
+
+	outRequestOptions.headers = headers.toObject();
 	outRequestOptions.method = options.method;
 
 	var outRequest = _getRequestor(options.url)(outRequestOptions, function(inResponse){

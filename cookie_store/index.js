@@ -18,19 +18,27 @@ var CookieStore = function(options){
 	var shortBread = new ShortBread(options);
 	var key = _getKey(options.userId);
 
-	this.set = function(header){
-		redis.rpush(key, header);
-	};	
+	this.setCookies = function(lst){
+		for (var i=0; i<lst.length; i++){
+			this.setCookie(lst[i]);
+		}
+	};
 
-	this.get = function(cb){
+	this.setCookie = function(header){
+		var oCookie = shortBread.setCookie(header);
+		var completedHeader = oCookie.toString();
+
+		redis.rpush(key, completedHeader);
+	};
+
+	this.getCookieHeader = function(cb){
 		redis.lrange(key, 0, -1, function(err, lst){
-			for (var i=0; i<lst.length; i++){
-				shortBread.setCookie(lst[i]);
-			}
-
-			cb(shortBread.getCookieHeader());
+			shortBread.setCookies(lst);
+			var temp = shortBread.getCookieHeader();
+			cb(temp);
 		});
 	};
 };
+
 
 module.exports = CookieStore;

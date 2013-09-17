@@ -65,8 +65,6 @@ describe('html response rewriter', function(){
 		var originalUrl = $fruits.old('#upper-case-href').attr('href');
 		var newUrl = $fruits.new('#upper-case-href').attr('href');
 		
-		console.log(originalUrl);
-		console.log(newUrl);
 		assert.notEqual(originalUrl, '');
 		assert.equal(toProxyUrlFn(originalUrl), newUrl);
 	});

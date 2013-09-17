@@ -6,5 +6,5 @@ module.exports = function(headerValue, context, cb) {
 		url: context.target.url
 	});
 
-	cookieStore.get(cb);
+	cookieStore.getCookieHeader(cb);
 };

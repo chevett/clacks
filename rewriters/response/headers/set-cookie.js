@@ -8,6 +8,6 @@ module.exports = function(headerValue, context, cb) {
 		url: context.target.url
 	});
 
-	cookieStore.set(headerValue);
+	cookieStore.setCookie(headerValue);
 	cb();
 };

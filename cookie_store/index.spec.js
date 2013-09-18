@@ -2,7 +2,7 @@ var CookieStore = require('./index.js');
 var expect = require('chai').expect;
  
 describe('cookie store', function(){
-	it('should be reasonable', function(){
+	it('should be reasonable', function(done){
 		var cookieStore = new CookieStore({
 			userId:'xj9000',
 			url: 'https://accounts.google.com/login'
@@ -20,6 +20,7 @@ describe('cookie store', function(){
 
 		cookieStore.getCookieHeader(function(cookieHeader){
 			expect(cookieHeader).to.be.equal('GAPS=1:aVnF72zYdkaERhd6Oh6jQyzYUw3Idw:l4q4QjpB4tYX1ruW; GALX=l2QZx_aQmA');
+			done();
 		});
 	});
 });

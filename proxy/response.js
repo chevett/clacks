@@ -1,7 +1,7 @@
 var util = require("util"),
 	concatStream = require('concat-stream'),
 	PassThrough = require('stream').PassThrough,
-	rewriters = require('./rewriters/').response
+	rewriters = require('../rewriters/').response
 ;
 
 

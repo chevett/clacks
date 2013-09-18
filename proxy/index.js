@@ -1,6 +1,6 @@
-var injectors =  require('./injectors/'),
-	Context = require('./context/'),
-	TranslatedRequest = require('./translated-request');
+var injectors =  require('../injectors/'),
+	Context = require('../context/'),
+	TranslatedRequest = require('./request');
 
 module.exports = function(req, res){
 	var headersModel = {};

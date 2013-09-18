@@ -3,8 +3,8 @@ var util = require("util"),
 	PassThrough = require('stream').PassThrough,
 	http = require('http'),
 	https = require('https'),
-	rewriters = require('./rewriters/').request,
-	TranslatedResponse = require('./translated-response')
+	rewriters = require('../rewriters/').request,
+	TranslatedResponse = require('./response')
 
 function _getRequestor(myUrl){
 	switch (url.parse(myUrl).protocol){

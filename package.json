@@ -24,7 +24,9 @@
     "redis": "~0.8.x",
     "hiredis": "~0.1.x",
     "async": "~0.2.x",
-    "underscore": "~1.5.x"
+    "underscore": "~1.5.x",
+    "esprima": "~1.0.4",
+    "escodegen": "0.0.27"
   },
   "devDependencies": {
     "mocha": "*",

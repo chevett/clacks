@@ -17,9 +17,14 @@ function traverse(object, visitor) {
 }
 
 function _checkString(str, ctx){
-	if (!/^https?:/i.test(str)) return str;
+	if (!/^https?:\/\//i.test(str)) return str;
 
-	return ctx.convert.toProxyUrl(str);
+	try {
+		return ctx.convert.toProxyUrl(str);
+	} catch (e){
+		console.log('error in js rewriter.');
+		console.log(str);
+		return str
 }
 
 

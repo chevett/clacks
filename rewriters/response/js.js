@@ -24,7 +24,8 @@ function _checkString(str, ctx){
 	} catch (e){
 		console.log('error in js rewriter.');
 		console.log(str);
-		return str
+		return str;
+	}
 }
 
 

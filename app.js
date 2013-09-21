@@ -8,6 +8,7 @@ var express = require('express'),
   sslOptions
 ;
 
+bad = notGood
 var app = express();
 var port = process.env.PORT || settings.port;
 

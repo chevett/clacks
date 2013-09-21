@@ -34,4 +34,4 @@ o.createHttpUrl = function(){
 };
 
 
-module.exports = function(){return Object.create(o);}
+module.exports = function(){return Object.create(o);};

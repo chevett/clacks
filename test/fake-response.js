@@ -1,4 +1,4 @@
-module.exports = function FakeResponse(options){
+module.exports = function FakeResponse(){
 	this.signedCookies = {};
 	this.setCookie = function(){
 	};

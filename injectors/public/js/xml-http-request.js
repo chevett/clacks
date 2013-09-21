@@ -1,3 +1,4 @@
+/* global URI: false */
 (function(open, UriJs) {
 	XMLHttpRequest.prototype.open = function(method, url, async, user, pass) {
 

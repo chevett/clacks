@@ -17,7 +17,7 @@ function _addToObjectMethod(headers){
 					if (!o[header.name]){
 						o[header.name] = header.value;
 					}
-					else if (_isArray(o[header.name])){
+					else if (_.isArray(o[header.name])){
 						o[header.name].push(header.value);
 					}
 					else {
@@ -33,14 +33,15 @@ function _addToObjectMethod(headers){
 
 function _headerObjectToArray(headers){
 	var arr = [], v;
+	var push = function(v2){
+		arr.push({name:headerName, value: v2});
+	};
 
 	for (var headerName in headers){
 		v = headers[headerName];
 
 		if (_.isArray(v)){
-			v.forEach(function(v2){
-				arr.push({name:headerName, value: v2});
-			});
+			v.forEach(push);
 		}
 		else {
 			arr.push({name:headerName, value: headers[headerName]});

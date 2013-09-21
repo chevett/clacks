@@ -1,0 +1,9 @@
+{
+	"unused": false,
+	"undef": true,
+	"node": true,
+	"globals":{
+		"describe": false,
+		"it": false
+	}
+}

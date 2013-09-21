@@ -1,6 +1,5 @@
 var esprima = require('esprima');
 var escodegen = require('escodegen');
-var _ = require('underscore');
 
 function traverse(object, visitor) {
 	var key, child;

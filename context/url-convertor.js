@@ -75,4 +75,4 @@ exports.FromProxyUrlFn = function (request){
 
 		return internetUrl;
 	};
-}
+};

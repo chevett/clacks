@@ -1,2 +1,1 @@
-
-exports.headers = headers = require('./headers/');
+exports.headers = require('./headers/');

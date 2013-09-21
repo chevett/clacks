@@ -4,7 +4,7 @@ var util = require("util"),
 	http = require('http'),
 	https = require('https'),
 	rewriters = require('../rewriters/').request,
-	TranslatedResponse = require('./response')
+	TranslatedResponse = require('./response');
 
 function _getRequestor(myUrl){
 	var protocol = url.parse(myUrl).protocol;

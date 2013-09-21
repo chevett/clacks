@@ -1,3 +1,3 @@
-module.exports = function(js, context) {
+module.exports = function(js) {
     return js;
 };

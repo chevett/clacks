@@ -7,11 +7,17 @@ var util = require("util"),
 	TranslatedResponse = require('./response')
 
 function _getRequestor(myUrl){
-	switch (url.parse(myUrl).protocol){
+	var protocol = url.parse(myUrl).protocol;
+
+	switch (protocol){
 		case 'https:':
 			return https.request;
 
 		case 'http:':
+			return http.request;
+
+		default:
+			console.log('unrecognized protocol: ' + protocol);
 			return http.request;
 	}
 }

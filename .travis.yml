@@ -32,3 +32,6 @@ after_success:
             yes | heroku keys:add;
             yes | git push heroku master --force;
             fi
+
+install: "npm -g install jshint"
+script: "jshint"

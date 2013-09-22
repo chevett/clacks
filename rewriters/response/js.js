@@ -30,6 +30,7 @@ function _checkString(str, ctx){
 
 
 module.exports = function(js, ctx) {
+	return js;
 	var tree = esprima.parse(js);
 
 	traverse(tree, function(node){

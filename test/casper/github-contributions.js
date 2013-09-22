@@ -1,7 +1,8 @@
 /* global casper: false */
 
 casper.test.begin('githib contributions graph loads', function(test){
-	casper.start('http://www.miketown3.com/http://github.com/chevett', function(){
+	casper.start('https://www.miketown3.com/https://github.com/chevett', function(){
+		this.echo(this.getTitle());
 	});
 
 	casper.waitForSelector('.calendar-graph svg g g', function(){

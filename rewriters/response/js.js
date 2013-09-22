@@ -16,10 +16,11 @@ function traverse(object, visitor) {
 }
 
 function _checkString(str, ctx){
-	if (!/^https?:\/\//i.test(str)) return str;
-
 	try {
-		return ctx.convert.toProxyUrl(str);
+		if (/^http:\/\//i.test(str)) return ctx.server.url + str;
+		if (/^https:\/\//i.test(str)) return ctx.server.secureUrl + str;
+
+		return str;
 	} catch (e){
 		console.log('error in js rewriter.');
 		console.log(str);

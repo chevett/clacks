@@ -19,6 +19,8 @@ after_success:
           - wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
           - if [[ "$TRAVIS_BRANCH" == "master" ]]; then
             git remote add heroku git@heroku.com:miketown3.git;
+            git config user.email "mchevett@gmail.com";
+            git config user.name "Mike Chevett";
             echo "Host heroku.com" >> ~/.ssh/config;
             echo "   StrictHostKeyChecking no" >> ~/.ssh/config;
             echo "   CheckHostIP no" >> ~/.ssh/config;
@@ -28,9 +30,14 @@ after_success:
             heroku config:add MT3_sslPort=443;
             heroku config:add MT3_hostname=www.miketown3.com;
             heroku config:add MT3_lastCommit=`git rev-parse HEAD`;
-            heroku keys:clear;
             yes | heroku keys:add;
-            yes | git push heroku master --force;
+            git checkout heroku/master;
+            git rebase master;
+            npm -g install jshint plato;
+            plato -r -x 'node_modules|plato' -d injectors/public/plato .;
+            git add injectors/public/plato -f;
+            git commit -am'whatever whatever.';
+            yes | git push heroku HEAD:master --force;
             fi
 
 install: "npm -g install jshint"

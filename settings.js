@@ -14,6 +14,7 @@ var o = {
   redisUrl:  process.env.REDISTOGO_URL
 };
 
+
 o.createHttpsUrl = function(){
 	return url.format({
 		port: o.sslPort,

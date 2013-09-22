@@ -17,8 +17,8 @@ function traverse(object, visitor) {
 
 function _checkString(str, ctx){
 	try {
-		if (/^http:\/\//i.test(str)) return ctx.server.url + str;
-		if (/^https:\/\//i.test(str)) return ctx.server.secureUrl + str;
+		//if (/^http:\/\//i.test(str)) return ctx.server.url + str;
+		//if (/^https:\/\//i.test(str)) return ctx.server.secureUrl + str;
 
 		return str;
 	} catch (e){
@@ -30,7 +30,6 @@ function _checkString(str, ctx){
 
 
 module.exports = function(js, ctx) {
-	return js;
 	var tree = esprima.parse(js);
 
 	traverse(tree, function(node){

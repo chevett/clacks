@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap-3.0.0-wip.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome-ie7.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="brand" href="http://github.com/jsoverson/plato">Plato on Github</a>
+    <ul class="nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>context/url-convertor.spec.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="span6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"></i></a></h2>
+      <p class="stat">72.04</p>
+    </div>
+    <div class="span6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC"></i></h2>
+      <p class="stat">222</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="span6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="span6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty"></i></a></h2>
+      <p class="stat">27.34</p>
+    </div>
+    <div class="span6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs"></i></a></h2>
+      <p class="stat">2.21</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="span6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="span6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="span12">var urlConvertor = require(&#039;./url-convertor&#039;),
+	ToProxyUrlFn = urlConvertor.ToProxyUrlFn,
+	FromProxyUrlFn = urlConvertor.FromProxyUrlFn;
+var assert = require(&#039;assert&#039;);
+var settings = require(&#039;../settings&#039;)();
+var testHelper = require(&#039;../test/helper&#039;);
+var FakeRequest = require(&#039;../test/fake-request&#039;);
+var httpClacksHomeUrl = settings.createHttpUrl();
+var httpsClacksHomeUrl = settings.createHttpsUrl();
+
+ describe(&#039;url-convertor&#039;, function(){
+
+	describe(&#039;#createToProxyUrlFn(...)(...)&#039;, function(){
+
+		it(&#039;should convert absolute urls when there is no request context&#039;, function (){
+			var url = &#039;http://www.google.com/&#039;;
+			var toProxyUrlFn = new ToProxyUrlFn();
+
+			assert.equal(toProxyUrlFn(url), httpClacksHomeUrl + &#039;http://www.google.com/&#039;);
+		});
+
+		it(&#039;should preserve https in absolute urls when there is no request context&#039;, function (){
+			var url = &#039;https://www.google.com/&#039;;
+			var toProxyUrlFn = new ToProxyUrlFn();
+
+			assert.equal(toProxyUrlFn(url), httpsClacksHomeUrl + &#039;https://www.google.com/&#039;);
+		});
+
+		it(&#039;should not double proxy a url&#039;, function (){
+			var url = &#039;https://www.google.com&#039;;
+			var toProxyUrlFn = new ToProxyUrlFn();
+
+			assert.equal(toProxyUrlFn(toProxyUrlFn(url)), httpsClacksHomeUrl + &#039;https://www.google.com&#039;);
+		});
+
+		it(&#039;should convert relative urls when there is a request context&#039;, function(){
+			var url = &#039;/chevett/miketown3&#039;;
+			var toProxyUrlFn = new ToProxyUrlFn(new FakeRequest({url:&#039;github.com&#039;}));
+
+			var port = settings.port==80 ? &#039;&#039; : &#039;:&#039; + settings.port;
+			assert.equal(toProxyUrlFn(url), &#039;http://&#039;+settings.hostname+port+&#039;/http://github.com/chevett/miketown3&#039;);
+		});
+		
+		it(&#039;should create secure absolute urls from relative urls when the parent request is secure&#039;, function(){
+			var url = &#039;/chevett/miketown3&#039;;
+			var toProxyUrlFn = new ToProxyUrlFn(new FakeRequest({url:&#039;github.com&#039;, secure: true}));
+
+			var port = settings.port==443 ? &#039;&#039; : &#039;:&#039; + settings.sslPort;
+			assert.equal(toProxyUrlFn(url), &#039;https://&#039;+settings.hostname+port+&#039;/https://github.com/chevett/miketown3&#039;);
+		});
+
+		it(&#039;should preserve the protocol override from the context when creating relative urls&#039;, function(){
+			var url = &#039;/chevett/miketown3&#039;;
+			var toProxyUrlFn = new ToProxyUrlFn(new FakeRequest({url:&#039;http://github.com&#039;, secure: true}));
+
+			var port = settings.port==443 ? &#039;&#039; : &#039;:&#039; + settings.sslPort;
+			assert.equal(toProxyUrlFn(url), &#039;https://&#039;+settings.hostname+port+&#039;/http://github.com/chevett/miketown3&#039;);
+		});
+
+		it(&#039;should convert really relative urls when there is a request context&#039;, function(){
+			var url = &#039;miketown3&#039;;
+			var toProxyUrlFn = new ToProxyUrlFn(new FakeRequest({url:&#039;github.com/chevett/&#039;}));
+
+			var port = settings.port==80 ? &#039;&#039; : &#039;:&#039; + settings.port;
+			assert.equal(toProxyUrlFn(url), &#039;http://&#039;+settings.hostname+port+&#039;/http://github.com/chevett/miketown3&#039;);
+		});
+
+		it(&#039;shouldn\&#039;t convert relative urls when there is no request context&#039;, function(){
+			var url = &#039;/chevett&#039;;
+			var toProxyUrlFn = new ToProxyUrlFn();
+
+			assert.equal(toProxyUrlFn(url), null);
+		});
+		
+		it(&#039;should preserve the trailing slash in an absolute url when there is no request context&#039;, function (){
+			var url = &#039;http://www.google.com/&#039;;
+			var toProxyUrlFn = new ToProxyUrlFn();
+
+			var port = settings.port==80 ? &#039;&#039; : &#039;:&#039; + settings.port;
+			assert.equal(toProxyUrlFn(url), &#039;http://&#039;+settings.hostname+port+&#039;/http://www.google.com/&#039;);
+		});
+		
+		it(&#039;should preserve non-standard port&#039;, function (){
+			var url = &#039;http://www.google.com:555/&#039;;
+			var toProxyUrlFn = new ToProxyUrlFn();
+
+			var port = settings.port==80 ? &#039;&#039; : &#039;:&#039; + settings.port;
+			assert.equal(toProxyUrlFn(url), &#039;http://&#039;+settings.hostname+port+&#039;/http://www.google.com:555/&#039;);
+		});
+		
+		it(&#039;should preserve protocol from absolute url&#039;, function (){
+			var url = &#039;https://www.google.com/&#039;;
+			var toProxyUrlFn = new ToProxyUrlFn();
+
+			assert.equal(toProxyUrlFn(url), httpsClacksHomeUrl+&#039;https://www.google.com/&#039;);
+		});
+
+		it(&#039;should not change a data url&#039;, function (){
+			var url = &#039;data:image/png;base64,iVBOR&#039;;
+			var toProxyUrlFn = new ToProxyUrlFn();
+
+			assert.equal(toProxyUrlFn(url), url);
+		});
+
+		it(&#039;should not change a mailto url&#039;, function (){
+			var url = &#039;mailto:bgates@mircosoft.com&#039;;
+			var toProxyUrlFn = new ToProxyUrlFn();
+
+			assert.equal(toProxyUrlFn(url), url);
+		});
+	});
+			
+ 
+	describe(&#039;#createFromProxyUrlFn(...)(...)&#039;, function(){
+		it(&#039;should convert valid url&#039;, function(){
+			var url = &#039;github.com/chevett/miketown3&#039;;
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:&#039;github.com&#039;}));
+
+			assert.equal(fromProxyUrlFn(url), &#039;http://github.com/chevett/miketown3&#039;);
+		});
+		
+		it(&#039;should preserve trailing slash in a valid url&#039;, function(){
+			var url = &#039;github.com/chevett/miketown3/&#039;;
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:&#039;github.com&#039;}));
+
+			assert.equal(fromProxyUrlFn(url), &#039;http://github.com/chevett/miketown3/&#039;);
+		});
+
+		it(&#039;should preserve querystring parameters&#039;, function(){
+			var url = &#039;github.com/chevett/miketown3?name1=value1&amp;name2=value2&#039;;
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:&#039;github.com&#039;}));
+
+			assert.equal(fromProxyUrlFn(url), &#039;http://github.com/chevett/miketown3?name1=value1&amp;name2=value2&#039;);
+		});
+
+		it(&#039;should default to https for a secure connection with no protocol&#039;, function(){
+			var url = &#039;github.com/chevett/miketown3&#039;;
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:&#039;github.com&#039;, secure: true}));
+
+			assert.equal(fromProxyUrlFn(url), &#039;https://github.com/chevett/miketown3&#039;);
+		});
+
+		it(&#039;should use protocol in the url regardless of the context&#039;, function(){
+			var url = &#039;ftp://github.com/chevett/miketown3&#039;;
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:&#039;https://github.com&#039;, secure: true}));
+
+			assert.equal(fromProxyUrlFn(url), &#039;ftp://github.com/chevett/miketown3&#039;);
+		});
+	
+		it(&#039;should respect http override&#039;, function(){
+			var url = &#039;http://github.com/chevett/miketown3&#039;;
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:&#039;https://github.com&#039;, secure: true}));
+
+			assert.equal(fromProxyUrlFn(url), &#039;http://github.com/chevett/miketown3&#039;);
+		});
+		
+		it(&#039;should respect port override&#039;, function(){
+			var url = &#039;github.com:8888/chevett/miketown3?name1=value1&amp;name2=value2&#039;;
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:&#039;https://github.com&#039;, secure: true}));
+
+			assert.equal(fromProxyUrlFn(url), &#039;https://github.com:8888/chevett/miketown3?name1=value1&amp;name2=value2&#039;);
+		});
+
+
+		it(&#039;should respect port and protocol override&#039;, function(){
+			var url = &#039;http://github.com:8080/chevett/miketown3?name1=value1&amp;name2=value2&#039;;
+			var fromProxyUrlFn = new FromProxyUrlFn(new FakeRequest({url:&#039;/github.com&#039;, secure: true}));
+
+			assert.equal(fromProxyUrlFn(url), &#039;http://github.com:8080/chevett/miketown3?name1=value1&amp;name2=value2&#039;);
+		});
+
+		it(&#039;should use the referer to resolve invalid urls&#039;, function(){
+			var request = new FakeRequest({
+				url: &#039;chevett/clacks&#039;,
+				referer: testHelper.createProxyUrl(&#039;http://www.github.com&#039;)
+			});
+
+			var fromProxyUrlFn = new FromProxyUrlFn(request);
+
+			assert.equal(fromProxyUrlFn(&#039;clacks&#039;), &#039;http://www.github.com/chevett/clacks&#039;);
+		});
+
+		it(&#039;should use the referer to resolve invalid urls and preserve https&#039;, function(){
+			var request = new FakeRequest({
+				url: &#039;chevett/clacks&#039;,
+				referer: testHelper.createProxyUrl(&#039;https://www.github.com&#039;)
+			});
+			var fromProxyUrlFn = new FromProxyUrlFn(request);
+
+			assert.equal(fromProxyUrlFn(request.url), &#039;https://www.github.com/chevett/clacks&#039;);
+		});
+
+		it(&#039;should return the request url when passed undefined&#039;, function(){
+			var request = new FakeRequest({
+				url: &#039;chevett/clacks&#039;,
+				referer: testHelper.createProxyUrl(&#039;https://www.github.com&#039;)
+			});
+			var fromProxyUrlFn = new FromProxyUrlFn(request);
+
+			assert.equal(fromProxyUrlFn(), &#039;https://www.github.com/chevett/clacks&#039;);
+		});
+		it(&#039;should use the referer to resolve invalid urls and then handle another relative url&#039;, function(){
+			var request = new FakeRequest({
+				url: &#039;chevett/clacks&#039;,
+				referer: testHelper.createProxyUrl(&#039;http://www.github.com&#039;)
+			});
+			var fromProxyUrlFn = new FromProxyUrlFn(request);
+
+			assert.equal(fromProxyUrlFn(&#039;/miketown3&#039;), &#039;http://www.github.com/miketown3&#039;);
+		});
+
+		it(&#039;should use the referer to resolve invalid urls and then handle another really relative url&#039;, function(){
+			var request = new FakeRequest({
+				url: &#039;chevett/clacks&#039;,
+				referer: testHelper.createProxyUrl(&#039;http://www.github.com&#039;)
+			});
+			var fromProxyUrlFn = new FromProxyUrlFn(request);
+
+			assert.equal(fromProxyUrlFn(&#039;miketown3&#039;), &#039;http://www.github.com/chevett/miketown3&#039;);
+		});
+	});
+ });</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

@@ -37,7 +37,7 @@ after_success:
             git reset --hard heroku/master;
             git rebase master;
             npm -g install plato;
-            plato -r -x 'node_modules|plato' -d injectors/public/plato .;
+            plato -r -t "clacks" -x 'node_modules|plato' -d injectors/public/plato .;
             git add injectors/public/plato -f;
             git commit -am'history for plato.';
             yes | git push heroku cool:master --force;

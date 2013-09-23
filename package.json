@@ -29,6 +29,7 @@
     "escodegen": "0.0.27"
   },
   "devDependencies": {
+    "jshint": "*",
     "mocha": "*",
     "chai": "~1.7.x"
   }

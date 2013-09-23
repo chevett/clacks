@@ -43,5 +43,4 @@ after_success:
             yes | git push heroku cool:master --force;
             fi
 
-install: "npm -g install jshint"
-script: "jshint ."
+script: "npm test && jshint ."

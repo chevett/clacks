@@ -5,7 +5,7 @@ var jsRewriter = require('./js');
 var home = require('../../settings')().createHttpUrl();
 
 
-describe('js rewriter', function(){
+describe.skip('js rewriter', function(){
 	it('should convert absolute urls in a string', function(){
 		var context = new Context(new FakeRequest());
 		var newJs = jsRewriter("var o = {}; o.someProperty = \"http://www.google.com\";", context);

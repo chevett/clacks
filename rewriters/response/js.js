@@ -28,8 +28,7 @@ function _checkString(str, ctx){
 	}
 }
 
-
-module.exports = function(js, ctx) {
+function _rewrite(js, ctx){
 	var tree = esprima.parse(js);
 
 	traverse(tree, function(node){
@@ -40,4 +39,13 @@ module.exports = function(js, ctx) {
 	});
 	
     return escodegen.generate(tree);
+}
+module.exports = function(js, ctx) {
+	try {
+		return _rewrite(js, ctx);
+	} catch (e){
+		console.log('failed parsing js: ' + ctx.target.url);
+		console.log(e);
+		return js;
+	}
 };

@@ -29,7 +29,8 @@ module.exports = function(req, res){
 	request.on('ready', function(response){
 		response.on('headers', function(statusCode, headers){
 			res.writeHead(statusCode, headers.toObject());
-			console.log('response headers');
+			console.log('response headers:');
+			console.log(headers.toObject());
 			headersModel.response = headers;
 
 		});
@@ -38,7 +39,7 @@ module.exports = function(req, res){
 			if (data.contentType==='text/html'){
 				data.body = injectors(ctx, {body: data.body, headers: headersModel});
 				console.log('send rewritten response body');
-
+				console.log(data.body);
 			}
 		});
 

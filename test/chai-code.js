@@ -15,8 +15,8 @@ module.exports = function(chai, utils){
 	
 		this.assert(
 			a === b,
-			'the functions are not the same.',
+			'the functions are not the same: ' + b + a,
 			'the functions are the same.'
-			);
+		);
 	});
 };

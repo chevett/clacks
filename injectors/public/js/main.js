@@ -13,3 +13,15 @@
 		open.call(this, method, completeUrl, async, user, pass);
 	};
 })(XMLHttpRequest.prototype.open, URI);
+
+// maybe convert
+function _mt3_(value){
+	console.log('_mt3_: '+JSON.stringify(value));
+	return value;
+}
+
+// definitely convert
+function __mt3_(value){
+	console.log('__mt3_: '+value);
+	return value;
+}

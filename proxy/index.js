@@ -39,7 +39,6 @@ module.exports = function(req, res){
 			if (data.contentType==='text/html'){
 				data.body = injectors(ctx, {body: data.body, headers: headersModel});
 				console.log('send rewritten response body');
-				console.log(data.body.substr(100));
 			}
 		});
 

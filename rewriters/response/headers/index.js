@@ -9,3 +9,5 @@ module.exports = require('../../header-converter').create(__dirname, o);
 o['content-security-policy'] = _deleteHeader;
 o['x-webkit-csp'] = _deleteHeader;
 o['x-forwarded-for'] = _deleteHeader;
+o['x-frame-options'] = _deleteHeader;
+o['x-xss-protection'] = _deleteHeader;

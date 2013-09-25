@@ -102,7 +102,7 @@ function _buildConverter(dir, lookup) {
 			});
 
 			headers = _.filter(headers, function(h){
-				return h.state !== 'added' || h.value !== undefined;
+				return !(h.state === 'added' && !h.value && !h.originalValue);
 			});
 
 			_addToObjectMethod(headers);

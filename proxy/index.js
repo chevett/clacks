@@ -5,12 +5,18 @@ var injectors =  require('../injectors/'),
 module.exports = function(req, res){
 	var headersModel = {};
 	var ctx = new Context(req, res);
+	var url = req.url.substr(1);
 
 	if (!ctx.target){
 		res.writeHead(400, {});
 		res.write('<h1>400</h1>');
 		res.write(req.url.substr(1) + ' is a bad request');
 		res.end();
+		return;
+	}
+
+	if (url !== ctx.target.url){
+		res.redirect(302, ctx.convert.toProxyUrl(ctx.target.url));
 		return;
 	}
 

@@ -1,6 +1,6 @@
 var settings = require('../settings')(),
 	redis = require('redis'),
-	ShortBread = require('short-bread');
+	Oven = require('oven');
 
 if (settings.redisUrl) {
 	var rtg   = require("url").parse(settings.redisUrl);
@@ -15,7 +15,7 @@ function _getKey(userId){
 	return 'cookies-' + userId;
 }
 var CookieStore = function(options){
-	var shortBread = new ShortBread(options);
+	var shortBread = new Oven(options);
 	var key = _getKey(options.userId);
 
 	this.setCookies = function(lst){

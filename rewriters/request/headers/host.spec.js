@@ -5,21 +5,17 @@ var hostHeaderRewriter = require('./host');
 var assert = require('assert');
 
 describe('host request header', function(){
-	it('should convert to the real host', function(done){
+	it('should convert to the real host', function(){
 		var context = new Context(new FakeRequest(), new FakeResponse());
 
-		hostHeaderRewriter('this value does not matter', context, function(targetHost){
-			assert.equal(targetHost, 'www.google.com');
-			done();
-		});
+		var targetHost = hostHeaderRewriter('this value does not matter', context);
+		assert.equal(targetHost, 'www.google.com');
 	});
 
-	it('should convert to the real host when a protocol is included', function(done){
+	it('should convert to the real host when a protocol is included', function(){
 		var context = new Context(new FakeRequest(), new FakeResponse());
 
-		hostHeaderRewriter('this value does not matter', context, function(targetHost){
-			assert.equal(targetHost, 'www.google.com');
-			done();
-		});
+		var targetHost = hostHeaderRewriter('this value does not matter', context);
+		assert.equal(targetHost, 'www.google.com');
 	});
 });

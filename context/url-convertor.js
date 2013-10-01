@@ -1,5 +1,7 @@
 var settings = require('../settings')(),
     url = require('url'),
+	EventEmitter = require('events').EventEmitter,
+	util = require('util'),
 	absolurl = require('absolurl');
 
 var httpBaseUrl = absolurl.ensureComplete(settings.createHttpUrl()),
@@ -38,12 +40,21 @@ function _getRequestUrl(request){
 
 	return conversionContextUrl;
 }
-exports.ToProxyUrlFn = function(request){
+
+var Convertor = function(request){
+	EventEmitter.call(this);
+	
+	var self = this;
+	absolurl.on('error', function(e){
+		self.emit('error', e);
+	});
+	
 	var requestUrl = _getRequestUrl(request);
 	var isClientConnectionSecure = _isClientConnectionSecure(request);
 	var isHttpDowngrade = isClientConnectionSecure && !/^https/.test(requestUrl);
 
-    return function (internetUrl){
+    this.toProxyUrl = function (internetUrl){
+
 		if (!internetUrl) return internetUrl;
 		if (httpBaseRegex.test(internetUrl)) return internetUrl;
 		if (httpsBaseRegex.test(internetUrl)) return internetUrl;
@@ -62,11 +73,8 @@ exports.ToProxyUrlFn = function(request){
 
 		return clacksHomeUrl + internetUrl ;
 	};
-};
 
-exports.FromProxyUrlFn = function (request){
-	var requestUrl = _getRequestUrl(request);
-	return function(myUrl){
+	this.fromProxyUrl = function(myUrl){
 		if (myUrl === undefined) return requestUrl;
 		if (!myUrl) return null;
 
@@ -76,3 +84,7 @@ exports.FromProxyUrlFn = function (request){
 		return internetUrl;
 	};
 };
+
+util.inherits(Convertor, EventEmitter);
+module.exports = Convertor;
+

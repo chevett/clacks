@@ -1,8 +1,8 @@
 var expect = require('chai').expect;
 var util = require('util');
-var cssRewriter = require('./css');
-var Context = require('../../context/');
-var FakeRequest = require('../../test/fake-request');
+var cssRewriter = require('./index');
+var Context = require('../../../context');
+var FakeRequest = require('../../../test/fake-request');
 
 describe('css header rewriter', function(){
 	describe('should convert urls', function(){

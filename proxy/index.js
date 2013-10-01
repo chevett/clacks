@@ -1,23 +1,18 @@
-var injectors =  require('../injectors/'),
-	Context = require('../context/'),
+var Context = require('../context/'),
 	TranslatedRequest = require('./request');
 
-module.exports = function(req, res){
-	var headersModel = {};
+module.exports = function(req, res, next){
 	var ctx = new Context(req, res);
 	var url = req.url.substr(1);
 
 	if (!ctx.target){
-		res.writeHead(400, {});
-		res.write('<h1>400</h1>');
-		res.write(req.url.substr(1) + ' is a bad request');
-		res.end();
-		return;
+		console.log('no target: ' + req.url);
+		return next();
 	}
 
+	console.log('hello1');
 	if (url !== ctx.target.url){
-		res.redirect(302, ctx.convert.toProxyUrl(ctx.target.url));
-		return;
+		return res.redirect(302, ctx.convert.toProxyUrl(ctx.target.url));
 	}
 
 	var request = new TranslatedRequest(ctx, {
@@ -26,28 +21,15 @@ module.exports = function(req, res){
 		headers: req.headers
 	});
 
-	request.on('headers', function(headers){
-		headersModel.request = headers;
-	});
-
+	console.log('hello1');
 	req.pipe(request);
 
 	request.on('ready', function(response){
 		response.on('headers', function(statusCode, headers){
 			res.writeHead(statusCode, headers.toObject());
-			console.log('response headers:');
-			console.log(headers.toObject());
-			headersModel.response = headers;
-
 		});
 
-		response.on('before-write', function(data){
-			if (data.contentType==='text/html'){
-				data.body = injectors(ctx, {body: data.body, headers: headersModel});
-				console.log('send rewritten response body');
-			}
-		});
-
+	console.log('hello3');
 		response.pipe(res);
 	});
 };

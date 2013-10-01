@@ -1,7 +1,8 @@
-var CookieStore = require('../../../cookie_store/');
+var CookieStore = require('../../../cookie_store');
+var q = require('q');
 
-module.exports = function(headerValue, context, cb) {
-	if (!headerValue) return cb();
+module.exports = function(headerValue, context) {
+	if (!headerValue) return;
 
 	var cookieStore = new CookieStore({
 		userId: context.client.id,
@@ -9,5 +10,4 @@ module.exports = function(headerValue, context, cb) {
 	});
 
 	cookieStore.setCookie(headerValue);
-	cb();
 };

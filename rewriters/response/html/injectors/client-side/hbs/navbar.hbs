@@ -1,6 +1,4 @@
 <div>
-    <link href="/css/navbar.css" rel="stylesheet" type="text/css"></link>
-
     <div id="mt3-debug-info">
         <a id="mt3-hide-debug">close</a>
         <div class="headers-container">
@@ -20,7 +18,7 @@
                 {{/if}}
 
                 {{#if removed}}
-                    <del><strong>{{name}}</strong>:&nbsp; {{originalValue}}</del>
+                    <del><strong>{{name}}</strong>:&nbsp; {{value}}</del>
                 {{/if}}
 
                 <br/>
@@ -67,6 +65,4 @@
     <div id="mt3-btn-nav-tab">
         <button type="button" id="mt3-nav-tab-open">&rarr;</button>
     </div>
-
-    <script src="/js/navbar.js"></script>
 </div>

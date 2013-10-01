@@ -1,8 +1,6 @@
 var util = require("util"),
 	concatStream = require('concat-stream'),
-	PassThrough = require('stream').PassThrough,
-	rewriters = require('../rewriters/').response
-;
+	PassThrough = require('stream').PassThrough;
 
 
 function _getContentType(innerResponse){
@@ -25,10 +23,11 @@ function _getEncoding(innerResponse){
 }
 
 function _doBodyWrite(self, context, innerResponse){
-
+	console.log('_doBodyWrite');
 	var contentType = _getContentType(innerResponse),
-		bodyRewriter = rewriters[contentType],
+		bodyRewriter = context.convert.rewriters.response[contentType],
 		encoding = _getEncoding(innerResponse);
+
 
 	// something like an image just gets piped without making any changes
 	if (!bodyRewriter){
@@ -39,16 +38,13 @@ function _doBodyWrite(self, context, innerResponse){
 	// but for something like html, will build up the body, change the body, then write
 	var bodyBuilder = concatStream(function(body){
 		body = new Buffer(body || '', encoding).toString(encoding);
+
+		console.log('load body start');
 		body = bodyRewriter(body, context);
 
-		var model =  {
-			contentType: contentType,
-			body: body
-		};
+		console.log('load body done');
 
-		self.emit('before-write', model);
-
-		self.write(model.body, encoding);
+		self.write(body, encoding);
 		self.end();
 	});
 
@@ -61,7 +57,8 @@ function TranslatedResponse(context, innerResponse){
 	var _self = this;
 
 	process.nextTick(function(){
-		rewriters.headers(innerResponse.headers, context, function(newHeaders){
+		context.convert.rewriters.response.headers.convert(innerResponse.headers, context, function(newHeaders){
+			console.log('sending headers');
 			_self.emit('headers', innerResponse.statusCode, newHeaders);
 			_doBodyWrite(_self, context, innerResponse);
 		});

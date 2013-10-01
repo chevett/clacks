@@ -1,6 +1,6 @@
-var ToProxyUrlFn = require('../context/url-convertor').ToProxyUrlFn;
+var UrlHelper = require('../context/url-convertor');
 
 exports.createProxyUrl = function(internetUrl) {
-	var toProxyUrlFn = new ToProxyUrlFn();
-	return toProxyUrlFn(internetUrl);
+	var urlHelper = new UrlHelper();
+	return urlHelper.toProxyUrl(internetUrl);
 };

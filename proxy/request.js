@@ -3,7 +3,6 @@ var util = require("util"),
 	PassThrough = require('stream').PassThrough,
 	http = require('http'),
 	https = require('https'),
-	rewriters = require('../rewriters/').request,
 	TranslatedResponse = require('./response');
 
 function _getRequestor(myUrl){
@@ -42,7 +41,7 @@ function TranslatedRequest(context, options){
 	var _self = this;
 
 	process.nextTick(function(){
-		rewriters.headers(options.headers, context, function(newHeaders){
+		context.convert.rewriters.request.headers.convert(options.headers, context, function(newHeaders){
 			_sendRequest(_self, context, options, newHeaders);
 			_self.emit('headers', newHeaders);
 		});

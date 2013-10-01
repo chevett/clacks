@@ -1,1 +1,1 @@
-module.exports = function(value, context, cb) { cb(null); };
+module.exports = function(value, context) { return null; };

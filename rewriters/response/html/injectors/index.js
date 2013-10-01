@@ -1,4 +1,3 @@
-var cheerio = require('cheerio');
 var fs = require('fs');
 
 var injectors = [];
@@ -9,12 +8,12 @@ fs.readdirSync(__dirname).forEach(function(file) {
 	}
 });
 
-module.exports = function(context, data) {
-    var $ = cheerio.load(data.body);
-
+module.exports = function($, context) {
 	for (var i=0; i< injectors.length; i++){
-		if (injectors[i]($, context, data) === false) break;
+		injectors[i]($, context);
 	}
 
-    return $.html();
+	return $.html();
 };
+
+

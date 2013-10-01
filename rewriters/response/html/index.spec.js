@@ -1,15 +1,15 @@
 var fs = require('fs');
-var assert = require('assert');
-var FakeRequest = require('../../test/fake-request');
-var Context = require('../../context/');
+var expect = require('chai').expect;
+var FakeRequest = require('../../../test/fake-request');
+var Context = require('../../../context/');
 var cheerio = require('cheerio');
-var htmlRewriter = require('./html');
+var htmlRewriter = require('./index');
 
 describe('html response rewriter', function(){
 
 	function _getFruitsString(){
 		return fs.readFileSync('test/fruits.html');
-    }
+	}
 
 	var context = new Context(new FakeRequest());
 	var toProxyUrlFn = context.convert.toProxyUrl;
@@ -30,14 +30,16 @@ describe('html response rewriter', function(){
 	
 		var $element, $newElement;
 
-		assert.notEqual($elements.length, 0);
-		assert.equal($elements.length, $newElements.length);
+		expect($elements.length).to.not.equal(0);
+
+		// sometimes we add elements during the conversion process.
+		expect($newElements).to.have.length.of.at.least($elements.length);
 
 		for (var i=0; i<$elements.length; i++){
 			$element = $fruits.old($elements[i]);
 			$newElement = $fruits.new($newElements[i]);
 
-			assert.equal(toProxyUrlFn($element.attr(attributeName)), $newElement.attr(attributeName));
+			expect($newElement.attr(attributeName)).to.be.equal(toProxyUrlFn($element.attr(attributeName)));
 		}
 	}
 
@@ -64,8 +66,8 @@ describe('html response rewriter', function(){
 		var $fruits = _convertFruits();
 		var originalUrl = $fruits.old('#upper-case-href').attr('href');
 		var newUrl = $fruits.new('#upper-case-href').attr('href');
-		
-		assert.notEqual(originalUrl, '');
-		assert.equal(toProxyUrlFn(originalUrl), newUrl);
+
+		expect(originalUrl).to.be.ok;
+		expect(newUrl).to.be.equal(toProxyUrlFn(originalUrl));
 	});
 });

@@ -1,5 +1,5 @@
 var fs = require('fs'),
-	async = require('async'), 
+	q = require('q'), 
 	_ = require('underscore');
 
 function _addToObjectMethod(headers){
@@ -60,25 +60,38 @@ function _buildConverter(dir, lookup) {
 		}
 	});
 
+	var o = Object.create(lookup);
 	var lookupKeys = Object.keys(lookup);
 
-    return function (headers, context, cb) {
-		var convertValueFn = function(header, cb){
-			var fn = lookup[header.name];
+    o.convert = function (headers, context, cb) {
+		var self = this;
+		var convertValueFn = function(header){
+			var defered = q.defer();
+			var fn = o[header.name];
 			header.originalValue = header.value;
 			
-			if(fn){
-				fn(header.value, context, function(value){
-					header.value  = value;
-					cb(null, header);
-				});
+			if (fn){
+				
+				var v = fn.call(self, header.value, context);
+				
+				if (!v || !v.then){
+					header.value = v;
+					defered.resolve(v);
+				} else {
+					v.then(function(result){
+						header.value = result;
+						defered.resolve(result);
+					});
+				}
 			} else {
-				cb(null, header);
+				defered.resolve();
 			}
+
+			return defered.promise;
 		};
 
-        if (!_.isArray(headers))
-            headers = _headerObjectToArray(headers);
+		if (!_.isArray(headers))
+			headers = _headerObjectToArray(headers);
 
 		_.difference(lookupKeys, _.map(headers, function(h){ return h.name; }))
 			.forEach(function(headerName){
@@ -88,27 +101,30 @@ function _buildConverter(dir, lookup) {
 				});
 			});
 
-		async.map(headers, convertValueFn, function(){
-			headers.forEach(function (header) {
-				if (!header.state){
-					if (header.value === header.originalValue) {
-						header.state = 'unchanged';
-					} else if (header.value){
-						header.state = 'changed';
-					} else {
-						header.state = 'removed';
+		q.all(headers.map(function(h){ return convertValueFn(h); }))
+			.done(function(){
+				headers.forEach(function (header) {
+					if (!header.state){
+						if (header.value === header.originalValue) {
+							header.state = 'unchanged';
+						} else if (header.value){
+							header.state = 'changed';
+						} else {
+							header.state = 'removed';
+						}
 					}
-				}
-			});
+				});
 
-			headers = _.filter(headers, function(h){
-				return !(h.state === 'added' && !h.value && !h.originalValue);
-			});
+				headers = _.filter(headers, function(h){
+					return !(h.state === 'added' && !h.value && !h.originalValue);
+				});
 
-			_addToObjectMethod(headers);
-			cb(headers);
+				_addToObjectMethod(headers);
+				cb(headers);
 		});
     };
+
+	return o;
 }
 
 exports.create = _buildConverter;

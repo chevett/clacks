@@ -1,11 +1,12 @@
 var url = require('url'),
-	urlConvertor = require('./url-convertor'),
-	ToProxyUrlFn = urlConvertor.ToProxyUrlFn,
-	FromProxyUrlFn = urlConvertor.FromProxyUrlFn,
+	UrlConvertor = require('./url-convertor'),
 	settings = require('../settings')(),
+	rewriters = require('../rewriters'),
 	serverUrl = settings.createHttpUrl(),
 	secureServerUrl = settings.createHttpsUrl(),
-	uuid = require('node-uuid');
+	uuid = require('node-uuid'),
+	extend = require('node.extend'),
+	watch = require('nostalgorithm').watch;
 
 function _id(request, response){
 	var id = request.signedCookies[settings.idCookieName];
@@ -23,6 +24,7 @@ function _isClientConnectionSecure(req){
 
 	return settings.isProduction? req.headers['x-forwarded-proto'] == 'https' : req.secure;
 }
+
 function _ipAddress(req){
 	if (!req || !req.isProduction) return '127.0.0.1';
 
@@ -32,20 +34,25 @@ function _ipAddress(req){
 var Context = function(request, response){
 	if (request.url === '/') request.url = '/' + settings.homepage;
 
-	var fromProxyUrlFn = new FromProxyUrlFn(request),
-		toProxyUrlFn = new ToProxyUrlFn(request),
-		targetUrl = fromProxyUrlFn(),
+	var self = this;
+	this.errors = [];
+	this.convert =  new UrlConvertor(request);
+	this.convert.on('error', function(e){
+		// todo: figure out alerts on these
+		self.errors.push(e);
+	});
+
+	var targetUrl = this.convert.fromProxyUrl(),
 		oTargetUrl;
 
 	if (!targetUrl) return;
 
+	this.convert.rewriters = rewriters;
+	this.convert = watch(this.convert);
+
 	oTargetUrl = url.parse(targetUrl);
 
 
-	this.convert =  {
-		toProxyUrl: toProxyUrlFn,
-		fromProxyUrl: fromProxyUrlFn
-	};
 	this.client =  {
 		id: _id(request, response),
 		isSecure: _isClientConnectionSecure(request),

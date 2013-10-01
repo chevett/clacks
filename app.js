@@ -8,15 +8,17 @@ var express = require('express'),
   sslOptions
 ;
 
+var mt3Js = require('./rewriters/response/html/injectors/bottom');
+
 var app = express();
 var port = process.env.PORT || settings.port;
 
-// middleware
 app.use(express.favicon());
 app.use(express.cookieParser(settings.cookieSecret));
 app.use(express.logger('dev'));
-app.use(require('less-middleware')({ src: __dirname + '/injectors/public' }));
-app.use(express.static(path.join(__dirname, '/injectors/public')));
+app.use(mt3Js.middleware());
+app.use(express.static(path.join(__dirname, '/public')));
+
 app.use(proxy);
 
 // start

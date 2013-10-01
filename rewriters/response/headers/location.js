@@ -1,3 +1,5 @@
 module.exports = function(headerValue, context, cb) {
-	cb(headerValue ? context.convert.toProxyUrl(headerValue) : null);
+	if (!headerValue) return headerValue;
+
+	return context.convert.toProxyUrl(headerValue);
 };

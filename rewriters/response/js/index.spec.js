@@ -4,11 +4,11 @@
 /* global fakeVar: false */
 
 var chai = require('chai');
-chai.use(require('../../test/chai-code'));
+chai.use(require('../../../test/chai-code'));
 
-var FakeRequest = require('../../test/fake-request');
-var Context = require('../../context/');
-var jsRewriter = require('./js');
+var FakeRequest = require('../../../test/fake-request');
+var Context = require('../../../context');
+var jsRewriter = require('./index');
 var expect = chai.expect;
 
 describe('js rewriter', function(){

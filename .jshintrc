@@ -1,6 +1,7 @@
 {
 	"unused": false,
 	"undef": true,
+	"expr": true,
 	"node": true,
 	"globals":{
 		"describe": false,

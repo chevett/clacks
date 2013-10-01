@@ -1,5 +1,5 @@
 var o = {};
-function _deleteHeader(value, context, cb){cb(null);}
+function _deleteHeader(value, context, cb){ return null; }
 
 module.exports = require('../../header-converter').create(__dirname, o);
 

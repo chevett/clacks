@@ -1,5 +1,15 @@
-
-@import "mixins.less";
+@mixin opacity($opacity: 0.5) {
+   -moz-opacity: $opacity;
+   -khtml-opacity: $opacity;
+   -webkit-opacity: $opacity;
+   opacity: $opacity;
+ }
+ 
+@mixin  RoundBorders ($radius: 5px) {
+   border-radius: $radius;
+   -moz-border-radius: $radius;
+   -webkit-border-radius: $radius;
+ }
 
 #mt3-navbar{
   display:none;
@@ -17,13 +27,11 @@
     padding-right: 20px;
     padding-left: 20px;
     background-color: #fafafa;
-    background-image: linear-gradient(to bottom, #ffffff, #f2f2f2);
     background-repeat: repeat-x;
-    border: 1px solid #d4d4d4;
+	border: 1px solid #d4d4d4;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='fff2f2f2', GradientType=0);
     *zoom: 1;
     -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
@@ -47,7 +55,6 @@
       cursor: pointer;
       background-color: #f5f5f5;
       *background-color: #e6e6e6;
-      background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
       background-repeat: repeat-x;
       border: 1px solid #cccccc;
       *border: 0;
@@ -56,7 +63,6 @@
       -webkit-border-radius: 4px;
       -moz-border-radius: 4px;
       border-radius: 4px;
-      filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
       *zoom: 1;
       -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
       -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -109,7 +115,6 @@
         cursor: pointer;
         background-color: #f5f5f5;
         *background-color: #e6e6e6;
-        background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
         background-repeat: repeat-x;
         border: 1px solid #cccccc;*border: 0;
         border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
@@ -117,7 +122,6 @@
         -webkit-border-radius: 4px;
         -moz-border-radius: 4px;
         border-radius: 4px;
-        filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
         *zoom: 1;
         -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
         -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -151,7 +155,6 @@
     cursor: pointer;
     background-color: #f5f5f5;
     *background-color: #e6e6e6;
-    background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
     background-repeat: repeat-x;
     border: 1px solid #cccccc;
     *border: 0;
@@ -159,79 +162,70 @@
     border-bottom-color: #b3b3b3;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
-    border-radius: 4px;filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);*zoom: 1;
     -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
     -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
     float:left;
   }
 }
-
 #mt3-debug-info{
-  display: none;
-  font-family: Verdana, Helvetica, Arial, sans-serif;
-  font-size: 13px;
-  font-style: normal;
-  line-height: 19px;
-  position: absolute;
-  z-index: 99998;
-  top: 0px;
-  *position: absolute;
-  *z-index: 2;
-  margin-bottom: 20px;
-  overflow: visible;
-  margin:8px;
+   display: none;
+   font-family: Verdana, Helvetica, Arial, sans-serif;
+   font-size: 13px;
+   font-style: normal;
+   line-height: 19px;
+   position: absolute;
+   z-index: 99998;
+   top: 0px;
+   margin-bottom: 20px;
+   overflow: visible;
+   margin:8px;
+   padding:4px;
+   color:greenyellow;
+   margin-top: 50px;
+   strong{
+     color:ghostwhite;
+   }
+   h1{
+     color:black;
+     background-color: white;
+     padding:4px;
+     font-size: 16px;
+     font-weight: bold;
+   }
+   ul{
+     list-style: none;
 
-  padding:4px;
-  aaborder: 3px solid black;
-  color:greenyellow;
-  margin-top: 50px;
-  strong{
-    color:ghostwhite;
-  }
+   }
 
-  h1{
-    color:black;
-    background-color: white;
-    .opacity(.8);
-    padding:4px;
-    font-size: 16px;
-    font-weight: bold;
-  }
-  ul{
-    list-style: none;
-
-  }
-
-  #mt3-hide-debug{
-    position: absolute;
-    right:15px;
-    top:10px;
-    color:black;
-    z-index: 99999;
-    cursor: pointer;
-    text-decoration: underline;
-  }
+   #mt3-hide-debug{
+     position: absolute;
+     right:15px;
+     top:10px;
+     color:black;
+     z-index: 99999;
+     cursor: pointer;
+     text-decoration: underline;
+   }
 
 
 
 
-  .headers-container{
-    .RoundBorders(3);
+   .headers-container{
+	   @include opacity(.8);
+	   @include RoundBorders(3);
+     padding:8px;
+     background-color: black;
+     > div{
+       padding-top: 5px;
+       padding-left: 10px;
+     }
 
-    padding:8px;
-    background-color: black;
-    .opacity(.8);
-    > div{
-      padding-top: 5px;
-      padding-left: 10px;
-    }
-
-    del{
-      color:red;
-    }
-    ins{
-      color:#008000;
-    }
-  }
+     del{
+       color:red;
+     }
+     ins{
+       color:#008000;
+     }
+   }
 }

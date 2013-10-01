@@ -1,10 +1,10 @@
 var url = require('url');
 
-module.exports = function(headerValue, context, cb) {
-	if (!headerValue) return cb(headerValue);
+module.exports = function(headerValue, context) {
+	if (!headerValue) return headerValue;
 	var oUrl = url.parse(headerValue);
 
-	if (!oUrl || !oUrl.path) return cb(null);
+	if (!oUrl || !oUrl.path) return null;
 
-	cb(oUrl.path.substr(1));
+	return oUrl.path.substr(1);
 };

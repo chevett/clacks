@@ -1,7 +1,7 @@
-var html = require('./html'),
-    css = require('./css'),
-    js = require('./js'),
-    json = require('./json'),
+var html = require('./html/'),
+    css = require('./css/'),
+    js = require('./js/'),
+    json = require('./json/'),
     headers = require('./headers/')
     ;
 

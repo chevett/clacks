@@ -18,7 +18,7 @@
     "diff": "~1.0.x",
     "absolurl": "git://github.com/chevett/absolurl.git#master",
     "node-uuid": "~1.4.x",
-    "express": "~3.4.x",
+    "express": "3.4.0",
     "concat-stream": "~1.0.x",
     "short-bread": "git://github.com/chevett/short-bread.git#master",
     "redis": "~0.8.x",

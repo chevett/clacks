@@ -1,6 +1,6 @@
 var fs = require('fs'),
 	q = require('q'), 
-	_ = require('underscore');
+	_ = require('lodash');
 
 function _addToObjectMethod(headers){
 	Object.defineProperty(headers, "toObject", {

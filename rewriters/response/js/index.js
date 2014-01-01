@@ -1,7 +1,7 @@
 var esprima = require('esprima');
 var escodegen = require('escodegen');
 var traverse = require('traverse');
-var _ = require('underscore');
+var _ = require('lodash');
 
 function _mt3_convert(value, ctx, targetName){
 	// this will look at the value and attempt to convert the value

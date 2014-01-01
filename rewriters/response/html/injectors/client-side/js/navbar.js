@@ -1,5 +1,5 @@
 var $ = require('jquery-browserify');
-var _ = require('underscore');
+var _ = require('lodash');
 var tmpl = require('../hbs/navbar.hbs');
 var css = require('../sass/navbar.scss');
 $('head').prepend($('<style></style>').html(css));

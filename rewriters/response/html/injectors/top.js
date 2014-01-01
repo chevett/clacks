@@ -1,5 +1,4 @@
 var _ = require('underscore');
-var m = require('merle');
 
 module.exports = function($, context){
 	var $head = $('head'),

@@ -5,7 +5,6 @@ var url = require('url'),
 	serverUrl = settings.createHttpUrl(),
 	secureServerUrl = settings.createHttpsUrl(),
 	uuid = require('node-uuid'),
-	extend = require('node.extend'),
 	watch = require('nostalgorithm').watch;
 
 function _id(request, response){

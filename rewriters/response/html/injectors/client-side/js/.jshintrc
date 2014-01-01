@@ -3,6 +3,7 @@
 	"undef": true,
 	"browser": true,
 	"devel": true,
+	"node": true,
 	"globals":{
 	}
 }

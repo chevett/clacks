@@ -37,6 +37,6 @@
   "devDependencies": {
     "jshint": "*",
     "mocha": "*",
-    "chai": "~1.7.x"
+    "chai": "*"
   }
 }

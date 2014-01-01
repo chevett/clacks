@@ -19,12 +19,12 @@
     "diff": "~1.0.x",
     "node-uuid": "~1.4.x",
     "express": "3.4.0",
-    "concat-stream": "~1.0.x",
+    "concat-stream": "~1.x.x",
     "redis": "~0.9.x",
     "hiredis": "~0.1.x",
     "underscore": "~1.5.x",
     "esprima": "~1.0.4",
-    "escodegen": "0.0.27",
+    "escodegen": "~1.x.x",
     "traverse": "~0.6.5",
     "hbsfy": "~0.1.5",
     "browserify": "~2.33.1",
@@ -32,7 +32,6 @@
     "brfs": "0.0.8",
     "jquery-browserify": "~1.8.1",
     "q": "~0.9.7",
-    "insert-css": "~0.1.0",
     "cssify2": "0.0.4"
   },
   "devDependencies": {

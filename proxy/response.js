@@ -23,7 +23,6 @@ function _getEncoding(innerResponse){
 }
 
 function _doBodyWrite(self, context, innerResponse){
-	console.log('_doBodyWrite');
 	var contentType = _getContentType(innerResponse),
 		bodyRewriter = context.convert.rewriters.response[contentType],
 		encoding = _getEncoding(innerResponse);
@@ -39,10 +38,7 @@ function _doBodyWrite(self, context, innerResponse){
 	var bodyBuilder = concatStream(function(body){
 		body = new Buffer(body || '', encoding).toString(encoding);
 
-		console.log('load body start');
 		body = bodyRewriter(body, context);
-
-		console.log('load body done');
 
 		self.write(body, encoding);
 		self.end();
@@ -58,7 +54,6 @@ function TranslatedResponse(context, innerResponse){
 
 	process.nextTick(function(){
 		context.convert.rewriters.response.headers.convert(innerResponse.headers, context, function(newHeaders){
-			console.log('sending headers');
 			_self.emit('headers', innerResponse.statusCode, newHeaders);
 			_doBodyWrite(_self, context, innerResponse);
 		});

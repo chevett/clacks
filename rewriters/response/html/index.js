@@ -43,9 +43,7 @@ module.exports = function(html, context) {
 		$this.attr('style', newContent);
 	});
 
-	console.log('running injectors');
 	injectors($, context);
 
-	console.log('running injectors done');
 	return $.html();
 };

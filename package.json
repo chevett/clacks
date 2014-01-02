@@ -26,7 +26,7 @@
     "escodegen": "~1.x.x",
     "traverse": "~0.6.5",
     "hbsfy": "~0.1.5",
-    "browserify": "~2.33.1",
+    "browserify": "~3.x.x",
     "sassify2": "0.0.2",
     "brfs": "0.0.8",
     "jquery-browserify": "~1.8.1",

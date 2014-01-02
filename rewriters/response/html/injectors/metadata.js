@@ -1,7 +1,7 @@
 var _ = require('lodash');
 
 module.exports = function($, context){
-	var $head = $('head'),
+	var $body = $('body'),
 		viewModel = {
 			headers:{}
 		},
@@ -21,5 +21,5 @@ module.exports = function($, context){
 	var $script = $('<script></script>')
 		.html('var mt3 = mt3 || {}; mt3.debug = '+ JSON.stringify(allCalls) + ';');
 
-	$head.prepend($script);
+	$body.append($script);
 };

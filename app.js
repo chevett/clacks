@@ -8,7 +8,7 @@ var express = require('express'),
   sslOptions
 ;
 
-var mt3Js = require('./rewriters/response/html/injectors/bottom');
+var mt3Js = require('./rewriters/response/html/injectors/external.js');
 
 var app = express();
 var port = process.env.PORT || settings.port;

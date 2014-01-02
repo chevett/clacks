@@ -10,7 +10,6 @@ module.exports = function(req, res, next){
 		return next();
 	}
 
-	console.log('hello1');
 	if (url !== ctx.target.url){
 		return res.redirect(302, ctx.convert.toProxyUrl(ctx.target.url));
 	}
@@ -21,7 +20,6 @@ module.exports = function(req, res, next){
 		headers: req.headers
 	});
 
-	console.log('hello1');
 	req.pipe(request);
 
 	request.on('ready', function(response){
@@ -29,7 +27,6 @@ module.exports = function(req, res, next){
 			res.writeHead(statusCode, headers.toObject());
 		});
 
-	console.log('hello3');
 		response.pipe(res);
 	});
 };

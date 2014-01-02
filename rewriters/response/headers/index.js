@@ -11,3 +11,4 @@ o['x-webkit-csp'] = _deleteHeader;
 o['x-forwarded-for'] = _deleteHeader;
 o['x-frame-options'] = _deleteHeader;
 o['x-xss-protection'] = _deleteHeader;
+o['content-length'] = _deleteHeader;

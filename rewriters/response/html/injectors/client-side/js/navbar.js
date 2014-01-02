@@ -1,4 +1,4 @@
-var $ = require('jquery-browserify');
+var $ = require('./my-jquery');
 var _ = require('lodash');
 var tmpl = require('../hbs/navbar.hbs');
 var css = require('../sass/navbar.scss');

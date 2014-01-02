@@ -1,4 +1,4 @@
-var $ = require('jquery-browserify');
+var $ = require('./my-jquery');
 var absolurl = require('absolurl');
 
 XMLHttpRequest.prototype.open = function(method, url, async, user, pass) {

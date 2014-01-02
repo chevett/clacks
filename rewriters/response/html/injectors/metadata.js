@@ -19,7 +19,7 @@ module.exports = function($, context){
 		.value();
 
 	var $script = $('<script></script>')
-		.html('_mt3_= __mt3_ = function(v){return v;};console.log("running data");var mt3 = mt3 || {}; mt3.debug = '+ JSON.stringify(allCalls) + ';');
+		.html('var mt3 = mt3 || {}; mt3.debug = '+ JSON.stringify(allCalls) + ';');
 
 	$head.prepend($script);
 };

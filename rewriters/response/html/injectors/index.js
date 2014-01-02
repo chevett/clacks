@@ -4,6 +4,7 @@ var injectors = [];
 
 fs.readdirSync(__dirname).forEach(function(file) {
 	if (/\.js$/i.test(file) && file!='index.js' && !/\.spec\.js$/i.test(file)) {
+		console.log('using injector: ' + file);
 		injectors.push(require(__dirname + '/' + file ));
 	}
 });

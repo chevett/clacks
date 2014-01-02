@@ -28,6 +28,7 @@ describe('html response rewriter', function(){
 		var $elements = $fruits.old(elementName + '['+ attributeName + ']');
 		var $newElements = $fruits.new(elementName + '['+ attributeName + ']');
 	
+		$newElements = $newElements.filter('*[src!="/mt3.js"]'); // hack to avoid the injected mt3 script
 		var $element, $newElement;
 
 		expect($elements.length).to.not.equal(0);

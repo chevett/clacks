@@ -3,10 +3,11 @@ var fileName = '/mt3.js';
 module.exports = function($, context){
 	var $script = $('<script src="'+fileName+'"></script>');
 
-	$('body').append($script);
+	$('head').prepend($script);
 };
 
 module.exports.middleware = function(){
+	// can't write files on heroku...
 
 	var browserify = require('browserify');
 	var b = browserify();
@@ -17,13 +18,7 @@ module.exports.middleware = function(){
 	var jsStr;
 	var concatStream = require('concat-stream');
 
-	var dirName = __dirname+'/client-side/js';
-	fs.readdirSync(dirName).forEach(function(file) {
-		if (/\.js$/i.test(file) && file!='index.js' && !/\.spec\.js$/i.test(file)) {
-			console.log('bundling: ' + file);
-			b.add(dirName + '/'+file);
-		}
-	});
+	b.add(__dirname+'/client-side/main.js');
 
 	// might be able to serve an empty file while the app is starting up, right?
 	b.bundle().pipe(concatStream(function(js){

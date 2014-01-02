@@ -1,9 +1,0 @@
-{
-	"unused": false,
-	"undef": true,
-	"browser": true,
-	"devel": true,
-	"node": true,
-	"globals":{
-	}
-}

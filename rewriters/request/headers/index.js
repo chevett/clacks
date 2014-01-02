@@ -2,6 +2,8 @@ var o = {};
 function _deleteHeader(headerValue, context, cb){ return null; }
 
 
+o['accept-encoding'] = _deleteHeader;
+//
 // delete some heroku headers
 o['x-request-start'] = _deleteHeader;
 o['x-forwarded-proto'] = _deleteHeader;

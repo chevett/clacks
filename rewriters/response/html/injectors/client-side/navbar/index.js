@@ -2,38 +2,63 @@ var $ = require('../my-jquery');
 var _ = require('lodash');
 var tmpl = require('./template.hbs');
 var css = require('./style.scss');
+var diff = require('diff');
 $('head').prepend($('<style></style>').html(css));
 
-function NavBar(data){
-	var requestHeaders = _.chain(data)
-		.filter(function(v){ return (/request\.headers\./).test(v.name); })
-		.filter(function(v){ return v.args[0] || v.value; })
+function _wrapWithDel(line){
+    return '<del>'+line+'</del>';
+}
+
+function _wrapWithIns(line){
+    return '<ins>'+line+'</ins>';
+}
+
+var Handlebars = require("handlebars-runtime");
+Handlebars.registerHelper("diff", function(a, b) {
+	var result ='', diffResult = diff.diffWords(a, b);
+
+	for (var i=0; i < diffResult.length; i++) {
+
+		if (diffResult[i].added && diffResult[i + 1] && diffResult[i + 1].removed) {
+			var swap = diffResult[i];
+			diffResult[i] = diffResult[i + 1];
+			diffResult[i + 1] = swap;
+		}
+
+		if (diffResult[i].removed) {
+			result += _wrapWithDel(diffResult[i].value);
+		} else if (diffResult[i].added) {
+			result += _wrapWithIns(diffResult[i].value);
+		} else {
+			result += diffResult[i].value;
+		}
+	}
+
+	return result;
+});
+
+function getHeaders(data, regex){
+	return _.chain(data)
+		.filter(function(v){ return regex.test(v.name); })
 		.filter(function(v){ return !/convert$/.test(v.name); })
+		.filter(function(v){ return v.args[0] || v.value; })
 		.map(function(v){
-			var o = {
+			return {
 				name: v.name.match(/([^\.]+)$/)[1],
 				oldValue: v.args[0],
-				newValue: v.value,
-				value: v.value || v.args[0]
+				newValue: v.value
 			};
-			
-			if (o.oldValue && !o.newValue){
-				o.removed = true;
-			} else if (!o.oldValue && o.newValue){
-				o.added = true;
-			} else if (o.oldValue === o.newValue){
-				o.unchanged = true;
-			} else {
-				o.changed = true;
-			}
-
-			return o;
 		})
 		.value();
+}
 
+function NavBar(data){
+	var requestHeaders = getHeaders(data, /request\.headers\./);
+	var responseHeaders = getHeaders(data, /response\.headers\./);
 	var $root = $(tmpl({
 		headers:{
-			request: requestHeaders
+			request: requestHeaders,
+			response: responseHeaders
 		}
 	}));
 

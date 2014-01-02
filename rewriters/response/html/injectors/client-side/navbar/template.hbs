@@ -5,24 +5,10 @@
             <h1>Request Headers</h1>
 
             {{#each headers.request}}
-                {{#if added}}
-                    <ins><strong>{{name}}</strong>:&nbsp; {{value}}</ins>
-                {{/if}}
-
-                {{#if unchanged}}
-                    <strong>{{name}}</strong>:&nbsp; {{value}}
-                {{/if}}
-
-                {{#if changed}}
-                    <strong>{{name}}</strong>:&nbsp; {{{valueDiff}}}
-                {{/if}}
-
-                {{#if removed}}
-                    <del><strong>{{name}}</strong>:&nbsp; {{value}}</del>
-                {{/if}}
-
-                <br/>
-            {{/each}}
+				<div>
+					<strong>{{name}}</strong>:&nbsp; {{{diff oldValue newValue}}}
+				</div>
+			{{/each}}
 
             <div>{{{requestHeadersHtml}}}</div>
         </div>
@@ -30,23 +16,9 @@
             <h1>Response Headers</h1>
 
             {{#each headers.response}}
-                {{#if added}}
-                    <ins><strong>{{name}}</strong>:&nbsp; {{value}}</ins>
-                {{/if}}
-
-                {{#if unchanged}}
-                    <strong>{{name}}</strong>:&nbsp; {{value}}
-                {{/if}}
-
-                {{#if changed}}
-                    <strong>{{name}}</strong>:&nbsp; {{{valueDiff}}}
-                {{/if}}
-
-                {{#if removed}}
-                    <del><strong>{{name}}</strong>:&nbsp; {{originalValue}}</del>
-                {{/if}}
-
-                <br/>
+				<div>
+					<strong>{{name}}</strong>:&nbsp; {{{diff oldValue newValue}}}
+				</div>
             {{/each}}
         </div>
     </div>

@@ -188,6 +188,7 @@
    }
    h1{
      color:black;
+	   @include RoundBorders(6px);
      background-color: white;
      padding:4px;
      font-size: 16px;
@@ -213,14 +214,14 @@
 
    .headers-container{
 	   @include opacity(.8);
-	   @include RoundBorders(3);
+	   @include RoundBorders(6px);
      padding:8px;
      background-color: black;
      > div{
        padding-top: 5px;
        padding-left: 10px;
      }
-
+margin-bottom:10px;
      del{
        color:red;
      }

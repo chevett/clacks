@@ -5,7 +5,7 @@ var css = require('./style.scss');
 var diff = require('../diff');
 $('head').prepend($('<style></style>').html(css));
 
-require("handlebars-runtime").registerHelper("diff", function(a, b) {
+require('hbsfy/runtime').registerHelper("diff", function(a, b) {
 	return diff(a, b);
 });
 

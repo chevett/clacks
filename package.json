@@ -12,7 +12,7 @@
     "test": "mocha --reporter spec $(find . -path ./node_modules -prune -o -name '*.spec.js' -print)"
   },
   "dependencies": {
-    "absolurl": "*",
+    "absolurl": "1.0.1",
     "nostalgorithm": "*",
     "oven": "*",
     "cheerio": "~0.12.x",

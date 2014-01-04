@@ -17,7 +17,7 @@
     "cheerio": "~0.12.x",
     "diff": "~1.0.x",
     "node-uuid": "~1.4.x",
-    "express": "3.4.0",
+    "express": ">=3.4.7",
     "concat-stream": "~1.x.x",
     "redis": "~0.10.x",
     "hiredis": "~0.1.x",

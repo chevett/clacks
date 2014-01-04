@@ -8,6 +8,7 @@ absolurl.on('error', function(e){
 });
 
 module.exports = function(){
+	var originalOpen = XMLHttpRequest.prototype.open;
 	XMLHttpRequest.prototype.open = function(method, url, async, user, pass) {
 		var currentTarget = window.location.pathname.substr(1);
 		var newTarget = absolurl.resolve(url, currentTarget);
@@ -23,6 +24,6 @@ module.exports = function(){
 			console.log('clacks intercepted "'+ url + '" and changed it to "' + completeUrl +'".');
 		}
 
-		open.call(this, method, completeUrl, async, user, pass);
+		originalOpen.call(this, method, completeUrl, async, user, pass);
 	};
 };

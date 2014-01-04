@@ -15,8 +15,8 @@ module.exports = function(){
 
 		if (url !== completeUrl){
 			window.mt3 = window.mt3 || {};
-			window.mt3.xhrIntercepts = window.mt3.xhrIntercepts || [];
-			window.mt4.xhrIntercepts.push({
+			window.mt3.xhrInterceptions = window.mt3.xhrInterceptions || [];
+			window.mt3.xhrInterceptions.push({
 				old: url,
 				new: completeUrl
 			});

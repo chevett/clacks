@@ -14,6 +14,12 @@ module.exports = function(){
 		var completeUrl = window.location.origin + '/' + newTarget;
 
 		if (url !== completeUrl){
+			window.mt3 = window.mt3 || {};
+			window.mt3.xhrIntercepts = window.mt3.xhrIntercepts || [];
+			window.mt4.xhrIntercepts.push({
+				old: url,
+				new: completeUrl
+			});
 			console.log('clacks intercepted "'+ url + '" and changed it to "' + completeUrl +'".');
 		}
 

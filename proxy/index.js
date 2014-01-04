@@ -22,6 +22,11 @@ module.exports = function(req, res, next){
 
 	req.pipe(request);
 
+	request.on('error', function(e){
+		res.writeHead(302,{location: '/500.html?message=' + encodeURIComponent(e.message)} );
+		res.end();
+	});
+
 	request.on('ready', function(response){
 		response.on('headers', function(statusCode, headers){
 			res.writeHead(statusCode, headers.toObject());

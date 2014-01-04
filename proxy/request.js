@@ -30,7 +30,13 @@ function _sendRequest(self, context, options, newHeaders){
 		self.emit('ready', new TranslatedResponse(context, inResponse));
 	});
 
-	outRequest.on('error', function(err){ console.log(err); });
+	outRequest.on('error', function(err){
+		var e = new Error();
+		e.name = "send_request";
+		e.message = err;
+
+		self.emit('error', e);
+	});
 
 	self.pipe(outRequest);
 }

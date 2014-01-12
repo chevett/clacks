@@ -1,13 +1,13 @@
 var $ = require('../my-jquery');
 var _ = require('lodash');
-var tmpl = require('./template.hbs');
+var vash = require('vash-runtime');
+var tmpl = require('./template.vash');
 var css = require('./style.scss');
-var diff = require('../diff');
+
 $('head').prepend($('<style></style>').html(css));
 
-require('hbsfy/runtime').registerHelper("diff", function(a, b) {
-	return diff(a, b);
-});
+vash.helpers.diff = require('../diff');
+
 
 function getHeaders(data, regex){
 	return _.chain(data)

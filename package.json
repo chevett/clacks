@@ -24,7 +24,6 @@
     "esprima": "~1.0.4",
     "escodegen": "~1.x.x",
     "traverse": "~0.6.5",
-    "hbsfy": "~1.x.x",
     "browserify": "~3.x.x",
     "sassify2": "0.0.2",
     "brfs": "0.0.8",
@@ -32,7 +31,8 @@
     "q": "~0.9.7",
     "cssify2": "0.0.4",
     "lodash": "~2.x.x",
-    "oven": "0.0.5"
+    "oven": "0.0.5",
+    "vashify": ">=0.2.0"
   },
   "devDependencies": {
     "jshint": "*",

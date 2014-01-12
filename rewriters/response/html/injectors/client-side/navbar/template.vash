@@ -1,0 +1,38 @@
+<div>
+	<div id="mt3-debug-info">
+		<a id="mt3-hide-debug">close</a>
+		<div class="headers-container">
+			<h1>Request Headers</h1>
+
+			@model.headers.request.forEach(function(h){
+				<div>
+					<strong>@h.name</strong>:&nbsp; @html.raw(html.diff(h.oldValue, h.newValue))
+				</div>
+			})
+		</div>
+		<div class="headers-container">
+			<h1>Response Headers</h1>
+
+			@model.headers.response.forEach(function(h){
+				<div>
+					<strong>@h.name</strong>:&nbsp; @html.raw(html.diff(h.oldValue, h.newValue))
+				</div>
+			})
+		</div>
+	</div>
+
+	<div id="mt3-navbar">
+		<div class="mt3-navbar-inner">
+			<button type="button" id="mt3-navbar-close" >&larr;</button>
+			<form id="mt3-navbar-form">
+				<input type="text" class="mt3-input" id="mt3-btn-nav-value" placeholder="http://www.google.com"></input>
+				<button type="submit" class="mt3-btn">Go</button>
+				<button id="mt3-show-debug" type="button" class="mt3-btn">Debug</button>
+			</form>
+		</div>
+	</div>
+
+	<div id="mt3-btn-nav-tab">
+		<button type="button" id="mt3-nav-tab-open">&rarr;</button>
+	</div>
+</div>

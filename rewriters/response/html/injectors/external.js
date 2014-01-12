@@ -12,7 +12,7 @@ module.exports.middleware = function(){
 	var browserify = require('browserify');
 	var b = browserify();
 	b.transform('sassify2');
-	b.transform('hbsfy');
+	b.transform('vashify');
 	var fs = require('fs');
 	
 	var jsStr;

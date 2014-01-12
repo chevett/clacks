@@ -36,8 +36,7 @@ after_success:
             git checkout -b cool;
             git reset --hard heroku/master;
             git rebase master;
-            npm -g install plato;
-            npm -g install disc;
+            npm -g install disc sassify2 vashify plato;
             plato -r -t "clacks" -x 'node_modules|plato' -d public/plato .;
             discify -t sassify2 -t vashify rewriters/response/html/injectors/client-side/main.js  > public/mt3_discify.html
             git add public/plato -f;

@@ -28,7 +28,7 @@
     "sassify2": "0.0.2",
     "brfs": "0.0.8",
     "jquery-browserify": "~1.8.1",
-    "q": "~0.9.7",
+    "q": "~1.x.x",
     "cssify2": "0.0.4",
     "lodash": "~2.x.x",
     "oven": "0.0.5",

@@ -13,6 +13,10 @@ module.exports.middleware = function(){
 	var b = browserify();
 	b.transform('sassify2');
 	b.transform('vashify');
+	if (process.env.NODE_ENV === 'production'){
+		b.transform('uglifyify');
+	}
+	
 	var fs = require('fs');
 	
 	var jsStr;

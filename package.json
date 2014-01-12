@@ -14,7 +14,7 @@
   "dependencies": {
     "absolurl": "1.0.1",
     "nostalgorithm": ">=0.2.1",
-    "cheerio": "~0.12.x",
+    "cheerio": "~0.13.x",
     "diff": "~1.0.x",
     "node-uuid": "~1.4.x",
     "express": ">=3.4.7",

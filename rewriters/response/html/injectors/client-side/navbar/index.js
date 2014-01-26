@@ -1,4 +1,4 @@
-var $ = require('../my-jquery');
+var $ = require('jquery');
 var _ = require('lodash');
 var vash = require('vash-runtime');
 var tmpl = require('./template.vash');

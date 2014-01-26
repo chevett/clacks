@@ -33,7 +33,8 @@
     "lodash": "~2.x.x",
     "oven": "0.0.5",
     "vashify": ">=0.2.0",
-    "uglifyify": "~1.1.0"
+    "uglifyify": "~1.1.0",
+    "jquery-ify": "0.0.3"
   },
   "devDependencies": {
     "jshint": "*",

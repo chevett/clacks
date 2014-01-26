@@ -1,4 +1,4 @@
-var $ = require('./my-jquery');
+var $ = require('jquery');
 var NavBar = require('./navbar');
 
 require('./xhr-intercept')();

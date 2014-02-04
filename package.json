@@ -27,14 +27,13 @@
     "browserify": "~3.x.x",
     "sassify2": "0.0.2",
     "brfs": "0.0.9",
-    "jquery-browserify": "~1.8.1",
     "q": "~1.x.x",
     "cssify2": "0.0.4",
     "lodash": "~2.x.x",
     "oven": "0.0.5",
     "vashify": ">=0.2.0",
     "uglifyify": "~1.2.0",
-    "jquery-ify": "0.0.3"
+    "jquery": "~2.1.0"
   },
   "devDependencies": {
     "jshint": "*",

@@ -138,6 +138,9 @@ function _rewrite(js, ctx){
 }
 
 module.exports = function(js, ctx) {
+	// punting temporarily
+	return js;
+
 	try {
 		return _rewrite(js, ctx);
 	} catch (e){

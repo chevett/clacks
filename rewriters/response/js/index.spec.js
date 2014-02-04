@@ -11,7 +11,7 @@ var Context = require('../../../context');
 var jsRewriter = require('./index');
 var expect = chai.expect;
 
-describe('js rewriter', function(){
+describe.skip('js rewriter', function(){
 	var context = new Context(new FakeRequest());
 	describe('assignment expressions', function(){
 

@@ -7,4 +7,4 @@ clacks
 
 [plato report](http://www.miketown3.com/plato/)
 
-[discify report for injected bundle](http://www.miketown3.com/mt3_discify.html)
+

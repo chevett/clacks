@@ -48,10 +48,8 @@ var Convertor = function(request){
 	var self = this,
 		absolurl = new Absolurl();
 
-	absolurl.on('error', function(e){
-		self.emit('error', e);
-	});
-	
+	absolurl.on('error', self.emit.bind(self, 'error'));
+
 	var requestUrl = _getRequestUrl(request);
 	var isClientConnectionSecure = _isClientConnectionSecure(request);
 	var isHttpDowngrade = isClientConnectionSecure && !/^https/.test(requestUrl);
